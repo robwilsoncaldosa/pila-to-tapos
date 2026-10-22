@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pila to Tapos — Technical Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f1;
+    --surface: #ffffff;
+    --ink: #1d1c1a;
+    --muted: #66625b;
+    --line: #e2ddd4;
+    --accent: #1f4fd1;
+    --accent-soft: #e8eefc;
+    --star: #c26a00;
+    --star-soft: #fdf0dc;
+    --ok: #1e7a3c;
+    --warn: #b3261e;
+    --lane-team: #e6f3ea;   --lane-team-ink: #1e6b3a;
+    --lane-phone: #e8eefc;  --lane-phone-ink: #1f4fd1;
+    --lane-counter: #fbeedd; --lane-counter-ink: #9a5200;
+    --lane-tv: #efe9fb;     --lane-tv-ink: #5b3cb8;
+    --assume: #7a5b00; --assume-soft: #fff6d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413; --surface: #1d1c1a; --ink: #ecebe7; --muted: #a29e96; --line: #35332f;
+      --accent: #86a8ff; --accent-soft: #1f2a44; --star: #f2a33a; --star-soft: #3a2a12;
+      --ok: #7fd49a; --warn: #ff8a80;
+      --lane-team: #17301f; --lane-team-ink: #8fd6a6;
+      --lane-phone: #1c2640; --lane-phone-ink: #9db8ff;
+      --lane-counter: #33240f; --lane-counter-ink: #f0b56a;
+      --lane-tv: #2a2140; --lane-tv-ink: #c4b1ff;
+      --assume: #f3d36b; --assume-soft: #3a3010;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413; --surface: #1d1c1a; --ink: #ecebe7; --muted: #a29e96; --line: #35332f;
+    --accent: #86a8ff; --accent-soft: #1f2a44; --star: #f2a33a; --star-soft: #3a2a12;
+    --ok: #7fd49a; --warn: #ff8a80;
+    --lane-team: #17301f; --lane-team-ink: #8fd6a6;
+    --lane-phone: #1c2640; --lane-phone-ink: #9db8ff;
+    --lane-counter: #33240f; --lane-counter-ink: #f0b56a;
+    --lane-tv: #2a2140; --lane-tv-ink: #c4b1ff;
+    --assume: #f3d36b; --assume-soft: #3a3010;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 940px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.2rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h3 { font-size: 1rem; margin: 0 0 6px; }
+  p { margin: 0 0 10px; }
+  ul { margin: 0; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  .eyebrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+  .badge { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; background: var(--surface); }
+  .badge.draft { color: var(--star); border-color: var(--star); }
+  .lede { font-size: 1.08rem; color: var(--muted); max-width: 700px; }
+  section { margin-top: 40px; }
+  .revised { max-width: 700px; font-size: 0.9rem; color: var(--muted); background: var(--star-soft); border-left: 3px solid var(--star); border-radius: 8px; padding: 10px 14px; margin-top: 14px; }
+  .sub { color: var(--muted); margin-bottom: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+
+  /* scope -> prd */
+  .grow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grow .card { padding: 16px 18px; }
+  .grow .was { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .grow .was-q { font-style: italic; color: var(--muted); margin-bottom: 10px; }
+  .grow .now { font-size: 0.82rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+
+  /* diagram */
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram-wrap svg { display: block; min-width: 720px; width: 100%; height: auto; }
+  svg text { font-family: inherit; fill: var(--ink); }
+  svg .lane-label { font-size: 12px; font-weight: 600; fill: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  svg .group-label { font-size: 11px; font-weight: 700; fill: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  svg .step-num { font-size: 12px; font-weight: 700; fill: var(--muted); }
+  svg .step-name { font-size: 14px; font-weight: 600; }
+  svg .box-title { font-size: 13px; font-weight: 600; }
+  svg .box-sub { font-size: 11.5px; fill: var(--muted); }
+  svg .rowline { stroke: var(--line); stroke-width: 1; }
+  svg .b-team { fill: var(--lane-team); stroke: var(--lane-team-ink); }
+  svg .b-phone { fill: var(--lane-phone); stroke: var(--lane-phone-ink); }
+  svg .b-counter { fill: var(--lane-counter); stroke: var(--lane-counter-ink); }
+  svg .b-tv { fill: var(--lane-tv); stroke: var(--lane-tv-ink); }
+  svg rect[class^="b-"] { stroke-width: 1.2; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  svg .arrow-label { font-size: 11px; fill: var(--muted); font-style: italic; }
+  svg .star-bg { fill: var(--star-soft); stroke: var(--star); stroke-width: 1.2; }
+  svg .star-txt { font-size: 11px; font-weight: 700; fill: var(--star); }
+  svg .row { transition: opacity 180ms ease; cursor: pointer; }
+  svg.focused .row { opacity: 0.2; }
+  svg.focused .row.on { opacity: 1; }
+  #ah path { fill: var(--muted); }
+
+  .stepper { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .stepper button {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  }
+  .stepper button:hover { border-color: var(--accent); }
+  .stepper button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .dots { display: flex; gap: 6px; flex-wrap: wrap; }
+  .dots button { width: 32px; padding: 6px 0; text-align: center; }
+  .dots button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+  .detail { margin-top: 14px; border-radius: 12px; background: var(--accent-soft); padding: 16px 18px; min-height: 90px; }
+  .detail h3 { margin-bottom: 4px; }
+  .detail .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
+  .detail .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
+  .detail .cool { color: var(--star); font-weight: 600; margin-top: 8px; }
+  .checks li { list-style: none; position: relative; padding-left: 4px; }
+  .checks { padding-left: 18px; }
+  .checks li::before { content: "☐"; position: absolute; left: -18px; color: var(--muted); }
+
+  /* screen reveals */
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+  summary {
+    cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none;
+    display: flex; align-items: center; gap: 12px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 1.2rem; margin-left: auto; }
+  details[open] summary::after { content: "–"; }
+  summary .tag { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .tag.phone { background: var(--lane-phone); color: var(--lane-phone-ink); }
+  .tag.counter { background: var(--lane-counter); color: var(--lane-counter-ink); }
+  .tag.tv { background: var(--lane-tv); color: var(--lane-tv-ink); }
+  .tag.team { background: var(--lane-team); color: var(--lane-team-ink); }
+  details .body { padding: 0 18px 18px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; }
+  details .body .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 6px; }
+  .grey-card { margin-top: 10px; border-radius: 10px; padding: 10px 12px; background: var(--bg); border: 1px dashed var(--line); font-size: 0.92rem; }
+
+  /* states grid */
+  .states { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .state { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .state h3 { font-size: 0.95rem; margin-bottom: 2px; }
+  .state p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+  .state.assume { border-color: var(--assume); background: var(--assume-soft); }
+  .state.assume h3::after { content: " · assumption"; font-weight: 500; color: var(--assume); font-size: 0.8rem; }
+
+  /* look & feel preview — fixed palette on purpose: it previews the app's colors */
+  .lf { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; }
+  .preview {
+    background: #faf6ee; color: #14213d; border-radius: 14px; padding: 18px; border: 1px solid #e6dfcf;
+    font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .preview .route { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; margin-bottom: 12px; }
+  .preview .route span { background: #14213d; color: #ffd21f; border-radius: 6px; padding: 2px 8px; }
+  .stub {
+    display: flex; align-items: stretch; border: 2px solid #14213d; border-radius: 12px; overflow: hidden; max-width: 320px;
+  }
+  .stub .num { background: #ffd21f; color: #14213d; font-size: 2.2rem; font-weight: 700; padding: 8px 16px; letter-spacing: 0.02em; border-right: 2px dashed #14213d; white-space: nowrap; display: flex; align-items: center; }
+  .stub .meta { padding: 10px 14px; font-size: 0.95rem; }
+  .stub .meta b { display: block; font-size: 1.05rem; }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { border-radius: 999px; padding: 4px 12px; font-weight: 700; font-size: 0.92rem; }
+  .pill.ok { background: #d9f2e1; color: #135c2c; }
+  .pill.miss { background: #ffe1d6; color: #a3330f; }
+  .tvmini {
+    background: #0e1525; color: #ffd21f; border-radius: 14px; padding: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-content: center;
+    font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .tvmini div { background: #172238; border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .tvmini small { display: block; color: #c9d1e3; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .tvmini strong { font-size: 1.6rem; }
+  .tvmini .flash { outline: 3px solid #ffd21f; }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .sw { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--muted); }
+  .sw i { width: 18px; height: 18px; border-radius: 5px; display: inline-block; border: 1px solid var(--line); }
+  .avoid { margin-top: 12px; font-size: 0.92rem; color: var(--muted); }
+
+  /* lists */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .callout { border-left: 4px solid var(--assume); background: var(--assume-soft); border-radius: 10px; padding: 14px 16px; }
+  .callout.block { border-left-color: var(--warn); }
+  .callout h3 { margin-bottom: 4px; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+  code { font-size: 0.9em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 1.7rem; }
+    .grow, .states, .lf, .split, details .body, .detail .cols { grid-template-columns: 1fr; }
+    main { padding-top: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) { svg .row { transition: none; } }
+
+  /* ---- spec.html additions ---- */
+  :root { --lane-core: #e8eefc; --lane-core-ink: #1f4fd1; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lane-core: #1c2640; --lane-core-ink: #9db8ff; } }
+  :root[data-theme="dark"] { --lane-core: #1c2640; --lane-core-ink: #9db8ff; }
+  html { scroll-behavior: smooth; }
+  main > *, .card, details, .body > div, .cardgrid > * { min-width: 0; }
+  code { overflow-wrap: anywhere; }
+  .toc { display: flex; gap: 6px; flex-wrap: wrap; margin: 18px 0 0; }
+  .toc a { font-size: 0.8rem; color: var(--accent); text-decoration: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 2px 10px; }
+  .toc a:hover { border-color: var(--accent); }
+  a { color: var(--accent); }
+  .cardgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .cardgrid .card { padding: 16px 18px; }
+  .cardgrid .card p:last-child { margin-bottom: 0; }
+  .cardgrid .card h3 { margin-bottom: 4px; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin: 10px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  pre { margin: 8px 0; padding: 12px 14px; overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; font: 0.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; tab-size: 2; }
+  pre code { background: none; padding: 0; overflow-wrap: normal; }
+  h2 .num { color: var(--muted); font-weight: 400; margin-right: 6px; }
+  h2 + .sub { margin-top: 0; }
+  .detail .cols code, .detail li code { font-size: 0.82em; }
+  .detail .prd li, .detail .files li { margin-bottom: 3px; }
+  .detail .what { margin: 0; }
+  .note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--accent); vertical-align: middle; margin-right: 5px; }
+  .legend i.dash { border-top: 2px dashed var(--star); }
+  .legend i.sq { width: 12px; height: 12px; border: 1px solid var(--muted); border-radius: 3px; background: var(--surface); }
+  .tag.core { background: var(--lane-core); color: var(--lane-core-ink); }
+  details .body.one { display: block; }
+  details .body .k { margin-top: 12px; }
+  details .body .k:first-child { margin-top: 0; }
+  td:first-child > code { white-space: nowrap; overflow-wrap: normal; }
+  .cls td:first-child { white-space: nowrap; font-weight: 600; }
+
+  /* diagram */
+  svg .b-svc { fill: var(--surface); stroke: var(--accent); stroke-width: 1.2; }
+  svg .b-port { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+  svg .b-adp { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+  svg .b-ext { fill: var(--star-soft); stroke: var(--star); stroke-width: 1.2; }
+  svg .b-dom { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 3; }
+  svg .b-band { fill: var(--assume-soft); stroke: var(--assume); stroke-width: 1.2; }
+  svg .b-ent { fill: var(--lane-core); stroke: var(--lane-core-ink); stroke-width: 1.2; }
+  svg .rt { stroke: var(--accent); stroke-width: 2; fill: none; }
+  svg .poll { stroke: var(--star); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+  svg .rt-label { font-size: 11px; font-weight: 600; fill: var(--accent); }
+  svg .poll-label { font-size: 11px; font-weight: 600; fill: var(--star); }
+  svg .band-title { font-size: 12px; font-weight: 700; fill: var(--assume); }
+  svg .band-sub { font-size: 11px; fill: var(--assume); }
+  #ah2 path { fill: var(--accent); }
+  #ah3 path { fill: var(--star); }
+  svg [data-k] { transition: opacity 180ms ease; }
+  svg.focused [data-k] { opacity: 0.16; }
+  svg.focused [data-k].on { opacity: 1; }
+  #arch .diagram-wrap svg, #flow .diagram-wrap svg { min-width: 880px; }
+  .detail .head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+
+  /* data / look */
+  .sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+  .swatch { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 0.85rem; }
+  .swatch .chip { height: 52px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .swatch .meta { padding: 8px 12px; }
+  .swatch .meta b { display: block; }
+  .swatch .meta span { color: var(--muted); }
+  .typesample { background: #faf6ee; color: #14213d; border: 1px solid #e6dfcf; border-radius: 14px; padding: 18px; margin-top: 12px; font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .typesample .big { font-size: 4rem; font-weight: 700; line-height: 1.05; letter-spacing: 0.02em; }
+  .typesample .big span { background: #ffd21f; padding: 0 12px; border-radius: 8px; }
+  .typesample .body18 { font-size: 18px; margin-top: 10px; }
+  .typesample .hint { font-size: 0.82rem; color: #475066; margin-top: 8px; }
+
+  /* decisions */
+  .grp { border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); }
+  .grp h3 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .grp.learner { border-left: 5px solid var(--accent); }
+  .grp.derived { border: 1px dashed var(--muted); background: var(--bg); }
+  .grp .pill-t { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .grp.learner .pill-t { background: var(--accent-soft); color: var(--accent); }
+  .grp.derived .pill-t { background: var(--line); color: var(--muted); }
+  .callout ol { margin: 6px 0 0; padding-left: 20px; }
+  .callout.unknown { border-left-color: var(--accent); background: var(--accent-soft); }
+  .callout + .callout { margin-top: 12px; }
+
+  @media (max-width: 720px) {
+    .cardgrid { grid-template-columns: 1fr; }
+    .typesample .big { font-size: 3rem; }
+  }
+  .mk-m { fill: var(--muted); } .mk-a { fill: var(--accent); } .mk-s { fill: var(--star); }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><span>Build With AI: Basics · Spec</span><span class="badge">Approved</span></div>
+  <h1>Pila to Tapos — Technical Spec</h1>
+  <p class="lede">One Next.js app running on the laptop, with no deployment: this is the blueprint for how the pages, the in-memory queue and the pre-written Magtanong answers fit together, and where each piece lives in the code.</p>
+  <p class="revised"><strong>Implements <code>prd.md</code></strong> (as revised in <code>4-spec</code> for the one-counter, two-visit process, and in <code>5-build</code> for pre-written answers and a laptop-only build). Official-source research: <code>devpost/research/bir-closure-sources.md</code>. Everything on this page comes from <code>devpost/spec.md</code>.</p>
+  <p class="revised"><strong>Revised in <code>5-build</code> (2026-10-22).</strong> The learner replaced live AI with pre-written cited answers and dropped deployment. This removes Supabase, Realtime, the Claude API, Vercel, and the in-app scanner. The app now runs as one server on the laptop. The data lives in a plan file and in the server's memory, the screens check for updates every 2 seconds, and a phone on the same Wi-Fi scans the TV's QR code with its own camera. The earlier choices and their reasons are kept under Decisions and Open Issues.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#plain">Plain language</a><a href="#arch">Architecture</a><a href="#journey">Journey</a><a href="#components">Components</a><a href="#data">Data</a><a href="#files">Files</a><a href="#stack">Stack</a><a href="#runs">Where it runs</a><a href="#look">Look and feel</a><a href="#risks">Failures</a><a href="#decisions">Decisions</a>
+  </nav>
+
+  <!-- 2 Plain language -->
+  <section id="plain">
+    <h2>How this works, in plain language</h2>
+    <p class="sub">Pila to Tapos is <b>one Next.js web app running on your laptop</b>. Each screen just opens a different address on the laptop.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Page</th><th>Opened on</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code> and <code>/plan</code></td><td>Her phone (or the laptop in phone view)</td><td>Screen 1 and "Your plan" (with the Magtanong panel)</td></tr>
+        <tr><td><code>/line</code></td><td>Her phone</td><td>Her number, "Ikaw na!", "Balik ka sa [date]," "Tapos na!"</td></tr>
+        <tr><td><code>/counter</code></td><td>The laptop (staff)</td><td>The Registration Officer counter</td></tr>
+        <tr><td><code>/tv</code></td><td>The laptop or TV</td><td>The panel for the counter, the spoken call, and the QR code</td></tr>
+        <tr><td><code>/team</code></td><td>The laptop</td><td>The passcode-protected edit screen</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:12px">A real phone reaches the laptop over <b>the same Wi-Fi</b>. The TV's QR code holds the laptop's local address (for example <code>http://192.168.1.23:3000/join</code>), and the phone's own camera opens it.</p>
+    <h3 style="margin-top:18px">Where things live</h3>
+    <div class="cardgrid">
+      <div class="card"><h3>The plan</h3><p>Steps, documents, fees, time, situation questions, the common questions and their pre-written answers, and a citation for every item are <b>one data file</b>, <code>content/plan/bir-closure.json</code>, which the server reads. The team edit screen writes changes back to it.</p></div>
+      <div class="card"><h3>The official BIR text</h3><p>Three short, verified text excerpts stored as plain text files: RMC 47-2026, Citizen's Charter entry 28-A, and the RMC 84-2026 digest. Every quoted answer is checked word for word against them.</p></div>
+      <div class="card"><h3>The queue</h3><p>Numbers, who is waiting, who is called: <b>in the server's memory</b> while the laptop runs it. When staff tap "Call next," the server updates the queue. The TV, the counter, and her phone <b>check for updates every 2 seconds</b>, so they react within moments. Restarting the server clears the queue, which is handy between demo takes.</p></div>
+      <div class="card"><h3>Her phone</h3><p>Her ticks, answers, and journey (which visit she is on, her return date) live <b>on her phone</b>, in the browser's <code>localStorage</code>, a sticky note the browser keeps for one site. That is why there is no login.</p></div>
+      <div class="card"><h3>How Magtanong works</h3><p>The panel lists common questions. Each answer was written ahead of time from the official excerpts and shows its citation. When the source does not answer a question, the answer is the grey "not in the source" card. A check script confirms every quoted passage really appears in its source file, so nothing is invented. There is no AI call.</p></div>
+      <div class="card"><h3>How the TV speaks</h3><p>The browser's built-in speech says "Numero B-014, [counter]" with a Filipino voice if the browser has one. If not, it plays short clips the team records.</p></div>
+      <div class="card"><h3>Why this shape</h3><p>The proof of concept is shown on video, so one laptop server is enough. There are no accounts, no keys, no hosting, and nothing to pay for.</p></div>
+      <div class="card"><h3>How the code is organized</h3><p>Business rules never read files or memory directly. They receive what they need ("a plan repository," "a queue repository," "a clock") as arguments, and one file, the <i>composition root</i>, plugs in the real versions. The in-memory and file versions are product code, and they keep the business rules testable without the server running.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 Architecture -->
+  <section id="arch">
+    <h2>Architecture</h2>
+    <p class="sub">Each layer imports only downward. Pages call server actions, server actions call services, services use ports, and the composition root decides which adapter sits behind each port.</p>
+    <div class="card">
+      <div class="diagram-wrap">
+        <svg class="arch" viewBox="0 0 970 650" role="img" aria-labelledby="a1-t a1-d"><title id="a1-t">Pila to Tapos system architecture</title><desc id="a1-d">Top to bottom: pages (her phone with localStorage, the staff counter on the laptop, the TV, the team edit screen) call server actions. Dashed arrows show the phone, counter and TV polling every 2 seconds through the getTicket and boardState server actions. Server actions call three services (team, plan, queue) next to a box of pure domain rules. Services use ports (SourceTexts, PlanRepository, QueueRepository, Clock and Ids). The composition root plugs in the adapters: a source texts reader, the file plan repository, the in-memory queue repository, and the system clock with random ids. These touch only files on the laptop and the server memory. There are no external services.</desc><defs><marker id="a1-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-m" d="M0,0 L10,5 L0,10 z"/></marker><marker id="a1-as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-s" d="M0,0 L10,5 L0,10 z"/></marker></defs><g transform="translate(50,0)"><text class="group-label" transform="translate(-38,77) rotate(-90)" text-anchor="middle">Pages</text><text class="group-label" transform="translate(-38,172) rotate(-90)" text-anchor="middle">Actions</text><text class="group-label" transform="translate(-38,255) rotate(-90)" text-anchor="middle">Services</text><text class="group-label" transform="translate(-38,342) rotate(-90)" text-anchor="middle">Ports</text><text class="group-label" transform="translate(-38,470) rotate(-90)" text-anchor="middle">Adapters</text><text class="group-label" transform="translate(-38,587) rotate(-90)" text-anchor="middle">Storage</text><g data-k="pg-phone"><rect class="b-phone" x="60" y="42" width="190" height="70" rx="10"/><text class="box-title" x="155.0" y="66" text-anchor="middle">Her phone</text><text class="box-sub" x="155.0" y="83" text-anchor="middle">/ · /plan · /join · /line</text><text class="box-sub" x="155.0" y="97" text-anchor="middle">localStorage: pila:v1</text></g><g data-k="pg-counter"><rect class="b-counter" x="270" y="42" width="190" height="70" rx="10"/><text class="box-title" x="365.0" y="66" text-anchor="middle">Laptop: staff</text><text class="box-sub" x="365.0" y="83" text-anchor="middle">/counter</text><text class="box-sub" x="365.0" y="97" text-anchor="middle">Call next · Done</text></g><g data-k="pg-tv"><rect class="b-tv" x="480" y="42" width="190" height="70" rx="10"/><text class="box-title" x="575.0" y="66" text-anchor="middle">Laptop or TV</text><text class="box-sub" x="575.0" y="83" text-anchor="middle">/tv</text><text class="box-sub" x="575.0" y="97" text-anchor="middle">panel · speech · QR code</text></g><g data-k="pg-team"><rect class="b-team" x="690" y="42" width="190" height="70" rx="10"/><text class="box-title" x="785.0" y="66" text-anchor="middle">Laptop: team</text><text class="box-sub" x="785.0" y="83" text-anchor="middle">/team</text><text class="box-sub" x="785.0" y="97" text-anchor="middle">passcode-protected edits</text></g><path data-k="l-ph" class="arrow" d="M130,112 L130,148" marker-end="url(#a1-ah)"/><path data-k="l-co" class="arrow" d="M365,112 L365,148" marker-end="url(#a1-ah)"/><path data-k="l-tv" class="arrow" d="M575,112 L575,148" marker-end="url(#a1-ah)"/><path data-k="l-te" class="arrow" d="M785,112 L785,148" marker-end="url(#a1-ah)"/><g data-k="poll"><path class="poll" d="M190,112 L190,148" marker-end="url(#a1-as)"/><path class="poll" d="M425,112 L425,148" marker-end="url(#a1-as)"/><path class="poll" d="M635,112 L635,148" marker-end="url(#a1-as)"/><text class="poll-label" x="205" y="134">getTicket · 2 s</text><text class="poll-label" x="440" y="134">boardState · 2 s</text><text class="poll-label" x="650" y="134">boardState · 2 s</text></g><g data-k="e-act"><rect class="b-ent" x="60" y="148" width="820" height="48" rx="10"/><text class="box-title" x="470" y="169" text-anchor="middle">Server actions: queue.ts · plan.ts · team.ts</text><text class="box-sub" x="470" y="185" text-anchor="middle">parse input, call one service method, map the Result</text></g><path data-k="la-team" class="arrow" d="M130,196 L130,225" marker-end="url(#a1-ah)"/><path data-k="la-plan" class="arrow" d="M300,196 L300,225" marker-end="url(#a1-ah)"/><path data-k="la-queue" class="arrow" d="M470,196 L470,225" marker-end="url(#a1-ah)"/><g data-k="s-team"><rect class="b-svc" x="60" y="225" width="140" height="60" rx="10"/><text class="box-title" x="130.0" y="248" text-anchor="middle">Team service</text><text class="box-sub" x="130.0" y="265" text-anchor="middle">citation required</text></g><g data-k="s-plan"><rect class="b-svc" x="230" y="225" width="140" height="60" rx="10"/><text class="box-title" x="300.0" y="248" text-anchor="middle">Plan service</text><text class="box-sub" x="300.0" y="265" text-anchor="middle">getPlan()</text></g><g data-k="s-queue"><rect class="b-svc" x="400" y="225" width="140" height="60" rx="10"/><text class="box-title" x="470.0" y="248" text-anchor="middle">Queue service</text><text class="box-sub" x="470.0" y="265" text-anchor="middle">issue · call · finish</text></g><g data-k="dom"><rect class="b-dom" x="740" y="225" width="140" height="60" rx="10"/><text class="box-title" x="810" y="245" text-anchor="middle">Domain</text><text class="box-sub" x="810" y="261" text-anchor="middle">checklist · plan diff</text><text class="box-sub" x="810" y="275" text-anchor="middle">working days · totals</text></g><path data-k="ls-src" class="arrow" d="M130,285 L130,320" marker-end="url(#a1-ah)"/><path data-k="ls-teamplan" class="arrow" d="M160,285 L260,320" marker-end="url(#a1-ah)"/><path data-k="ls-plan" class="arrow" d="M300,285 L300,320" marker-end="url(#a1-ah)"/><path data-k="ls-queue" class="arrow" d="M470,285 L470,320" marker-end="url(#a1-ah)"/><path data-k="ls-clock" class="arrow" d="M510,285 L610,320" marker-end="url(#a1-ah)"/><g data-k="p-src"><rect class="b-port" x="60" y="320" width="140" height="45" rx="8"/><text class="box-title" x="130.0" y="339" text-anchor="middle">SourceTexts</text><text class="box-sub" x="130.0" y="356" text-anchor="middle">get(sourceId)</text></g><g data-k="p-plan"><rect class="b-port" x="230" y="320" width="140" height="45" rx="8"/><text class="box-title" x="300.0" y="339" text-anchor="middle">PlanRepository</text><text class="box-sub" x="300.0" y="356" text-anchor="middle">plan + citations</text></g><g data-k="p-queue"><rect class="b-port" x="400" y="320" width="140" height="45" rx="8"/><text class="box-title" x="470.0" y="339" text-anchor="middle">QueueRepository</text><text class="box-sub" x="470.0" y="356" text-anchor="middle">tickets</text></g><g data-k="p-clock"><rect class="b-port" x="570" y="320" width="140" height="45" rx="8"/><text class="box-title" x="640.0" y="339" text-anchor="middle">Clock · Ids</text><text class="box-sub" x="640.0" y="356" text-anchor="middle">now() · uuid()</text></g><text data-k="pnote" class="box-sub" x="740" y="346">Ports: hand-written</text><text data-k="pnote" class="box-sub" x="740" y="360">contracts</text><path data-k="pm-src" class="arrow" d="M130,365 L130,385" marker-end="url(#a1-ah)"/><path data-k="pm-plan" class="arrow" d="M300,365 L300,385" marker-end="url(#a1-ah)"/><path data-k="pm-queue" class="arrow" d="M470,365 L470,385" marker-end="url(#a1-ah)"/><path data-k="pm-clock" class="arrow" d="M640,365 L640,385" marker-end="url(#a1-ah)"/><g data-k="band"><rect class="b-band" x="60" y="385" width="820" height="38" rx="8"/><text class="band-title" x="150" y="402">Composition root</text><text class="band-sub" x="150" y="416">builds the services; plugs in the adapters</text></g><path data-k="n-src" class="arrow" d="M130,423 L130,440" marker-end="url(#a1-ah)"/><path data-k="n-plan" class="arrow" d="M300,423 L300,440" marker-end="url(#a1-ah)"/><path data-k="n-queue" class="arrow" d="M470,423 L470,440" marker-end="url(#a1-ah)"/><path data-k="n-clock" class="arrow" d="M640,423 L640,440" marker-end="url(#a1-ah)"/><g data-k="a-src"><rect class="b-adp" x="60" y="440" width="140" height="60" rx="8"/><text class="box-title" x="130.0" y="460" text-anchor="middle">Source texts</text><text class="box-sub" x="130.0" y="477" text-anchor="middle">reader</text><text class="box-sub" x="130.0" y="491" text-anchor="middle">content/sources</text></g><g data-k="a-plan"><rect class="b-adp" x="230" y="440" width="140" height="60" rx="8"/><text class="box-title" x="300.0" y="460" text-anchor="middle">File plan repo</text><text class="box-sub" x="300.0" y="477" text-anchor="middle">reads and writes</text><text class="box-sub" x="300.0" y="491" text-anchor="middle">bir-closure.json</text></g><g data-k="a-mem"><rect class="b-adp" x="400" y="440" width="140" height="60" rx="8"/><text class="box-title" x="470.0" y="460" text-anchor="middle">In-memory queue</text><text class="box-sub" x="470.0" y="477" text-anchor="middle">repository</text><text class="box-sub" x="470.0" y="491" text-anchor="middle">server-only</text></g><g data-k="a-clock"><rect class="b-adp" x="570" y="440" width="140" height="60" rx="8"/><text class="box-title" x="640.0" y="460" text-anchor="middle">System clock</text><text class="box-sub" x="640.0" y="477" text-anchor="middle">crypto.randomUUID</text><text class="box-sub" x="640.0" y="491" text-anchor="middle">product code</text></g><path data-k="x-src-l" class="arrow" d="M130,500 L130,560" marker-end="url(#a1-ah)"/><text data-k="x-src-l" class="arrow-label" x="138" y="534">read</text><path data-k="x-plan-l" class="arrow" d="M300,500 L300,560" marker-end="url(#a1-ah)"/><text data-k="x-plan-l" class="arrow-label" x="308" y="534">read / write</text><path data-k="x-mem-l" class="arrow" d="M470,500 L470,560" marker-end="url(#a1-ah)"/><text data-k="x-mem-l" class="arrow-label" x="478" y="534">array on globalThis</text><g data-k="x-src"><rect class="b-ent" x="60" y="560" width="140" height="55" rx="10"/><text class="box-title" x="130.0" y="583" text-anchor="middle">Source excerpts</text><text class="box-sub" x="130.0" y="600" text-anchor="middle">content/sources/*.txt</text></g><g data-k="x-plan"><rect class="b-ent" x="230" y="560" width="140" height="55" rx="10"/><text class="box-title" x="300.0" y="583" text-anchor="middle">Plan file</text><text class="box-sub" x="300.0" y="600" text-anchor="middle">bir-closure.json</text></g><g data-k="x-mem"><rect class="b-ent" x="400" y="560" width="140" height="55" rx="10"/><text class="box-title" x="470.0" y="583" text-anchor="middle">Server memory</text><text class="box-sub" x="470.0" y="600" text-anchor="middle">tickets, one day</text></g><g data-k="noext"><rect class="b-dom" x="570" y="560" width="310" height="55" rx="10"/><text class="box-title" x="725" y="583" text-anchor="middle">No external services</text><text class="box-sub" x="725" y="600" text-anchor="middle">no database · no AI · no hosting · no keys</text></g></g></svg>
+      </div>
+      <div class="legend">
+        <span><i class="dash"></i>Polling every 2 s through server actions, over the same Wi-Fi (<code>http://&lt;laptop-ip&gt;:3000</code>)</span>
+        <span><i class="sq"></i>Dashed grey box: pure domain rules (no IO) and the note that there are no external services</span>
+      </div>
+      <p class="note">Business rules never import <code>node:fs</code> or touch memory directly. ESLint allows <code>fs</code> only in <code>src/adapters/**</code> and <code>scripts/**</code>. No external services, API keys, or accounts are needed.</p>
+    </div>
+  </section>
+
+  <!-- 4 Journey -->
+  <section id="journey">
+    <h2>The core journey through the system</h2>
+    <p class="sub">PRD ref: <code>prd.md &gt; The Core Journey</code>. Choose a step to light up the pieces involved and see the files behind it. The rest of the diagram dims.</p>
+    <div class="card" id="flow">
+      <div class="diagram-wrap">
+        <svg class="arch" viewBox="0 0 970 650" role="img" aria-labelledby="j1-t j1-d"><title id="j1-t">Pila to Tapos system architecture</title><desc id="j1-d">Top to bottom: pages (her phone with localStorage, the staff counter on the laptop, the TV, the team edit screen) call server actions. Dashed arrows show the phone, counter and TV polling every 2 seconds through the getTicket and boardState server actions. Server actions call three services (team, plan, queue) next to a box of pure domain rules. Services use ports (SourceTexts, PlanRepository, QueueRepository, Clock and Ids). The composition root plugs in the adapters: a source texts reader, the file plan repository, the in-memory queue repository, and the system clock with random ids. These touch only files on the laptop and the server memory. There are no external services.</desc><defs><marker id="j1-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-m" d="M0,0 L10,5 L0,10 z"/></marker><marker id="j1-as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-s" d="M0,0 L10,5 L0,10 z"/></marker></defs><g transform="translate(50,0)"><text class="group-label" transform="translate(-38,77) rotate(-90)" text-anchor="middle">Pages</text><text class="group-label" transform="translate(-38,172) rotate(-90)" text-anchor="middle">Actions</text><text class="group-label" transform="translate(-38,255) rotate(-90)" text-anchor="middle">Services</text><text class="group-label" transform="translate(-38,342) rotate(-90)" text-anchor="middle">Ports</text><text class="group-label" transform="translate(-38,470) rotate(-90)" text-anchor="middle">Adapters</text><text class="group-label" transform="translate(-38,587) rotate(-90)" text-anchor="middle">Storage</text><g data-k="pg-phone"><rect class="b-phone" x="60" y="42" width="190" height="70" rx="10"/><text class="box-title" x="155.0" y="66" text-anchor="middle">Her phone</text><text class="box-sub" x="155.0" y="83" text-anchor="middle">/ · /plan · /join · /line</text><text class="box-sub" x="155.0" y="97" text-anchor="middle">localStorage: pila:v1</text></g><g data-k="pg-counter"><rect class="b-counter" x="270" y="42" width="190" height="70" rx="10"/><text class="box-title" x="365.0" y="66" text-anchor="middle">Laptop: staff</text><text class="box-sub" x="365.0" y="83" text-anchor="middle">/counter</text><text class="box-sub" x="365.0" y="97" text-anchor="middle">Call next · Done</text></g><g data-k="pg-tv"><rect class="b-tv" x="480" y="42" width="190" height="70" rx="10"/><text class="box-title" x="575.0" y="66" text-anchor="middle">Laptop or TV</text><text class="box-sub" x="575.0" y="83" text-anchor="middle">/tv</text><text class="box-sub" x="575.0" y="97" text-anchor="middle">panel · speech · QR code</text></g><g data-k="pg-team"><rect class="b-team" x="690" y="42" width="190" height="70" rx="10"/><text class="box-title" x="785.0" y="66" text-anchor="middle">Laptop: team</text><text class="box-sub" x="785.0" y="83" text-anchor="middle">/team</text><text class="box-sub" x="785.0" y="97" text-anchor="middle">passcode-protected edits</text></g><path data-k="l-ph" class="arrow" d="M130,112 L130,148" marker-end="url(#j1-ah)"/><path data-k="l-co" class="arrow" d="M365,112 L365,148" marker-end="url(#j1-ah)"/><path data-k="l-tv" class="arrow" d="M575,112 L575,148" marker-end="url(#j1-ah)"/><path data-k="l-te" class="arrow" d="M785,112 L785,148" marker-end="url(#j1-ah)"/><g data-k="poll"><path class="poll" d="M190,112 L190,148" marker-end="url(#j1-as)"/><path class="poll" d="M425,112 L425,148" marker-end="url(#j1-as)"/><path class="poll" d="M635,112 L635,148" marker-end="url(#j1-as)"/><text class="poll-label" x="205" y="134">getTicket · 2 s</text><text class="poll-label" x="440" y="134">boardState · 2 s</text><text class="poll-label" x="650" y="134">boardState · 2 s</text></g><g data-k="e-act"><rect class="b-ent" x="60" y="148" width="820" height="48" rx="10"/><text class="box-title" x="470" y="169" text-anchor="middle">Server actions: queue.ts · plan.ts · team.ts</text><text class="box-sub" x="470" y="185" text-anchor="middle">parse input, call one service method, map the Result</text></g><path data-k="la-team" class="arrow" d="M130,196 L130,225" marker-end="url(#j1-ah)"/><path data-k="la-plan" class="arrow" d="M300,196 L300,225" marker-end="url(#j1-ah)"/><path data-k="la-queue" class="arrow" d="M470,196 L470,225" marker-end="url(#j1-ah)"/><g data-k="s-team"><rect class="b-svc" x="60" y="225" width="140" height="60" rx="10"/><text class="box-title" x="130.0" y="248" text-anchor="middle">Team service</text><text class="box-sub" x="130.0" y="265" text-anchor="middle">citation required</text></g><g data-k="s-plan"><rect class="b-svc" x="230" y="225" width="140" height="60" rx="10"/><text class="box-title" x="300.0" y="248" text-anchor="middle">Plan service</text><text class="box-sub" x="300.0" y="265" text-anchor="middle">getPlan()</text></g><g data-k="s-queue"><rect class="b-svc" x="400" y="225" width="140" height="60" rx="10"/><text class="box-title" x="470.0" y="248" text-anchor="middle">Queue service</text><text class="box-sub" x="470.0" y="265" text-anchor="middle">issue · call · finish</text></g><g data-k="dom"><rect class="b-dom" x="740" y="225" width="140" height="60" rx="10"/><text class="box-title" x="810" y="245" text-anchor="middle">Domain</text><text class="box-sub" x="810" y="261" text-anchor="middle">checklist · plan diff</text><text class="box-sub" x="810" y="275" text-anchor="middle">working days · totals</text></g><path data-k="ls-src" class="arrow" d="M130,285 L130,320" marker-end="url(#j1-ah)"/><path data-k="ls-teamplan" class="arrow" d="M160,285 L260,320" marker-end="url(#j1-ah)"/><path data-k="ls-plan" class="arrow" d="M300,285 L300,320" marker-end="url(#j1-ah)"/><path data-k="ls-queue" class="arrow" d="M470,285 L470,320" marker-end="url(#j1-ah)"/><path data-k="ls-clock" class="arrow" d="M510,285 L610,320" marker-end="url(#j1-ah)"/><g data-k="p-src"><rect class="b-port" x="60" y="320" width="140" height="45" rx="8"/><text class="box-title" x="130.0" y="339" text-anchor="middle">SourceTexts</text><text class="box-sub" x="130.0" y="356" text-anchor="middle">get(sourceId)</text></g><g data-k="p-plan"><rect class="b-port" x="230" y="320" width="140" height="45" rx="8"/><text class="box-title" x="300.0" y="339" text-anchor="middle">PlanRepository</text><text class="box-sub" x="300.0" y="356" text-anchor="middle">plan + citations</text></g><g data-k="p-queue"><rect class="b-port" x="400" y="320" width="140" height="45" rx="8"/><text class="box-title" x="470.0" y="339" text-anchor="middle">QueueRepository</text><text class="box-sub" x="470.0" y="356" text-anchor="middle">tickets</text></g><g data-k="p-clock"><rect class="b-port" x="570" y="320" width="140" height="45" rx="8"/><text class="box-title" x="640.0" y="339" text-anchor="middle">Clock · Ids</text><text class="box-sub" x="640.0" y="356" text-anchor="middle">now() · uuid()</text></g><text data-k="pnote" class="box-sub" x="740" y="346">Ports: hand-written</text><text data-k="pnote" class="box-sub" x="740" y="360">contracts</text><path data-k="pm-src" class="arrow" d="M130,365 L130,385" marker-end="url(#j1-ah)"/><path data-k="pm-plan" class="arrow" d="M300,365 L300,385" marker-end="url(#j1-ah)"/><path data-k="pm-queue" class="arrow" d="M470,365 L470,385" marker-end="url(#j1-ah)"/><path data-k="pm-clock" class="arrow" d="M640,365 L640,385" marker-end="url(#j1-ah)"/><g data-k="band"><rect class="b-band" x="60" y="385" width="820" height="38" rx="8"/><text class="band-title" x="150" y="402">Composition root</text><text class="band-sub" x="150" y="416">builds the services; plugs in the adapters</text></g><path data-k="n-src" class="arrow" d="M130,423 L130,440" marker-end="url(#j1-ah)"/><path data-k="n-plan" class="arrow" d="M300,423 L300,440" marker-end="url(#j1-ah)"/><path data-k="n-queue" class="arrow" d="M470,423 L470,440" marker-end="url(#j1-ah)"/><path data-k="n-clock" class="arrow" d="M640,423 L640,440" marker-end="url(#j1-ah)"/><g data-k="a-src"><rect class="b-adp" x="60" y="440" width="140" height="60" rx="8"/><text class="box-title" x="130.0" y="460" text-anchor="middle">Source texts</text><text class="box-sub" x="130.0" y="477" text-anchor="middle">reader</text><text class="box-sub" x="130.0" y="491" text-anchor="middle">content/sources</text></g><g data-k="a-plan"><rect class="b-adp" x="230" y="440" width="140" height="60" rx="8"/><text class="box-title" x="300.0" y="460" text-anchor="middle">File plan repo</text><text class="box-sub" x="300.0" y="477" text-anchor="middle">reads and writes</text><text class="box-sub" x="300.0" y="491" text-anchor="middle">bir-closure.json</text></g><g data-k="a-mem"><rect class="b-adp" x="400" y="440" width="140" height="60" rx="8"/><text class="box-title" x="470.0" y="460" text-anchor="middle">In-memory queue</text><text class="box-sub" x="470.0" y="477" text-anchor="middle">repository</text><text class="box-sub" x="470.0" y="491" text-anchor="middle">server-only</text></g><g data-k="a-clock"><rect class="b-adp" x="570" y="440" width="140" height="60" rx="8"/><text class="box-title" x="640.0" y="460" text-anchor="middle">System clock</text><text class="box-sub" x="640.0" y="477" text-anchor="middle">crypto.randomUUID</text><text class="box-sub" x="640.0" y="491" text-anchor="middle">product code</text></g><path data-k="x-src-l" class="arrow" d="M130,500 L130,560" marker-end="url(#j1-ah)"/><text data-k="x-src-l" class="arrow-label" x="138" y="534">read</text><path data-k="x-plan-l" class="arrow" d="M300,500 L300,560" marker-end="url(#j1-ah)"/><text data-k="x-plan-l" class="arrow-label" x="308" y="534">read / write</text><path data-k="x-mem-l" class="arrow" d="M470,500 L470,560" marker-end="url(#j1-ah)"/><text data-k="x-mem-l" class="arrow-label" x="478" y="534">array on globalThis</text><g data-k="x-src"><rect class="b-ent" x="60" y="560" width="140" height="55" rx="10"/><text class="box-title" x="130.0" y="583" text-anchor="middle">Source excerpts</text><text class="box-sub" x="130.0" y="600" text-anchor="middle">content/sources/*.txt</text></g><g data-k="x-plan"><rect class="b-ent" x="230" y="560" width="140" height="55" rx="10"/><text class="box-title" x="300.0" y="583" text-anchor="middle">Plan file</text><text class="box-sub" x="300.0" y="600" text-anchor="middle">bir-closure.json</text></g><g data-k="x-mem"><rect class="b-ent" x="400" y="560" width="140" height="55" rx="10"/><text class="box-title" x="470.0" y="583" text-anchor="middle">Server memory</text><text class="box-sub" x="470.0" y="600" text-anchor="middle">tickets, one day</text></g><g data-k="noext"><rect class="b-dom" x="570" y="560" width="310" height="55" rx="10"/><text class="box-title" x="725" y="583" text-anchor="middle">No external services</text><text class="box-sub" x="725" y="600" text-anchor="middle">no database · no AI · no hosting · no keys</text></g></g></svg>
+      </div>
+      <div class="stepper" role="group" aria-label="Journey steps">
+        <button type="button" id="prev" aria-label="Previous step">‹ Prev</button>
+        <div class="dots" id="dots"></div>
+        <button type="button" id="next" aria-label="Next step">Next ›</button>
+        <button type="button" id="all" aria-label="Show all steps">Show all</button>
+      </div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+      <p class="note"><b>Behind the scenes:</b> <code>/team</code> → passcode → server actions → the <b>team service</b> validates "no citation, no save" → the plan repository writes the item back to <code>bir-closure.json</code> and bumps its revision.</p>
+    </div>
+  </section>
+
+  <!-- 5 Components -->
+  <section id="components">
+    <h2>Components</h2>
+    <p class="sub">Open an area to see what it does, which PRD heading it implements, and where the files live.</p>
+
+    <details>
+      <summary><span class="tag core">Core</span> Domain (pure rules)</summary>
+      <div class="body">
+        <div><p class="k">What it does</p>
+          <p>Types and pure functions with no IO: <code>Plan</code>, <code>Step</code>, <code>PlanDocument</code>, <code>Fee</code>, <code>Question</code>, <code>Citation</code>, <code>Ticket</code>, <code>Journey</code>, and <code>Result&lt;T, E&gt;</code>.</p>
+          <ul>
+            <li><code>checklistStatus(plan, ticks, answers)</code> returns <code>{ missing, ready }</code>. Hindi means not needed; Oo, Hindi ko alam, or no answer mean required.</li>
+            <li><code>addWorkingDays(date, n)</code> skips Saturdays and Sundays in Asia/Manila.</li>
+            <li><code>diffPlan(snapshot, plan)</code> returns <code>{ added, changed }</code> item ids, for the "Na-update" banner.</li>
+            <li><code>formatTicketNumber(letter, seq)</code> returns <code>B-001</code>.</li>
+            <li><code>validateCitations(plan, sources)</code> returns the list of problems: an item without a citation, or a <code>quote</code> that does not appear word for word in the cited source text. It backs "no citation, no save" and the content check.</li>
+            <li><code>totalVisitTime(journey)</code> sums both visits.</li>
+          </ul></div>
+        <div><p class="k">PRD ref</p><ul><li><code>prd.md &gt; Your Plan</code> (checklist)</li><li><code>prd.md &gt; Visit 1 Done and Coming Back</code> (working days)</li><li><code>prd.md &gt; Team Edit Screen</code> (plan diff)</li></ul>
+          <p class="k">Files</p><ul><li><code>src/domain/</code>: plan.ts, checklist.ts, queue.ts, journey.ts, working-days.ts, plan-diff.ts, citations.ts, result.ts, and <code>*.test.ts</code> for the pure rules</li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag core">Core</span> Ports (contracts)</summary>
+      <div class="body">
+        <div><p class="k">What it does (hand-written contracts)</p><ul>
+          <li><code>PlanRepository</code>: <code>getPlan(transactionId)</code>, <code>saveStep</code>, <code>saveDocument</code>, <code>saveFee</code>, <code>saveMeta</code>. Every save requires a citation and bumps the item's revision.</li>
+          <li><code>QueueRepository</code>: <code>issueTicket({ journeyId, visit, docsReady, issuedAt })</code>, <code>listWaiting(counterId)</code>, <code>getCurrent(counterId)</code>, <code>callNext(counterId, at)</code>, <code>finish(ticketId, at)</code>, <code>getTicket(id)</code>.</li>
+          <li><code>SourceTexts</code>: <code>get(sourceId)</code> returns the excerpt text (used by <code>validateCitations</code>).</li>
+          <li><code>Clock</code>: <code>now()</code>. <code>Ids</code>: <code>uuid()</code>.</li>
+        </ul></div>
+        <div><p class="k">PRD ref</p><ul><li>Contracts behind every PRD behavior; no single heading.</li></ul>
+          <p class="k">Files</p><ul><li><code>src/ports/</code>: plan-repository.ts, queue-repository.ts, source-texts.ts, clock.ts, ids.ts</li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag core">Core</span> Services</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><p>Factories that take ports and return functions. Types are <code>ReturnType&lt;typeof createX&gt;</code>.</p><ul>
+          <li><b>Plan service:</b> <code>getPlan()</code>. The questions and explanations come with the plan.</li>
+          <li><b>Queue service:</b> <code>issueTicket</code>, <code>callNext</code>, <code>finishVisit</code>, <code>getTicket</code>, <code>boardState</code> (current number plus waiting list). It refuses <code>callNext</code> on an empty list with <code>{ ok: false, error: "empty" }</code>.</li>
+          <li><b>Team service:</b> <code>checkPasscode</code>, plus <code>saveStep</code>, <code>saveDocument</code>, <code>saveFee</code>, <code>saveMeta</code>, each rejecting a missing citation (<code>citation_required</code>) or a quote not found in the source (<code>quote_not_in_source</code>).</li>
+        </ul></div>
+        <div><p class="k">PRD ref</p><ul>
+          <li>Plan: <code>prd.md &gt; Your Plan</code>, <code>prd.md &gt; Asking Questions (Magtanong)</code></li>
+          <li>Queue: <code>prd.md &gt; Getting a Number</code>, <code>prd.md &gt; Staff Counter</code>, <code>prd.md &gt; Being Called</code></li>
+          <li>Team: <code>prd.md &gt; Team Edit Screen</code></li></ul>
+          <p class="k">Files</p><ul><li><code>src/services/</code>: plan-service.ts, queue-service.ts, team-service.ts (plus <code>*.test.ts</code>)</li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag core">Core</span> Adapters</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><ul>
+          <li><b>File plan repository</b> (<code>server-only</code>): reads and writes <code>content/plan/bir-closure.json</code>, writing through a temp file and a rename so a crash cannot leave half a file. It is the only server code that imports <code>node:fs</code> (besides the sources reader and <code>scripts/</code>).</li>
+          <li><b>Source texts reader</b> (<code>server-only</code>): reads <code>content/sources/*.txt</code> plus <code>sources.json</code> (title, URL, effective date).</li>
+          <li><b>In-memory queue repository</b> (<code>server-only</code>): product code. An array of tickets kept on <code>globalThis</code>, so it survives hot reload. Numbers restart at B-001 each day (Asia/Manila) and on a server restart.</li>
+          <li><b>Server actions</b> are adapters too: parse input, call exactly one service method, and map the <code>Result</code> to a plain serializable response. <code>getTicket</code> and <code>boardState</code> are what the screens poll.</li>
+        </ul></div>
+        <div><p class="k">Files</p><ul>
+          <li><code>src/adapters/file/</code>: plan-repository.ts, source-texts.ts</li>
+          <li><code>src/adapters/memory/queue-repository.ts</code></li>
+          <li><code>src/app/actions/</code>: queue.ts, plan.ts, team.ts</li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag core">Core</span> Composition root</summary>
+      <div class="body">
+        <div><p class="k">What it does</p>
+          <p><code>src/composition-root.ts</code> (<code>server-only</code>) builds the services with the file plan repository, the source texts reader, the in-memory queue repository, the system clock, and <code>crypto.randomUUID</code>, and caches them on <code>globalThis</code>. Only server actions and server components call it. Domain and service tests call <code>createXService</code> with plain object fakes.</p></div>
+        <div><p class="k">Files</p><ul><li><code>src/composition-root.ts</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> Customer app screens: Screen 1, Your plan, Join, In line</summary>
+      <div class="body">
+        <div>
+          <p class="k">Screen 1</p><p>One choice card linking to <code>/plan</code>. PRD: <code>prd.md &gt; Choosing the Transaction</code>. Files: <code>src/app/page.tsx</code>, <code>src/app/components/</code>.</p>
+          <p class="k">Your plan</p>
+          <p><code>src/app/plan/page.tsx</code> (a server component fetches the plan) plus client components in <code>src/app/plan/components/</code>. PRD: <code>prd.md &gt; Your Plan</code>.</p>
+          <ul>
+            <li><code>PlanSummary</code>: step count, amount (₱30, plus "taxes or penalties if BIR finds any: no official amount listed"), "about 3 working days," each with a citation chip.</li>
+            <li><code>PathLine</code> (shared): the three steps. The waiting step shows the 30-day warning and the cited relief note when the unfiled-returns answer is Oo or Hindi ko alam.</li>
+            <li><code>Checklist</code>, <code>ChecklistItem</code>, <code>SituationItem</code> (RadioGroup: Oo, Hindi, Hindi ko alam), plus <code>MissingWarning</code> ("Kulang pa").</li>
+            <li><code>LastChecked</code>, <code>UpdatedBanner</code> ("Na-update ang requirements" plus highlights).</li>
+            <li><code>GetNumberButton</code>, which opens <code>ScanInstructions</code> ("I-scan ang QR sa TV gamit ang camera ng phone mo," plus a "Bumalik" button).</li>
+            <li><code>ResetLink</code> ("I-reset").</li>
+          </ul>
+        </div>
+        <div>
+          <p class="k">Join (QR target)</p>
+          <p><code>src/app/join/page.tsx</code> is a client page. It reads the journey from <code>localStorage</code>. PRD: <code>prd.md &gt; Getting a Number</code>.</p>
+          <ul>
+            <li><b>Not ready:</b> redirect to <code>/</code> (Screen 1).</li>
+            <li><b>Ready for visit 1:</b> <code>issueTicket(visit 1)</code>.</li>
+            <li><b>Visit 1 done and the return date reached, or <code>demoSkip</code> on:</b> <code>issueTicket(visit 2)</code>.</li>
+            <li><b>Visit 2 locked:</b> go to <code>/line</code>, which shows "Balik ka sa [date]."</li>
+          </ul>
+          <p>On success it stores the ticket id and goes to <code>/line</code>.</p>
+          <p class="k">In line</p>
+          <p><code>src/app/line/page.tsx</code> plus <code>src/app/line/components/</code>. PRD: <code>prd.md &gt; Being Called</code>, <code>prd.md &gt; Visit 1 Done and Coming Back</code>, <code>prd.md &gt; States and Boundaries</code>.</p>
+          <ul>
+            <li><code>TicketStub</code> and <code>PathLine</code> (current step highlighted), with "All documents ready ✓."</li>
+            <li><code>CalledOverlay</code> ("Ikaw na! [counter]" full-screen; plays a chime if sound alerts are on).</li>
+            <li><code>SoundPrompt</code> (the one-time "Tap to turn on sound alerts," which unlocks audio).</li>
+            <li><code>VisitDone</code> ("Visit 1 done ✓. Balik ka sa [date]. Dalhin: ₱30" plus <code>DemoSkipSwitch</code>, labeled "Demo: lumipas ang 3 working days").</li>
+            <li><code>TaposNa</code> ("Tapos na!" with the total time).</li>
+            <li><code>OfflineBanner</code> ("Offline: huling update HH:MM," driven by <code>navigator.onLine</code> and the last successful poll).</li>
+          </ul>
+          <p><code>usePoll(getTicket, 2000)</code> polls every 2 s, and immediately on load, on reconnect, and when the page becomes visible again. If the ticket is already <code>called</code>, it shows "Tinawag ka na sa [counter]."</p>
+        </div>
+      </div>
+    </details>
+
+    <details id="magtanong">
+      <summary><span class="tag phone">Phone</span> Magtanong (pre-written answers)</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><p>In <code>src/app/plan/components/</code>. PRD: <code>prd.md &gt; Asking Questions (Magtanong)</code>.</p><ul>
+          <li><code>AskSheet</code> (shadcn Sheet from the bottom): the question list. Tapping one shows its answer, and a "Mga tanong" back button returns to the list.</li>
+          <li><code>AnswerCard</code> (normal style): the answer text, then each citation as a quoted passage with its source title and locator, linking to the official PDF.</li>
+          <li><code>NotInSourceCard</code> (grey, info icon): "Hindi ito direktang sinasagot ng opisyal na source," the related quote labeled "Related, not a direct answer," who to ask, and "Gabay lang ito, hindi legal o tax advice."</li>
+          <li><code>DocumentExplainer</code>: the "?" on a document opens the same sheet showing that document's explanation and citation. The "Hindi ko alam" nudge opens it too.</li></ul>
+          <p>The sheet overlays the page and does not navigate, so the scroll position is kept. The questions and answers are not generated at runtime: they are read from the plan file, already loaded with the plan. There is no free-text box and no AI call.</p></div>
+        <div><p class="k">Files</p><ul><li><code>src/app/plan/components/</code>: AskSheet, AnswerCard, NotInSourceCard, DocumentExplainer</li><li><code>content/plan/bir-closure.json</code> (<code>questions</code>)</li><li><code>scripts/check-content.ts</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag counter">Counter</span> Staff counter</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><ul>
+          <li><code>CounterHeader</code> (the counter's name).</li>
+          <li><code>WaitingList</code> (rows: number, time waiting, visit badge "Submit" or "Pay &amp; claim," and "Documents ready ✓"; no names; "Walang naghihintay" when empty).</li>
+          <li><code>CallNextButton</code> (does nothing when the list is empty).</li>
+          <li><code>CurrentTicket</code> (number plus "Done").</li></ul>
+          <p>It polls <code>boardState</code> every 2 s. <b>Not protected</b> (see Decisions).</p></div>
+        <div><p class="k">PRD ref</p><ul><li><code>prd.md &gt; Staff Counter</code></li></ul>
+          <p class="k">Files</p><ul><li><code>src/app/counter/page.tsx</code></li><li><code>src/app/counter/components/</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tv">TV</span> TV display</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><ul>
+          <li><code>StartTvOverlay</code> ("Simulan ang TV": the one tap that unlocks speech and audio).</li>
+          <li><code>CounterPanel</code> (the current number in huge yellow; flashes for 3 s on a new call).</li>
+          <li><code>JoinQr</code> (<code>QRCodeSVG</code> of <code>${NEXT_PUBLIC_APP_URL}/join?c=registration</code>, with the address printed small underneath).</li>
+          <li><code>Announcer</code>, which calls <code>speak()</code> when the polled current ticket changes.</li></ul>
+          <p>Dark theme.</p></div>
+        <div><p class="k">PRD ref</p><ul><li><code>prd.md &gt; TV Display</code></li></ul>
+          <p class="k">Files</p><ul><li><code>src/app/tv/page.tsx</code></li><li><code>src/app/tv/components/</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tv">TV</span> Speech</summary>
+      <div class="body">
+        <div><p class="k">What it does</p>
+          <p><code>speak(ticketNumber, counterSpeechLabel)</code>:</p>
+          <ol>
+            <li>If <code>speechSynthesis.getVoices()</code> has a voice whose <code>lang</code> starts with <code>fil</code> or <code>tl</code>, speak "Numero B, zero, zero, isa, [counter]" (exact wording settled in the voice check).</li>
+            <li>Otherwise play clips in sequence from <code>public/audio/</code> (<code>numero.mp3</code>, <code>letter-b.mp3</code>, <code>digit-0.mp3</code> … <code>digit-9.mp3</code>, <code>counter.mp3</code>), recorded by the team.</li>
+          </ol>
+          <p><code>src/app/tv/voice-check/page.tsx</code> lists the available voices and test-speaks the call: <b>built in slice 1</b> (see Decisions and Open Issues).</p></div>
+        <div><p class="k">Files</p><ul><li><code>src/lib/speech.ts</code></li><li><code>src/app/tv/voice-check/page.tsx</code></li><li><code>public/audio/</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag team">Team</span> Team edit screen (built last)</summary>
+      <div class="body">
+        <div><p class="k">What it does</p><ul>
+          <li><code>PasscodeForm</code>: server action <code>unlockTeam(passcode)</code> does a timing-safe compare with <code>TEAM_PASSCODE</code> and sets an httpOnly, signed (HMAC with <code>TEAM_COOKIE_SECRET</code>) cookie for 8 hours.</li>
+          <li><code>StepEditor</code>, <code>DocumentEditor</code>, <code>FeeEditor</code>, <code>MetaEditor</code> (last-checked date, processing time). Each form has a <b>required</b> citation (source picker plus locator such as "Sec. 4(1)").</li></ul>
+          <p>Server actions call the team service, which writes the plan file. The common questions and answers are edited in the data file directly (<code>prd.md &gt; Deferred From the POC</code>).</p></div>
+        <div><p class="k">PRD ref</p><ul><li><code>prd.md &gt; Team Edit Screen</code></li></ul>
+          <p class="k">Files</p><ul><li><code>src/app/team/page.tsx</code></li><li><code>src/app/team/components/</code></li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> Phone storage</summary>
+      <div class="body">
+        <div><p class="k">What it does</p>
+          <p>A typed wrapper around <code>localStorage</code> key <code>pila:v1</code>. Every read and write goes through <code>try/catch</code>, and it falls back to in-memory if storage is blocked (private mode). See Data model.</p></div>
+        <div><p class="k">Files</p><ul><li><code>src/lib/phone-storage.ts</code></li></ul></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 6 Data -->
+  <section id="data">
+    <h2>Data model</h2>
+    <h3>Plan file <code>content/plan/bir-closure.json</code> <span class="badge draft">Draft — learner reviews in the build</span></h3>
+    <p class="sub">The single source of the plan. You review its wording in slice 1 and slice 2, before the demo.</p>
+<pre><code>{
+  transaction: { id: "bir-closure-freelancer", title, processingTimeLabel: "about 3 working days",
+                 processingCitation: Citation, lastCheckedOn: "2026-10-22", revision: number },
+  counter: { id: "registration", label: "Registration Officer counter", speechLabel: string },
+  steps:     { id, position, name, kind: "visit" | "wait", visitNo?: 1 | 2, waitWorkingDays?: 3,
+               citation: Citation, revision }[],
+  documents: { id, position, name, whereToGet, requirement: "required" | "situation",
+               situationQuestion?: string, notNeededReason?: string,
+               explanation: string, citation: Citation, revision }[],
+  fees:      { id, label, amountPhp: number | null, visitNo, citation: Citation, revision }[],
+  questions: { id, question: string, kind: "direct" | "not_in_source",
+               answer: string,                    // direct: the plain-language answer
+               citations: Citation[],             // direct: at least one
+               related?: Citation[],              // not_in_source: the closest cited passage(s)
+               whoToAsk?: string }[]              // not_in_source: e.g. "RDO – Client Support Section"
+}
+// Citation = { sourceId: "rmc-47-2026" | "cc-28a" | "rmc-84-2026", locator: string, quote: string }
+//   quote must appear word for word in content/sources/&lt;sourceId&gt;.txt</code></pre>
+    <p class="k" style="margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Steps</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>Step</th><th>Citation</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>"Visit 1: Submit," at the Registration Officer counter</td><td>CC 28-A, step 1</td></tr>
+        <tr><td>2</td><td>"BIR checks your records," a wait of 3 working days</td><td>RMC 47-2026 Sec. 6 and CC 28-A "Total processing time: 3 days"</td></tr>
+        <tr><td>3</td><td>"Visit 2: Pay ₱30 &amp; claim the tax clearance"</td><td>CC 28-A, steps 11–12</td></tr>
+      </tbody>
+    </table></div>
+    <p class="k" style="margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Documents</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Document</th><th>Requirement</th><th>Where to get it</th><th>Citation</th></tr></thead>
+      <tbody>
+        <tr><td>BIR Form 1905 (2 original copies)</td><td>Required</td><td>RDO Client Support Section, or download from bir.gov.ph</td><td>RMC 47-2026 Sec. 4(1)</td></tr>
+        <tr><td>Original COR / eCOR (Form 2303)</td><td>Situation: "Nasa iyo pa ba ang original COR mo?" (Lost COR handling is not in the sources, so "Hindi" routes to the RDO and the question nudges Magtanong)</td><td></td><td>RMC 47-2026 Sec. 4(4)(a)</td></tr>
+        <tr><td>Unused invoices / receipts and their inventory</td><td>Situation: "May natira ka pang hindi nagamit na invoices o resibo?"</td><td></td><td>RMC 47-2026 Sec. 4(3)</td></tr>
+        <tr><td>Other BIR permits (Authority to Print, Notice to Issue Invoice, CRM/POS permit, EIS certificate)</td><td>Situation: "May iba ka pang BIR permit (hal. Authority to Print)?"</td><td></td><td>RMC 47-2026 Sec. 4(4)(b–e)</td></tr>
+        <tr><td>Ending inventory list</td><td>Situation: "VAT-registered ka ba?" Hindi gives "Hindi kailangan sa iyo: para lang sa VAT-registered"</td><td></td><td>RMC 47-2026 Sec. 4(2)</td></tr>
+        <tr><td>Notarized SPA plus IDs</td><td>Situation: "May ibang magpa-file para sa iyo?"</td><td></td><td>RMC 47-2026 Sec. 4(5)(a)</td></tr>
+        <tr><td>Final/short-period returns filed (zero returns for no-activity periods)</td><td>Situation: "May hindi ka pa na-file na returns?" This drives the path warning and relief note</td><td></td><td>RMC 47-2026 Sec. 5; relief: RMC 84-2026</td></tr>
+      </tbody>
+    </table></div>
+    <p class="k" style="margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Fees</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Item</th><th>Amount</th><th>Citation</th></tr></thead>
+      <tbody>
+        <tr><td>Documentary stamp, visit 2</td><td>₱30</td><td>CC 28-A step 11</td></tr>
+        <tr><td>"Taxes or penalties, if BIR finds any"</td><td>null: the app says "no official amount listed"</td><td>RMC 47-2026 Sec. 6</td></tr>
+      </tbody>
+    </table></div>
+    <h3 style="margin-top:18px">Common questions (draft, 6–8 in Taglish)</h3>
+    <p class="sub">Drafted from the research file in slice 2; you edit the wording. They include:</p>
+    <ul>
+      <li>Anong form ang gagamitin?</li>
+      <li>Magkano ang babayaran?</li>
+      <li>Gaano katagal?</li>
+      <li>Kailangan ko ba ng ending inventory?</li>
+      <li>Ano ang gagawin sa natirang resibo?</li>
+      <li>May deadline ba? This one is also <code>not_in_source</code>: no official deadline was found.</li>
+      <li><b>May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?</b> This one is <code>not_in_source</code>: no case-specific amount exists. Its related passages are RMC 47-2026 Sec. 6 (penalties stop accruing after submission) and RMC 84-2026 (the one-time relief program until 31 Dec 2026), and who to ask is the RDO.</li>
+    </ul>
+
+    <h3 style="margin-top:22px">Queue (server memory)</h3>
+    <p><code>tickets: { id, day ("YYYY-MM-DD", Asia/Manila), seq, number ("B-001"), journeyId, visitNo, counterId, docsReady, status: "waiting" | "called" | "done", issuedAt, calledAt?, doneAt? }[]</code>, held on <code>globalThis</code>. There is no personal data. A server restart clears it.</p>
+
+    <h3 style="margin-top:22px">Her phone (<code>localStorage</code> key <code>pila:v1</code>)</h3>
+<pre><code>{
+  journeyId: string,                  // uuid, created on first plan visit
+  ticks: Record&lt;docId, true&gt;,
+  answers: Record&lt;docId, "oo" | "hindi" | "hindi_ko_alam"&gt;,
+  seen: { revision: number, items: Record&lt;itemId, number&gt; },  // for "Na-update"
+  visits: { 1?: { ticketId, issuedAt, doneAt? }, 2?: { ticketId, issuedAt, doneAt? } },
+  demoSkip: boolean,
+  soundOn: boolean
+}</code></pre>
+    <div class="cardgrid">
+      <div class="card"><h3>When she leaves and comes back</h3><ul>
+        <li>Ticks, answers, and visits stay until "Tapos na!" (which clears ticks and answers) or "I-reset."</li>
+        <li>The ticket's live status always comes from the server.</li>
+        <li>If the server was restarted and her ticket no longer exists, <code>/line</code> says "Hindi na makita ang number mo. Kumuha ulit." and unlocks a new scan.</li>
+        <li>After a plan change, ticks are kept for unchanged documents and dropped for changed ones, and new documents start unticked.</li></ul></div>
+      <div class="card"><h3>Server-side state on the TV and counter</h3><p>None of their own. They poll <code>boardState</code> every 2 s, and the queue they read lives in the server's memory.</p></div>
+    </div>
+  </section>
+
+  <!-- 7 Files -->
+  <section id="files">
+    <h2>File structure</h2>
+    <p class="sub">The annotated project tree. Open or close it as needed.</p>
+    <details open>
+      <summary>pila-to-tapos/</summary>
+      <div class="body one" style="padding-top:0">
+<pre><code>pila-to-tapos/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx                 # Atkinson Hyperlegible, theme tokens, &lt;html lang="fil"&gt;
+│   │   ├── globals.css                # color tokens (Look and Feel)
+│   │   ├── page.tsx                   # Screen 1 (composition only)
+│   │   ├── components/                # Screen 1 pieces + index.ts
+│   │   ├── plan/
+│   │   │   ├── page.tsx               # Your plan (server component fetches plan)
+│   │   │   └── components/            # PlanSummary, Checklist, ChecklistItem, SituationItem, MissingWarning,
+│   │   │                              # UpdatedBanner, LastChecked, GetNumberButton, ScanInstructions, ResetLink,
+│   │   │                              # AskSheet, AnswerCard, NotInSourceCard, DocumentExplainer + index.ts
+│   │   ├── join/page.tsx              # QR target: issue visit 1/2 number or send to Screen 1
+│   │   ├── line/
+│   │   │   ├── page.tsx               # In line
+│   │   │   └── components/            # TicketStub, CalledOverlay, SoundPrompt, VisitDone,
+│   │   │                              # DemoSkipSwitch, TaposNa, OfflineBanner + index.ts
+│   │   ├── counter/
+│   │   │   ├── page.tsx               # staff counter
+│   │   │   └── components/            # CounterHeader, WaitingList, CallNextButton, CurrentTicket + index.ts
+│   │   ├── tv/
+│   │   │   ├── page.tsx               # TV
+│   │   │   ├── voice-check/page.tsx   # slice 1: list voices, test the call
+│   │   │   └── components/            # StartTvOverlay, CounterPanel, JoinQr, Announcer + index.ts
+│   │   ├── team/
+│   │   │   ├── page.tsx               # passcode + editors
+│   │   │   └── components/            # PasscodeForm, StepEditor, DocumentEditor, FeeEditor, MetaEditor + index.ts
+│   │   └── actions/                   # server actions (adapters): queue.ts, plan.ts, team.ts
+│   ├── components/
+│   │   ├── ui/                        # shadcn primitives + stack.tsx, inline.tsx, grid.tsx, container.tsx + index.ts
+│   │   ├── path-line/                 # PathLine (used by /plan and /line) + index.ts
+│   │   └── index.ts
+│   ├── domain/                        # plan.ts, checklist.ts, queue.ts, journey.ts, working-days.ts,
+│   │   │                              # plan-diff.ts, citations.ts, result.ts  (pure, no IO)
+│   │   └── *.test.ts                  # node:test files for the pure rules
+│   ├── ports/                         # plan-repository.ts, queue-repository.ts, source-texts.ts, clock.ts, ids.ts
+│   ├── services/                      # plan-service.ts, queue-service.ts, team-service.ts (+ *.test.ts)
+│   ├── adapters/
+│   │   ├── file/                      # server-only: plan-repository.ts (reads/writes the plan file), source-texts.ts
+│   │   └── memory/                    # server-only: queue-repository.ts (product code)
+│   ├── composition-root.ts            # server-only; builds services; cached on globalThis
+│   └── lib/
+│       ├── phone-storage.ts           # typed localStorage journey
+│       ├── use-poll.ts                # poll a server action every 2 s (+ on focus/online)
+│       ├── speech.ts                  # speechSynthesis or clips
+│       └── utils.ts                   # shadcn cn()
+├── content/
+│   ├── sources/                       # rmc-47-2026.txt, cc-28a.txt, rmc-84-2026.txt, sources.json
+│   └── plan/bir-closure.json          # the plan, questions and answers, all with citations
+├── scripts/check-content.ts           # npm run check:content — validateCitations over the plan file
+├── public/audio/                      # fallback clips (only if no Filipino voice)
+├── devpost/                           # planning docs + research (learner-profile.md is git-ignored)
+├── .env.example
+├── eslint.config.mjs                  # next config + @shadcn/lint + no-restricted-imports (layering)
+├── components.json                    # shadcn
+├── package.json                       # scripts: dev, dev:lan, build, lint, typecheck, test, check:content
+└── README.md                          # what it is, how to run, how to demo</code></pre>
+      </div>
+    </details>
+    <p class="note"><b>Layering rule (ESLint <code>no-restricted-imports</code>):</b> <code>node:fs</code> and <code>fs</code> are allowed only in <code>src/adapters/**</code> and <code>scripts/**</code>. <code>src/domain/**</code> may not import from <code>ports</code>, <code>services</code>, <code>adapters</code>, <code>app</code>, or React. <code>src/services/**</code> may import only <code>domain</code> and <code>ports</code>.</p>
+  </section>
+
+  <!-- 8 Stack / runs / look -->
+  <section id="stack">
+    <h2>Stack</h2>
+    <p class="sub">All learner-selected unless marked <i>derived</i>. Versions are as of 2026-10-22 (<code>npm view</code>). <code>create-next-app</code> and the shadcn CLI pick compatible versions at setup.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Piece</th><th>Choice</th><th>Version</th><th>Why</th><th>Docs</th></tr></thead>
+      <tbody>
+        <tr><td>Framework</td><td>Next.js (App Router) + React</td><td>next 16.4.x, react 19.3.x</td><td>Your familiar stack; server actions keep the server code small</td><td><a href="https://nextjs.org/docs">nextjs.org/docs</a></td></tr>
+        <tr><td>Language</td><td>TypeScript</td><td>7.0.x</td><td>Familiar</td><td><a href="https://www.typescriptlang.org/docs/">typescriptlang.org/docs</a></td></tr>
+        <tr><td>Styling</td><td>Tailwind CSS + shadcn/ui</td><td>tailwindcss 4.3.x, shadcn CLI 4.22.x</td><td>Familiar; accessible primitives</td><td><a href="https://tailwindcss.com/docs">tailwindcss.com/docs</a>, <a href="https://ui.shadcn.com/docs">ui.shadcn.com/docs</a></td></tr>
+        <tr><td>Lint</td><td>ESLint + <code>@shadcn/lint</code> (<code>shadcn/no-restyle</code>) + <code>no-restricted-imports</code> for layering</td><td>eslint 10.x, @shadcn/lint 0.2.x</td><td><i>Derived</i> from your global conventions</td><td><a href="https://github.com/shadcn-ui/lint/blob/main/SETUP.md">shadcn-ui/lint SETUP</a></td></tr>
+        <tr><td>Live updates</td><td>Polling every 2 s through server actions</td><td>built-in</td><td>Laptop-only, so no realtime service is needed</td><td><a href="https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations">Server actions</a></td></tr>
+        <tr><td>Speech</td><td>Browser <code>speechSynthesis</code> (Web Speech API), with recorded clips as fallback</td><td>built-in</td><td>No service or key</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis">MDN SpeechSynthesis</a></td></tr>
+        <tr><td>QR display</td><td><code>qrcode.react</code> (<code>QRCodeSVG</code>)</td><td>4.2.x</td><td>Small and stable</td><td><a href="https://github.com/zpao/qrcode.react">zpao/qrcode.react</a></td></tr>
+        <tr><td>Tests (domain only)</td><td>Node's built-in test runner via <code>tsx</code></td><td>node 22+, tsx</td><td><i>Derived</i>: no new test framework</td><td><a href="https://nodejs.org/api/test.html">nodejs.org/api/test</a></td></tr>
+        <tr><td>Fonts</td><td>Atkinson Hyperlegible via <code>next/font/google</code></td><td>—</td><td>From <code>prd.md &gt; Look and Feel</code></td><td><a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible">Google Fonts</a></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">No external services, API keys, or accounts are needed.</p>
+    <h3 style="margin-top:18px">External services and dependencies</h3>
+    <div class="cardgrid">
+      <div class="card"><h3>External services</h3><p>None at runtime: no APIs, databases, hosting, or keys.</p></div>
+      <div class="card"><h3>npm packages</h3><p><code>next</code>, <code>react</code>, <code>react-dom</code>, <code>typescript</code>, <code>tailwindcss</code>, shadcn (CLI) + <code>class-variance-authority</code> + Radix primitives (added by shadcn), <code>qrcode.react</code>, <code>server-only</code>, <code>eslint</code>, <code>@shadcn/lint</code>, <code>@typescript-eslint/parser</code>, and <code>tsx</code> (to run tests and scripts).</p></div>
+      <div class="card" style="grid-column: 1 / -1"><h3>The official sources</h3><p>Cited by URL in <code>sources.json</code> (from the research file):</p><ul>
+        <li>RMC 47-2026: <a href="https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2047-2026.pdf">RMC No. 47-2026</a> (<a href="https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2047-2026%20Digest.pdf">digest</a>)</li>
+        <li>Citizen's Charter 2026, entry 28-A: <a href="https://bir-cdn.bir.gov.ph/BIR/pdf/BIR%20Citizen's%20Charter%20(2026%20Edition)%20final.pdf">BIR Citizen's Charter (2026 Edition)</a></li>
+        <li>RMC 84-2026 digest: <a href="https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2084-2026%20Digest.pdf">RMC No. 84-2026 Digest</a></li></ul></div>
+    </div>
+  </section>
+
+  <section id="runs">
+    <h2>Where it runs and how someone tries it</h2>
+    <p class="sub"><b>Environment:</b> Node.js 22 LTS or newer (this laptop has 24). A phone on the <b>same Wi-Fi</b> as the laptop. Public or office Wi-Fi often blocks devices from seeing each other; a phone hotspot that the laptop joins always works.</p>
+    <h3><code>.env.example</code> (committed, with no values)</h3>
+<pre><code>TEAM_PASSCODE=
+TEAM_COOKIE_SECRET=
+NEXT_PUBLIC_APP_URL=http://localhost:3000   # set to http://&lt;laptop-ip&gt;:3000 so the TV's QR code works from a phone</code></pre>
+    <p class="note">Real values go in <code>.env.local</code> (git-ignored). Never paste them into chat.</p>
+    <div class="cardgrid" style="margin-top:12px">
+      <div class="card"><h3>Run on the laptop only</h3>
+<pre><code>npm install
+npm run dev</code></pre>
+        <p>Open <code>http://localhost:3000</code> (phone view; use the browser's device toolbar), <code>/counter</code>, <code>/tv</code>, and <code>/team</code>. On the laptop, opening <code>http://localhost:3000/join?c=registration</code> in the phone-view tab does the same thing as scanning.</p></div>
+      <div class="card"><h3>Run with a real phone</h3>
+        <ol>
+          <li>Find the laptop's Wi-Fi address with <code>ipconfig getifaddr en0</code>.</li>
+          <li>Set <code>NEXT_PUBLIC_APP_URL=http://&lt;that-address&gt;:3000</code> in <code>.env.local</code>.</li>
+          <li>Start the server listening on the network with <code>npm run dev:lan</code>, which runs <code>next dev -H 0.0.0.0</code>. Allow macOS's "accept incoming connections" prompt.</li>
+          <li>On the phone, open <code>http://&lt;that-address&gt;:3000</code>, or scan the TV's QR code with the phone's camera.</li>
+        </ol></div>
+      <div class="card"><h3>Reset between demo takes</h3>
+        <p>Restart the server to clear the queue. On the phone, use the "I-reset" link at the bottom of the plan to clear the ticks and the journey.</p></div>
+      <div class="card"><h3>Deployment</h3>
+        <p>Not planned (<code>prd.md &gt; Deferred From the POC</code>). It is optional for the hackathon.</p></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>Recording the demo video (about 1 minute)</h3>
+      <p>The laptop screen shows <code>/counter</code> and <code>/tv</code> side by side. A real phone opens the laptop's address and is screen-recorded (or filmed) next to it.</p>
+      <ol>
+        <li>Plan: open Magtanong, tap the penalty question, and see the grey card with the cited relief-program note.</li>
+        <li>Leave one document unticked and see "Kulang pa."</li>
+        <li>Tick it, then scan the TV's QR code with the phone's camera to get B-001.</li>
+        <li>"Call next": the TV speaks and the phone shows "Ikaw na!"</li>
+        <li>"Done": the phone shows "Balik ka sa [date]."</li>
+        <li>Demo switch, then the visit 2 number, then call, then "Done": "Tapos na!"</li>
+      </ol>
+      <p class="note">The submission needs the video and the public GitHub repository.</p>
+    </div>
+  </section>
+
+  <section id="look">
+    <h2>Look and feel</h2>
+    <p class="sub">From <code>prd.md &gt; Look and Feel</code> and <code>scope.md &gt; Inspiration &amp; Identity</code>. Tokens are CSS variables in <code>src/app/globals.css</code>, mapped to shadcn theme variables; exact values can be tuned. Every text and background pair must meet WCAG AA contrast (4.5:1).</p>
+    <div class="sw-grid">
+      <div class="swatch"><div class="chip" style="background:#FAF6EE;color:#14213D;border-bottom:1px solid #e6dfcf">Aa</div><div class="meta"><b><code>--background</code> #FAF6EE</b><span>warm off-white, like a paper form</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#14213D;color:#FAF6EE">Aa</div><div class="meta"><b><code>--foreground</code> #14213D</b><span>deep navy</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFD21F;color:#14213D">B-014</div><div class="meta"><b><code>--accent-turn</code> #FFD21F</b><span>jeepney yellow: only the number and "your turn" moments, always with navy text</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#D9F2E1;color:#1E7A3C">Ready ✓</div><div class="meta"><b><code>--ready</code> #1E7A3C on #D9F2E1</b><span>"ready ✓" only</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFE1D6;color:#A3330F">Kulang pa</div><div class="meta"><b><code>--missing</code> #A3330F on #FFE1D6</b><span>"Kulang pa" only</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#EEF0F3;color:#475066">Not in source</div><div class="meta"><b><code>--muted-card</code> #EEF0F3, text #475066</b><span>the grey "not in the source" card</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#0E1525;color:#FFD21F">B-014</div><div class="meta"><b><code>--tv-bg</code> #0E1525</b><span>TV background; numbers in <code>--accent-turn</code></span></div></div>
+    </div>
+    <div class="typesample">
+      <div class="big"><span>B-014</span></div>
+      <div class="body18">Atkinson Hyperlegible (400 and 700) for everything. Phone body text is 18px minimum. 0 O 1 l: check that these look distinct.</div>
+      <div class="hint">The number is 700 at about 4rem on the phone and <code>clamp(6rem, 18vw, 16rem)</code> on the TV. Falls back to the system font if Atkinson cannot load.</div>
+    </div>
+    <div class="cardgrid" style="margin-top:12px">
+      <div class="card"><h3>Route signboard</h3><p><code>PathLine</code> renders steps like a jeepney signboard: bold, high contrast, arrows between steps ("Visit 1: Submit → BIR checks (3 working days) → Visit 2: Pay ₱30 &amp; claim").</p></div>
+      <div class="card"><h3>Ticket stub</h3><p><code>TicketStub</code> shows the number on a yellow stub with a dashed tear line, and the step and counter beside it.</p></div>
+      <div class="card"><h3>Density and tone</h3><p>Spacious and calm, one column on the phone, large tap targets (48px minimum). Plain Taglish exactly as written in the PRD, like a helpful ate or kuya at the info desk.</p></div>
+      <div class="card"><h3>Never, and stack fit</h3><p><b>Never:</b> government logos or seals, purple gradients, tiny text. shadcn primitives (Button, Card, Checkbox, Badge, Sheet, Dialog, Switch, Alert, Input, Textarea, RadioGroup) are used as-is. The look comes from theme tokens and <code>cva</code> variants, not inline restyling, so <code>shadcn/no-restyle</code> stays green.</p></div>
+    </div>
+  </section>
+
+  <!-- 9 Failures / Simplifications -->
+  <section id="risks">
+    <h2>Important failure modes</h2>
+    <div class="cardgrid">
+      <div class="card"><h3>The phone can't reach the laptop</h3><p>A different Wi-Fi, Wi-Fi that blocks devices from seeing each other, or the macOS firewall. Use the phone's hotspot with the laptop joined to it, and allow incoming connections. As a last resort, record with the laptop's phone view only.</p></div>
+      <div class="card"><h3>The laptop's address changes</h3><p>A new network. <code>/tv</code> prints the address under the QR code. Update <code>NEXT_PUBLIC_APP_URL</code> and restart.</p></div>
+      <div class="card"><h3>No Filipino voice on the TV's browser</h3><p>The pre-recorded clips play instead. Browsers block sound until a tap, so the TV always starts with a "Simulan ang TV" tap.</p></div>
+      <div class="card"><h3>A quoted answer drifts from the official text</h3><p><code>npm run check:content</code> fails the build step and names the item. The team edit screen refuses a save the same way.</p></div>
+      <div class="card"><h3>The server restarts mid-demo</h3><p>The queue empties, and her phone says "Hindi na makita ang number mo. Kumuha ulit." Treat it as a reset.</p></div>
+      <div class="card"><h3>localStorage is blocked</h3><p>Private browsing: the app still works for the session, but ticks will not survive a reload. A small note says so.</p></div>
+    </div>
+
+    <h2 style="margin-top:36px">What was simplified and why</h2>
+    <div class="cardgrid">
+      <div class="card"><h3>Pre-written answers instead of live AI</h3><p>Learner decision in <code>5-build</code>. The proof is shown on video, so a curated list of questions with quoted, cited answers proves the kernel without an API key, cost, or the riskiest integration. The fuller version (Claude with the citations feature) is described under Decisions.</p></div>
+      <div class="card"><h3>A laptop server instead of a hosted database and realtime service</h3><p>Learner decision in <code>5-build</code>. One process keeps the queue in memory, and screens poll every 2 s. The fuller version would need Supabase (or similar), Realtime, and hosting.</p></div>
+      <div class="card"><h3>The phone's own camera instead of an in-app scanner</h3><p>Phones require HTTPS for the camera inside a website, and a local address is not HTTPS. The QR code is a plain URL, so the native camera works.</p></div>
+      <div class="card"><h3>The plan is a JSON file instead of database tables</h3><p>It has the same shape, and the team screen writes back to it.</p></div>
+      <div class="card"><h3>Self-reported readiness</h3><p>The server trusts <code>docsReady</code>.</p></div>
+      <div class="card"><h3>Weekends only, no holidays</h3><p>The return date skips weekends, not Philippine holidays.</p></div>
+      <div class="card"><h3>Open staff and TV pages</h3><p>They are open URLs on the local network; only the team edit screen has a passcode.</p></div>
+      <div class="card"><h3>One of everything</h3><p>One office, one counter, one transaction, and the number letter is always B.</p></div>
+      <div class="card"><h3>Demo switch</h3><p>A switch, labeled on screen, simulates the 3 working days.</p></div>
+    </div>
+    <p class="note">The kernel is not faked: the requirements, quotes, and citations come from the real official text, and a script checks every quote.</p>
+  </section>
+
+  <!-- 9 Decisions -->
+  <section id="decisions">
+    <h2>Decisions and open issues</h2>
+
+    <div class="grp learner">
+      <h3><span class="pill-t">Learner decisions</span> Choices you made</h3>
+      <ul>
+        <li><b>Stack:</b> Next.js, TypeScript, shadcn/ui, and Tailwind, because they are familiar.</li>
+        <li><b>TV speech:</b> browser speech, checking early for a Filipino voice, with pre-recorded clips as the fallback.</li>
+        <li><b>QR:</b> a small library.</li>
+        <li><b>Process:</b> follow the real one counter and two visits (<code>prd.md &gt; Product Decisions</code>).</li>
+        <li><b>Pre-written cited answers instead of live AI</b> (<code>5-build</code>). "It's only video… this is a proof of concept only." It must be described honestly as pre-written, not AI.</li>
+        <li><b>No deployment</b> (<code>5-build</code>). This removes Supabase and Vercel too, and the phone joins over Wi-Fi.</li>
+        <li><b>Superseded <code>4-spec</code> choices,</b> kept for the record and as the path back if you want them later:
+          <ul>
+            <li>Supabase with Realtime: you had used it before, and it was needed for deployment.</li>
+            <li>The Claude API with citations and no vector database.</li>
+            <li>Vercel's free tier.</li>
+          </ul></li>
+      </ul>
+    </div>
+
+    <div class="grp derived">
+      <h3><span class="pill-t">Derived</span> Implementation detail, from your decisions or global conventions</h3>
+      <ul>
+        <li><b>Code structure:</b> the functional repository pattern with ports, factory services, file and in-memory adapters as product code, a composition root, and lint-enforced layering (<code>fs</code> only in adapters and scripts).</li>
+        <li><b>Live updates:</b> polling every 2 s through server actions.</li>
+        <li><b>Quote checking:</b> <code>validateCitations</code> plus <code>npm run check:content</code> keep every quote word for word in its source file.</li>
+        <li><b>Domain tests:</b> Node's built-in test runner, so there is no new framework.</li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <h3>Assumptions confirmed in spec review (2026-10-22)</h3>
+      <ol>
+        <li>The demo switch sits on her phone's "Visit 1 done" screen.</li>
+        <li>Before the return date, visit 2 stays locked ("Balik ka sa [date]") unless the demo switch is on.</li>
+        <li>"Total time" means time at the office on both visits added together, not calendar days.</li>
+        <li>The staff counter and TV pages have no passcode; only the team edit screen does.</li>
+        <li>The exact spoken counter name is set in the data (<code>counter.speechLabel</code>), for example "Registration counter."</li>
+      </ol>
+    </div>
+
+    <div class="callout unknown">
+      <h3>The one useful unknown: is there a Filipino voice on the TV's browser?</h3>
+      <p>You raised it: "Check early whether a Filipino voice is available on the TV's browser." Voices depend on the browser and the operating system, not on our code, and many systems have no <code>fil-PH</code> voice.</p>
+      <p><b>Agreed investigation (slice 1):</b> open <code>/tv/voice-check</code> on the actual browser that will play the TV. It lists every voice and plays "Numero B-001, Registration counter" with the best match.</p>
+      <p style="margin:0"><b>Evidence needed:</b> the voice list plus your ear's verdict. If there is no Filipino voice, or it sounds wrong, record the clips (<code>public/audio/</code>) and switch <code>speak()</code> to clip mode before the TV is built in slice 3.</p>
+    </div>
+
+    <h3 style="margin-top:18px">Open issues <span class="badge">non-blocking, resolved in the build</span></h3>
+    <ul>
+      <li><b>Content review:</b> you review the plan wording (slice 1) and the common questions and answers (slice 2) before the demo.</li>
+      <li><b>RMC 47-2026 is a scanned PDF:</b> the excerpt uses the OCR-verified quotes in the research file and the clean "Digest" PDF, and cites both.</li>
+      <li><b>Citizen's Charter 28-A predates RMC 47-2026:</b> where they conflict (the ending inventory, audit thresholds), RMC 47-2026 controls, per its own repealing clause. Record this in <code>sources.json</code>.</li>
+      <li><b>Lost COR, eCOR surrender, and ORUS-only closure</b> are not covered by the sources. If they are added as questions, they are <code>not_in_source</code> with who to ask.</li>
+      <li><b>Verify at the start of the build:</b> that Atkinson Hyperlegible's 0/O and 1/l look distinct. <b>Verify before slice 3:</b> that the phone reaches <code>http://&lt;laptop-ip&gt;:3000</code> on the network you will record on.</li>
+    </ul>
+  </section>
+
+  <footer>This page is a visual companion. The canonical spec is <code>devpost/spec.md</code>.</footer>
+</main>
+
+<script>
+(function () {
+  var QUEUE = ["e-act", "la-queue", "s-queue", "ls-queue", "p-queue", "pm-queue", "band", "n-queue", "a-mem", "x-mem-l", "x-mem"];
+  var POLL = ["poll", "pg-counter", "pg-tv"];
+  var steps = [
+    { t: "1 · Choose",
+      what: "She opens / and a server-rendered page shows the single transaction.",
+      prd: ["prd.md > Choosing the Transaction"],
+      files: ["src/app/page.tsx", "src/app/components/"],
+      keys: ["pg-phone"] },
+    { t: "2 · See the plan",
+      what: "On /plan the page asks the plan service for the plan; the file plan repository reads bir-closure.json. She sees the summary, the three-step path, and the checklist. Her phone compares the plan's item revisions with the snapshot in localStorage to decide whether to show \"Na-update ang requirements\".",
+      prd: ["prd.md > Your Plan", "prd.md > Team Edit Screen"],
+      files: ["src/app/plan/page.tsx", "src/app/plan/components/ (PlanSummary, UpdatedBanner, LastChecked)", "src/components/path-line/", "src/services/plan-service.ts", "src/adapters/file/plan-repository.ts", "content/plan/bir-closure.json", "src/domain/plan-diff.ts", "src/lib/phone-storage.ts", "src/composition-root.ts"],
+      keys: ["pg-phone", "l-ph", "e-act", "la-plan", "s-plan", "dom", "ls-plan", "p-plan", "pm-plan", "band", "n-plan", "a-plan", "x-plan-l", "x-plan"] },
+    { t: "3 · Ask",
+      what: "She taps \"Magtanong\" or a document's \"?\". The sheet shows the questions or the document's explanation, already loaded with the plan, as a normal card or the grey card, with citations. No server call and no AI.",
+      prd: ["prd.md > Asking Questions (Magtanong)"],
+      files: ["src/app/plan/components/ (AskSheet, AnswerCard, NotInSourceCard, DocumentExplainer)", "content/plan/bir-closure.json (questions)", "scripts/check-content.ts"],
+      keys: ["pg-phone", "x-plan"] },
+    { t: "4 · Tick documents",
+      what: "Ticks and situation answers are saved to localStorage. The pure domain function checklistStatus() decides what is missing and whether \"Kumuha ng number\" unlocks.",
+      prd: ["prd.md > Your Plan"],
+      files: ["src/app/plan/components/ (Checklist, ChecklistItem, SituationItem, MissingWarning, GetNumberButton)", "src/domain/checklist.ts", "src/lib/phone-storage.ts"],
+      keys: ["pg-phone", "dom"] },
+    { t: "5 · Get a number (visit 1)",
+      what: "She taps \"Kumuha ng number\" and sees \"I-scan ang QR sa TV gamit ang camera ng phone mo.\" Her phone's camera opens the QR's URL, http://<laptop-ip>:3000/join?c=registration. /join checks her readiness from localStorage, then calls server action issueTicket({ journeyId, visit: 1, docsReady: true }). The queue service asks the in-memory queue repository for the next number of the day, B-001. Her phone stores the ticket id and opens /line.",
+      prd: ["prd.md > Getting a Number"],
+      files: ["src/app/plan/components/ (GetNumberButton, ScanInstructions)", "src/app/tv/components/JoinQr", "src/app/join/page.tsx", "src/app/actions/queue.ts", "src/services/queue-service.ts", "src/ports/queue-repository.ts", "src/adapters/memory/queue-repository.ts", "src/app/line/page.tsx", "src/app/line/components/TicketStub"],
+      keys: ["pg-tv", "pg-phone", "l-ph"].concat(QUEUE) },
+    { t: "6 · Called",
+      what: "Staff tap \"Call next\" on /counter; server action callNext() marks the first waiting ticket called. Within 2 s, /tv's poll sees the new current number (flash and speak), and /line's poll sees its ticket called (full-screen \"Ikaw na!\" with a sound).",
+      prd: ["prd.md > Being Called", "prd.md > TV Display"],
+      files: ["src/app/counter/page.tsx", "src/app/counter/components/CallNextButton", "src/app/actions/queue.ts", "src/services/queue-service.ts", "src/lib/use-poll.ts", "src/app/tv/page.tsx", "src/app/tv/components/ (CounterPanel, Announcer, StartTvOverlay)", "src/lib/speech.ts", "src/app/line/components/ (CalledOverlay, SoundPrompt)"],
+      keys: ["pg-phone", "l-co", "l-ph", "l-tv"].concat(QUEUE, POLL) },
+    { t: "7 · Visit 1 done",
+      what: "Staff tap \"Done\"; server action finishVisit() marks the ticket done. /line computes the return date with addWorkingDays(doneAt, 3) (skips Sat/Sun, Asia/Manila time) and shows \"Visit 1 done ✓. Balik ka sa [date]. Dalhin: ₱30\".",
+      prd: ["prd.md > Visit 1 Done and Coming Back"],
+      files: ["src/app/counter/components/CurrentTicket", "src/app/actions/queue.ts", "src/services/queue-service.ts", "src/domain/working-days.ts", "src/app/line/components/ (VisitDone, DemoSkipSwitch)", "src/lib/phone-storage.ts"],
+      keys: ["pg-phone", "l-co", "dom"].concat(QUEUE, POLL) },
+    { t: "8 · Visit 2",
+      what: "The labeled demo switch sets demoSkip in localStorage (or the return date arrives). \"Kumuha ng number\" unlocks for visit 2, and the same /join flow issues a ticket with visit: 2 (\"Pay & claim\").",
+      prd: ["prd.md > Getting a Number", "prd.md > Visit 1 Done and Coming Back"],
+      files: ["src/app/line/components/DemoSkipSwitch", "src/app/join/page.tsx", "src/lib/phone-storage.ts", "src/app/actions/queue.ts", "src/app/counter/components/WaitingList (visit badge)"],
+      keys: ["pg-phone", "pg-tv", "l-ph"].concat(QUEUE) },
+    { t: "9 · Tapos na",
+      what: "\"Done\" on the visit 2 ticket. /line shows \"Tapos na!\" with the total time: (visit 1 done − visit 1 issued) + (visit 2 done − visit 2 issued). Her saved ticks are cleared.",
+      prd: ["prd.md > Visit 1 Done and Coming Back", "prd.md > States and Boundaries"],
+      files: ["src/app/counter/components/CurrentTicket", "src/app/actions/queue.ts", "src/domain/journey.ts (totalVisitTime)", "src/app/line/components/TaposNa", "src/lib/phone-storage.ts"],
+      keys: ["pg-phone", "l-co", "dom"].concat(QUEUE, POLL) }
+  ];
+
+  var svg = document.querySelector("#flow svg");
+  var detail = document.getElementById("detail");
+  var dots = document.getElementById("dots");
+  var current = 0;
+
+  steps.forEach(function (s, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(i + 1);
+    b.setAttribute("aria-label", "Step " + s.t);
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { go(i + 1); });
+    dots.appendChild(b);
+  });
+
+  function el(tag, text, cls) {
+    var e = document.createElement(tag);
+    if (text) e.textContent = text;
+    if (cls) e.className = cls;
+    return e;
+  }
+  function codeList(items) {
+    var ul = document.createElement("ul");
+    items.forEach(function (x) {
+      var li = document.createElement("li");
+      li.appendChild(el("code", x));
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+
+  function go(n) {
+    current = n;
+    var on = n ? steps[n - 1].keys : [];
+    svg.classList.toggle("focused", n > 0);
+    svg.querySelectorAll("[data-k]").forEach(function (e) {
+      e.classList.toggle("on", on.indexOf(e.getAttribute("data-k")) !== -1);
+    });
+    Array.prototype.forEach.call(dots.children, function (b, i) { b.setAttribute("aria-pressed", String(i + 1 === n)); });
+    detail.textContent = "";
+    if (n === 0) {
+      detail.appendChild(el("h3", "All nine steps"));
+      detail.appendChild(el("p", "Use Next or a step number to light up the pieces of the architecture involved in that step and see the PRD heading and files behind it.", "what"));
+      return;
+    }
+    var s = steps[n - 1];
+    detail.appendChild(el("h3", s.t));
+    detail.appendChild(el("p", s.what, "what"));
+    var cols = el("div", "", "cols");
+    var c1 = el("div"); c1.appendChild(el("div", "PRD heading", "k")); c1.appendChild(codeList(s.prd));
+    var c2 = el("div"); c2.appendChild(el("div", "Files involved", "k")); c2.appendChild(codeList(s.files));
+    cols.appendChild(c1); cols.appendChild(c2);
+    detail.appendChild(cols);
+  }
+
+  document.getElementById("next").addEventListener("click", function () { go(current >= steps.length ? 1 : current + 1); });
+  document.getElementById("prev").addEventListener("click", function () { go(current <= 1 ? steps.length : current - 1); });
+  document.getElementById("all").addEventListener("click", function () { go(0); });
+  go(0);
+})();
+</script>
+</body>
+</html>

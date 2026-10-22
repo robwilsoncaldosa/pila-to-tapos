@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pila to Tapos — PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f1;
+    --surface: #ffffff;
+    --ink: #1d1c1a;
+    --muted: #66625b;
+    --line: #e2ddd4;
+    --accent: #1f4fd1;
+    --accent-soft: #e8eefc;
+    --star: #c26a00;
+    --star-soft: #fdf0dc;
+    --ok: #1e7a3c;
+    --warn: #b3261e;
+    --lane-team: #e6f3ea;   --lane-team-ink: #1e6b3a;
+    --lane-phone: #e8eefc;  --lane-phone-ink: #1f4fd1;
+    --lane-counter: #fbeedd; --lane-counter-ink: #9a5200;
+    --lane-tv: #efe9fb;     --lane-tv-ink: #5b3cb8;
+    --assume: #7a5b00; --assume-soft: #fff6d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413; --surface: #1d1c1a; --ink: #ecebe7; --muted: #a29e96; --line: #35332f;
+      --accent: #86a8ff; --accent-soft: #1f2a44; --star: #f2a33a; --star-soft: #3a2a12;
+      --ok: #7fd49a; --warn: #ff8a80;
+      --lane-team: #17301f; --lane-team-ink: #8fd6a6;
+      --lane-phone: #1c2640; --lane-phone-ink: #9db8ff;
+      --lane-counter: #33240f; --lane-counter-ink: #f0b56a;
+      --lane-tv: #2a2140; --lane-tv-ink: #c4b1ff;
+      --assume: #f3d36b; --assume-soft: #3a3010;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413; --surface: #1d1c1a; --ink: #ecebe7; --muted: #a29e96; --line: #35332f;
+    --accent: #86a8ff; --accent-soft: #1f2a44; --star: #f2a33a; --star-soft: #3a2a12;
+    --ok: #7fd49a; --warn: #ff8a80;
+    --lane-team: #17301f; --lane-team-ink: #8fd6a6;
+    --lane-phone: #1c2640; --lane-phone-ink: #9db8ff;
+    --lane-counter: #33240f; --lane-counter-ink: #f0b56a;
+    --lane-tv: #2a2140; --lane-tv-ink: #c4b1ff;
+    --assume: #f3d36b; --assume-soft: #3a3010;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 940px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.2rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h3 { font-size: 1rem; margin: 0 0 6px; }
+  p { margin: 0 0 10px; }
+  ul { margin: 0; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  .eyebrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+  .badge { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; background: var(--surface); }
+  .badge.draft { color: var(--star); border-color: var(--star); }
+  .lede { font-size: 1.08rem; color: var(--muted); max-width: 700px; }
+  section { margin-top: 40px; }
+  .revised { max-width: 700px; font-size: 0.9rem; color: var(--muted); background: var(--star-soft); border-left: 3px solid var(--star); border-radius: 8px; padding: 10px 14px; margin-top: 14px; }
+  .sub { color: var(--muted); margin-bottom: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+
+  /* scope -> prd */
+  .grow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grow .card { padding: 16px 18px; }
+  .grow .was { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .grow .was-q { font-style: italic; color: var(--muted); margin-bottom: 10px; }
+  .grow .now { font-size: 0.82rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+
+  /* diagram */
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram-wrap svg { display: block; min-width: 720px; width: 100%; height: auto; }
+  svg text { font-family: inherit; fill: var(--ink); }
+  svg .lane-label { font-size: 12px; font-weight: 600; fill: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  svg .group-label { font-size: 11px; font-weight: 700; fill: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  svg .step-num { font-size: 12px; font-weight: 700; fill: var(--muted); }
+  svg .step-name { font-size: 14px; font-weight: 600; }
+  svg .box-title { font-size: 13px; font-weight: 600; }
+  svg .box-sub { font-size: 11.5px; fill: var(--muted); }
+  svg .rowline { stroke: var(--line); stroke-width: 1; }
+  svg .b-team { fill: var(--lane-team); stroke: var(--lane-team-ink); }
+  svg .b-phone { fill: var(--lane-phone); stroke: var(--lane-phone-ink); }
+  svg .b-counter { fill: var(--lane-counter); stroke: var(--lane-counter-ink); }
+  svg .b-tv { fill: var(--lane-tv); stroke: var(--lane-tv-ink); }
+  svg rect[class^="b-"] { stroke-width: 1.2; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  svg .arrow-label { font-size: 11px; fill: var(--muted); font-style: italic; }
+  svg .star-bg { fill: var(--star-soft); stroke: var(--star); stroke-width: 1.2; }
+  svg .star-txt { font-size: 11px; font-weight: 700; fill: var(--star); }
+  svg .row { transition: opacity 180ms ease; cursor: pointer; }
+  svg.focused .row { opacity: 0.2; }
+  svg.focused .row.on { opacity: 1; }
+  #ah path { fill: var(--muted); }
+
+  .stepper { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .stepper button {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  }
+  .stepper button:hover { border-color: var(--accent); }
+  .stepper button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .dots { display: flex; gap: 6px; flex-wrap: wrap; }
+  .dots button { width: 32px; padding: 6px 0; text-align: center; }
+  .dots button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+  .detail { margin-top: 14px; border-radius: 12px; background: var(--accent-soft); padding: 16px 18px; min-height: 90px; }
+  .detail h3 { margin-bottom: 4px; }
+  .detail .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
+  .detail .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
+  .detail .cool { color: var(--star); font-weight: 600; margin-top: 8px; }
+  .checks li { list-style: none; position: relative; padding-left: 4px; }
+  .checks { padding-left: 18px; }
+  .checks li::before { content: "☐"; position: absolute; left: -18px; color: var(--muted); }
+
+  /* screen reveals */
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+  summary {
+    cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none;
+    display: flex; align-items: center; gap: 12px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 1.2rem; margin-left: auto; }
+  details[open] summary::after { content: "–"; }
+  summary .tag { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .tag.phone { background: var(--lane-phone); color: var(--lane-phone-ink); }
+  .tag.counter { background: var(--lane-counter); color: var(--lane-counter-ink); }
+  .tag.tv { background: var(--lane-tv); color: var(--lane-tv-ink); }
+  .tag.team { background: var(--lane-team); color: var(--lane-team-ink); }
+  details .body { padding: 0 18px 18px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; }
+  details .body .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 6px; }
+  .grey-card { margin-top: 10px; border-radius: 10px; padding: 10px 12px; background: var(--bg); border: 1px dashed var(--line); font-size: 0.92rem; }
+
+  /* states grid */
+  .states { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .state { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .state h3 { font-size: 0.95rem; margin-bottom: 2px; }
+  .state p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+  .state.assume { border-color: var(--assume); background: var(--assume-soft); }
+  .state.assume h3::after { content: " · assumption"; font-weight: 500; color: var(--assume); font-size: 0.8rem; }
+
+  /* look & feel preview — fixed palette on purpose: it previews the app's colors */
+  .lf { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; }
+  .preview {
+    background: #faf6ee; color: #14213d; border-radius: 14px; padding: 18px; border: 1px solid #e6dfcf;
+    font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .preview .route { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; margin-bottom: 12px; }
+  .preview .route span { background: #14213d; color: #ffd21f; border-radius: 6px; padding: 2px 8px; }
+  .stub {
+    display: flex; align-items: stretch; border: 2px solid #14213d; border-radius: 12px; overflow: hidden; max-width: 320px;
+  }
+  .stub .num { background: #ffd21f; color: #14213d; font-size: 2.2rem; font-weight: 700; padding: 8px 16px; letter-spacing: 0.02em; border-right: 2px dashed #14213d; white-space: nowrap; display: flex; align-items: center; }
+  .stub .meta { padding: 10px 14px; font-size: 0.95rem; }
+  .stub .meta b { display: block; font-size: 1.05rem; }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { border-radius: 999px; padding: 4px 12px; font-weight: 700; font-size: 0.92rem; }
+  .pill.ok { background: #d9f2e1; color: #135c2c; }
+  .pill.miss { background: #ffe1d6; color: #a3330f; }
+  .tvmini {
+    background: #0e1525; color: #ffd21f; border-radius: 14px; padding: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-content: center;
+    font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .tvmini div { background: #172238; border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .tvmini small { display: block; color: #c9d1e3; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .tvmini strong { font-size: 1.6rem; }
+  .tvmini .flash { outline: 3px solid #ffd21f; }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .sw { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--muted); }
+  .sw i { width: 18px; height: 18px; border-radius: 5px; display: inline-block; border: 1px solid var(--line); }
+  .avoid { margin-top: 12px; font-size: 0.92rem; color: var(--muted); }
+
+  /* lists */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .callout { border-left: 4px solid var(--assume); background: var(--assume-soft); border-radius: 10px; padding: 14px 16px; }
+  .callout.block { border-left-color: var(--warn); }
+  .callout h3 { margin-bottom: 4px; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+  code { font-size: 0.9em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 1.7rem; }
+    .grow, .states, .lf, .split, details .body, .detail .cols { grid-template-columns: 1fr; }
+    main { padding-top: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) { svg .row { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><span>Build With AI: Basics · PRD</span><span class="badge">Approved</span></div>
+  <h1>Pila to Tapos — Product Requirements</h1>
+  <p class="lede">An independent helper for a former freelancer closing her BIR registration. It shows her the whole path before she leaves home, then guides her through both visits to the BIR counter, with a number for each.</p>
+  <p class="revised"><strong>Revised during <code>4-spec</code> (2026-10-22).</strong> The official source says she deals with one counter, the Registration Officer counter, across two visits about 3 working days apart. The learner chose to follow the real process. This replaced the earlier demo assumption of three windows in one visit. The affected sections are the Core Journey, Screens and Layout, Being Called, Visit 1 Done, the Staff Counter, the TV Display, States, and Product Decisions.</p>
+  <p class="revised"><strong>Revised again in <code>5-build</code> (2026-10-22).</strong> The learner chose pre-written cited answers instead of live AI, and a laptop-only build with no deployment, where the phone scans the QR code with its own camera over Wi-Fi. The affected sections are Asking Questions (Magtanong), Getting a Number, Product Decisions, Deferred, Possible Later Enhancements, and Non-Goals.</p>
+
+  <!-- Scope -> PRD -->
+  <section>
+    <h2>What the scope said, and what we know now</h2>
+    <p class="sub">The scope was a sketch. Here's how four of its lines turned into concrete behavior.</p>
+    <div class="grow">
+      <div class="card">
+        <div class="was">Scope said</div>
+        <div class="was-q">"She sees the full path and ticks off documents."</div>
+        <div class="now">Now we know</div>
+        <p>One scrolling "Your plan" screen: a summary, then the path, then the checklist with a "?" on each document. Then a "Kumuha ng number" button that stays locked until everything is ticked.</p>
+      </div>
+      <div class="card">
+        <div class="was">Scope said</div>
+        <div class="was-q">"Answers come only from the official source, with the citation shown."</div>
+        <div class="now">Now we know</div>
+        <p>Magtanong is a list of common questions with pre-written answers that quote the official source. When the source doesn't answer (her penalty question), she gets a plain grey card: it says so, shows related cited text, says who can answer, and never shows a guessed amount.</p>
+      </div>
+      <div class="card">
+        <div class="was">Scope said</div>
+        <div class="was-q">"Her phone updates live."</div>
+        <div class="now">Now we know</div>
+        <p>Progress is saved on her phone with no login. If her signal drops, she sees an "Offline: huling update" banner. If she was called while the app was closed, reopening shows "Tinawag ka na." A number is good for that day only.</p>
+      </div>
+      <div class="card">
+        <div class="was">Scope said</div>
+        <div class="was-q">"The team edit screen updates the data."</div>
+        <div class="now">Now we know</div>
+        <p>A passcode-protected link. No citation, no save. Changes show on her next load with a "Na-update" banner. Her ticks stay unless a document changed, and she keeps her place in line.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journey -->
+  <section>
+    <h2>The core journey</h2>
+    <p class="sub">Nine steps across four surfaces. Choose a step to see what she sees, how we'll check it works, and what happens if something goes wrong.</p>
+    <div class="card">
+      <div class="diagram-wrap">
+        <svg id="flow" viewBox="0 0 820 820" role="img" aria-labelledby="ft fd">
+          <title id="ft">Pila to Tapos core journey</title>
+          <desc id="fd">Nine steps across four lanes: team data, her phone, the staff counter, and the TV. At home: choose, see the plan fed by team data, ask, tick documents. At BIR: scan the TV's QR code for a number, get called at the Registration Officer counter (the staff counter triggers the TV and her phone), see Visit 1 done with the come-back date when staff tap Done, then visit 2 with a new number to pay and claim, then Tapos na with the total time across both visits.</desc>
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+          </defs>
+
+          <text class="lane-label" x="200" y="24" text-anchor="middle">Team data</text>
+          <text class="lane-label" x="385" y="24" text-anchor="middle">Her phone</text>
+          <text class="lane-label" x="580" y="24" text-anchor="middle">Staff counter</text>
+          <text class="lane-label" x="747" y="24" text-anchor="middle">TV</text>
+
+          <!-- 1 choose -->
+          <g class="row r1" data-step="1">
+            <line class="rowline" x1="0" y1="44" x2="820" y2="44"/>
+            <text class="group-label" x="8" y="40">At home</text>
+            <text class="step-num" x="8" y="80">1</text><text class="step-name" x="26" y="80">Choose</text>
+            <rect class="b-phone" x="290" y="54" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="80" text-anchor="middle">Screen 1: one choice</text>
+            <text class="box-sub" x="385" y="98" text-anchor="middle">BIR: Close my registration</text>
+          </g>
+          <!-- 2 plan -->
+          <g class="row r2" data-step="2">
+            <line class="rowline" x1="0" y1="128" x2="820" y2="128"/>
+            <text class="step-num" x="8" y="164">2</text><text class="step-name" x="26" y="164">See the plan</text>
+            <rect class="b-team" x="130" y="138" width="140" height="64" rx="10"/>
+            <text class="box-title" x="200" y="160" text-anchor="middle">Steps · docs · fees</text>
+            <text class="box-sub" x="200" y="177" text-anchor="middle">each with a citation</text>
+            <text class="box-sub" x="200" y="191" text-anchor="middle">+ "last checked"</text>
+            <rect class="b-phone" x="290" y="138" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="164" text-anchor="middle">Your plan</text>
+            <text class="box-sub" x="385" y="182" text-anchor="middle">summary · path · checklist</text>
+            <path class="arrow" d="M270,170 L288,170" marker-end="url(#ah)"/>
+          </g>
+          <!-- 3 ask -->
+          <g class="row r3" data-step="3">
+            <line class="rowline" x1="0" y1="212" x2="820" y2="212"/>
+            <text class="step-num" x="8" y="248">3</text><text class="step-name" x="26" y="248">Ask</text>
+            <rect class="b-phone" x="290" y="222" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="244" text-anchor="middle">Magtanong panel</text>
+            <text class="box-sub" x="385" y="261" text-anchor="middle">pre-written answer, cited,</text>
+            <text class="box-sub" x="385" y="275" text-anchor="middle">or grey "not in source" card</text>
+          </g>
+          <!-- 4 tick -->
+          <g class="row r4" data-step="4">
+            <line class="rowline" x1="0" y1="296" x2="820" y2="296"/>
+            <text class="step-num" x="8" y="332">4</text><text class="step-name" x="26" y="332">Tick documents</text>
+            <rect class="b-phone" x="290" y="306" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="328" text-anchor="middle">"Kulang pa: ___"</text>
+            <text class="box-sub" x="385" y="345" text-anchor="middle">until every document is ✓,</text>
+            <text class="box-sub" x="385" y="359" text-anchor="middle">then the button unlocks</text>
+            <rect class="star-bg" x="510" y="324" width="118" height="28" rx="14"/>
+            <text class="star-txt" x="569" y="342" text-anchor="middle">★ cool moment 1</text>
+          </g>
+          <!-- 5 number -->
+          <g class="row r5" data-step="5">
+            <line class="rowline" x1="0" y1="380" x2="820" y2="380"/>
+            <text class="group-label" x="8" y="376">At BIR</text>
+            <text class="step-num" x="8" y="416">5</text><text class="step-name" x="26" y="416">Get a number</text>
+            <rect class="b-tv" x="680" y="390" width="134" height="64" rx="10"/>
+            <text class="box-title" x="747" y="416" text-anchor="middle">QR code</text>
+            <text class="box-sub" x="747" y="434" text-anchor="middle">in the corner</text>
+            <rect class="b-phone" x="290" y="390" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="416" text-anchor="middle">B-014 · Step 1 of 3</text>
+            <text class="box-sub" x="385" y="434" text-anchor="middle">All documents ready ✓</text>
+            <path class="arrow" d="M680,422 L482,422" marker-end="url(#ah)"/>
+            <text class="arrow-label" x="580" y="414" text-anchor="middle">phone's own camera</text>
+          </g>
+          <!-- 6 called -->
+          <g class="row r6" data-step="6">
+            <line class="rowline" x1="0" y1="464" x2="820" y2="464"/>
+            <text class="step-num" x="8" y="500">6</text><text class="step-name" x="26" y="500">Called</text>
+            <rect class="b-counter" x="510" y="474" width="140" height="64" rx="10"/>
+            <text class="box-title" x="580" y="498" text-anchor="middle">Call next</text>
+            <text class="box-sub" x="580" y="516" text-anchor="middle">B-014 · Submit · docs ✓</text>
+            <rect class="b-tv" x="680" y="474" width="134" height="64" rx="10"/>
+            <text class="box-title" x="747" y="496" text-anchor="middle">Flash + speaks</text>
+            <text class="box-sub" x="747" y="513" text-anchor="middle">"Numero B-014,</text>
+            <text class="box-sub" x="747" y="527" text-anchor="middle">[counter]"</text>
+            <rect class="b-phone" x="290" y="474" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="500" text-anchor="middle">"Ikaw na! [counter]"</text>
+            <text class="box-sub" x="385" y="518" text-anchor="middle">full-screen, same moment</text>
+            <path class="arrow" d="M650,506 L678,506" marker-end="url(#ah)"/>
+            <path class="arrow" d="M510,506 L482,506" marker-end="url(#ah)"/>
+          </g>
+          <!-- 7 visit 1 done -->
+          <g class="row r7" data-step="7">
+            <line class="rowline" x1="0" y1="548" x2="820" y2="548"/>
+            <text class="step-num" x="8" y="584">7</text><text class="step-name" x="26" y="584">Visit 1 done</text>
+            <rect class="b-counter" x="510" y="558" width="140" height="64" rx="10"/>
+            <text class="box-title" x="580" y="584" text-anchor="middle">Done</text>
+            <text class="box-sub" x="580" y="602" text-anchor="middle">visit 1, one tap</text>
+            <rect class="b-phone" x="290" y="558" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="580" text-anchor="middle">Visit 1 done ✓</text>
+            <text class="box-sub" x="385" y="597" text-anchor="middle">Balik ka sa [date]</text>
+            <text class="box-sub" x="385" y="611" text-anchor="middle">Dalhin: ₱30</text>
+            <path class="arrow" d="M510,590 L482,590" marker-end="url(#ah)"/>
+            <rect class="star-bg" x="141" y="576" width="118" height="28" rx="14"/>
+            <text class="star-txt" x="200" y="594" text-anchor="middle">★ cool moment 2</text>
+            <text class="arrow-label" x="747" y="584" text-anchor="middle">BIR checks records</text>
+            <text class="arrow-label" x="747" y="598" text-anchor="middle">about 3 working days</text>
+          </g>
+          <!-- 8 visit 2 -->
+          <g class="row r8" data-step="8">
+            <line class="rowline" x1="0" y1="632" x2="820" y2="632"/>
+            <text class="step-num" x="8" y="668">8</text><text class="step-name" x="26" y="668">Visit 2</text>
+            <rect class="b-phone" x="130" y="642" width="140" height="64" rx="10"/>
+            <text class="box-title" x="200" y="664" text-anchor="middle">Demo switch</text>
+            <text class="box-sub" x="200" y="681" text-anchor="middle">Demo: lumipas ang</text>
+            <text class="box-sub" x="200" y="695" text-anchor="middle">3 working days</text>
+            <rect class="b-phone" x="290" y="642" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="664" text-anchor="middle">New number · Pay &amp; claim</text>
+            <text class="box-sub" x="385" y="681" text-anchor="middle">pay ₱30, claim the</text>
+            <text class="box-sub" x="385" y="695" text-anchor="middle">tax clearance</text>
+            <rect class="b-counter" x="510" y="642" width="140" height="64" rx="10"/>
+            <text class="box-title" x="580" y="668" text-anchor="middle">Call next</text>
+            <text class="box-sub" x="580" y="686" text-anchor="middle">then Done</text>
+            <path class="arrow" d="M270,674 L288,674" marker-end="url(#ah)"/>
+            <path class="arrow" d="M510,674 L482,674" marker-end="url(#ah)"/>
+          </g>
+          <!-- 9 done -->
+          <g class="row r9" data-step="9">
+            <line class="rowline" x1="0" y1="716" x2="820" y2="716"/>
+            <text class="step-num" x="8" y="752">9</text><text class="step-name" x="26" y="752">Tapos na</text>
+            <rect class="b-phone" x="290" y="726" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="752" text-anchor="middle">"Tapos na!"</text>
+            <text class="box-sub" x="385" y="770" text-anchor="middle">total time, both visits</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="stepper" role="group" aria-label="Journey steps">
+        <button type="button" id="prev">‹ Prev</button>
+        <div class="dots" id="dots"></div>
+        <button type="button" id="next">Next ›</button>
+        <button type="button" id="all">Show all</button>
+      </div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Screens -->
+  <section>
+    <h2>Every screen: behavior and how we'll check it</h2>
+    <p class="sub">Each section opens to show what the screen does and the checks we'll run by looking at it during the build.</p>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> Screen 1: "Ano'ng kailangan mong gawin?"</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul><li>One clear choice: "BIR: Close my freelancer registration."</li><li>One tap opens Your plan. Other offices come later.</li></ul></div>
+        <div><p class="k">Checks</p><ul class="checks"><li>Opening the app shows exactly one choice.</li><li>Tapping it opens Your plan.</li></ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> Screen 2: "Your plan"</summary>
+      <div class="body">
+        <div><p class="k">Behavior, top to bottom</p><ul>
+          <li><b>Summary:</b> number of steps, money to prepare, roughly how long. With no amount entered, it says no official amount is listed.</li>
+          <li><b>Path:</b> "Visit 1: Submit" → "BIR checks your records (about 3 working days)" → "Visit 2: Pay ₱30 &amp; claim," showing the counter for each visit. If she answered Oo or Hindi ko alam to the unfiled-returns question, the waiting step also shows a 30-day settle warning and a cited "Related" note about the one-time penalty relief program for micro taxpayers (until 31 Dec 2026).</li>
+          <li><b>Checklist:</b> every document with a tick box and a "?". The "?" opens Magtanong for that document.</li>
+          <li><b>"Kung naaangkop sa iyo":</b> situation documents, each with one question (for example, "May hindi ka pa na-file na returns?") and Oo / Hindi / Hindi ko alam. <i>Hindi</i> greys it out with "Hindi kailangan sa iyo" and the cited reason. <i>Oo</i> makes it required. <i>Hindi ko alam</i>, or no answer, keeps it required, with a "?" nudge to Magtanong.</li>
+          <li><b>"Kulang pa: ___"</b> at the top of the checklist: each missing document, where to get it, and its citation.</li>
+          <li>"Huling sinuri sa opisyal na source: [date]."</li>
+          <li><b>"Kumuha ng number"</b> at the bottom, locked until everything is ticked.</li>
+        </ul></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>The summary shows steps, amount, and time, each traceable to a citation.</li>
+          <li>With no amount entered, no number is shown and the summary says so.</li>
+          <li>The path lists the three steps in order, with the counter for each visit and "about 3 working days" on the waiting step.</li>
+          <li>With any document unticked, the warning names it, says where to get it, and cites it, and the button is locked.</li>
+          <li>Ticking the last document that applies clears the warning and unlocks the button.</li>
+          <li>Hindi greys a situation document out with its cited reason and stops it locking the button.</li>
+          <li>Oo makes it a required tick box that locks the button.</li>
+          <li>Hindi ko alam, or no answer, keeps the button locked and shows the "?" nudge.</li>
+          <li>Oo or Hindi ko alam to the unfiled-returns question shows the 30-day warning and the relief note; Hindi hides them.</li>
+          <li>The "last checked" date is visible.</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> Magtanong panel</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul>
+          <li>A floating button opens a panel over the plan with a short list of common questions in Taglish, including her real one: "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?"</li>
+          <li>Tapping a question shows its pre-written answer: it quotes the official text, with the citation underneath. The "?" beside a document opens that document's pre-written explanation.</li>
+          <li>Closing returns her to the same place in her plan.</li>
+          <li>No free-text box and no live AI. These are pre-written answers from the official source, not AI, and the video and write-up say so.</li>
+        </ul>
+        <div class="grey-card"><b>ⓘ When the source doesn't answer:</b> "Hindi ito direktang sinasagot ng opisyal na source." It shows the closest cited text, labeled "Related, not a direct answer," says who to ask (with a contact number if the source lists one), and adds "Gabay lang ito, hindi legal o tax advice." Never anything beyond the source, and never a made-up amount.</div></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>The panel lists the common questions, including her real penalty question.</li>
+          <li>A question the source answers gets a normal-style reply that quotes the official text, with its citation.</li>
+          <li>Her penalty question shows the grey card with all five parts (including the cited relief-program note) and no invented amount.</li>
+          <li>Every quoted passage appears word for word in the official source excerpt it cites.</li>
+          <li>A document's "?" opens that document's explanation, with its citation.</li>
+          <li>Closing the panel keeps her scroll position.</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag phone">Phone</span> In line: number, steps, "Ikaw na!", "Balik ka sa", "Tapos na!"</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul>
+          <li>With everything that applies ticked, tapping the unlocked "Kumuha ng number" shows "I-scan ang QR sa TV gamit ang camera ng phone mo." She scans the TV's QR code with her phone's own camera and gets one number, such as B-014 (the app runs on a laptop over local Wi-Fi, so the phone's own camera does the scanning). Scanning before preparing lands on Screen 1.</li>
+          <li>A one-time "Tap to turn on sound alerts" prompt.</li>
+          <li>Shows the number big, "Step 1 of 3: Submit, [counter]," the path with the current step highlighted, and "All documents ready ✓."</li>
+          <li>Called: full-screen "Ikaw na! [counter]," with a sound.</li>
+          <li>After "Done" on visit 1: moves on by itself to "Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30." The path highlights step 2, and the return date skips weekends.</li>
+          <li>Visit 2: scanning the QR code again issues a new number with a "Pay &amp; claim" badge. A labeled "Demo: lumipas ang 3 working days" switch jumps to it. <i>(Assumption: the switch sits on the "Visit 1 done" screen, and visit 2 stays locked before the return date unless the switch is on.)</i></li>
+          <li>End: "Tapos na!" with the total time across both visits. <i>(Assumption: time at the office on visit 1 plus visit 2.)</i></li>
+        </ul></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>Everything ticked: scanning the TV's QR code with the phone's camera issues exactly one number.</li>
+          <li>Anything unticked: no number can be issued.</li>
+          <li>"Call next" shows "Ikaw na!" at the same moment the TV speaks.</li>
+          <li>"Done" on visit 1 moves her phone to "Visit 1 done ✓. Balik ka sa [date]" without her touching it.</li>
+          <li>Done on a Thursday gives a return date of the following Tuesday.</li>
+          <li>The demo switch is visibly labeled and unlocks visit 2 right away; scanning again issues a "Pay &amp; claim" number.</li>
+          <li>"Done" on visit 2 shows "Tapos na!" with the total time across both visits.</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag counter">Counter</span> Staff counter (one counter)</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul>
+          <li>The counter's name at the top: one counter, the Registration Officer counter. Nothing to pick.</li>
+          <li>The waiting list in order: number, time waiting, a visit badge ("Submit" or "Pay &amp; claim"), and "Documents ready ✓." No names.</li>
+          <li>A big "Call next." Then the current number with "Done."</li>
+          <li>"Done" finishes that visit: visit 1 moves her phone to "Balik ka sa [date]," and visit 2 moves it to "Tapos na!"</li>
+        </ul></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>The list shows the line in order with number, time waiting, visit badge, and "Documents ready ✓," and no names.</li>
+          <li>"Call next" calls the first number and shows it with "Done."</li>
+          <li>"Done" removes the number from the list and finishes that visit.</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tv">TV</span> TV on the wall</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul>
+          <li>One panel for the Registration Officer counter, showing the number being served.</li>
+          <li>A call flashes the panel and is spoken in Filipino: "Numero B-014, [counter]."</li>
+          <li>A QR code in the corner. Numbers only, never names.</li>
+        </ul></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>The counter's panel shows its current number.</li>
+          <li>"Call next" flashes the panel and speaks the call.</li>
+          <li>The QR code is visible, and no names appear.</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag team">Team</span> Team edit screen (built last)</summary>
+      <div class="body">
+        <div><p class="k">Behavior</p><ul>
+          <li>A separate link with the team passcode, not shown in the customer app. No full accounts.</li>
+          <li>Edit steps (name, counter, order, and for the waiting step how many working days), documents (name, where to get it, required or depends on her situation), fees, processing time, the citation for every item, and the "last checked" date.</li>
+          <li><b>No citation, no save.</b></li>
+          <li>Her plan shows changes on the next load, with a "Na-update ang requirements" banner and highlighted items. Her ticks stay unless a document changed, a new document locks the button, and she keeps her number.</li>
+          <li>If time runs short, the team edits the data file directly instead.</li>
+        </ul></div>
+        <div><p class="k">Checks</p><ul class="checks">
+          <li>It opens only with the passcode, and no link to it appears in the app.</li>
+          <li>Saving without a citation is refused.</li>
+          <li>Reopening the plan after a change shows the banner and the highlighted item.</li>
+          <li>A new document shows unticked and locks the button, and existing ticks stay.</li>
+          <li>Someone in line keeps her number and step.</li>
+        </ul></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- States -->
+  <section>
+    <h2>What-ifs and states</h2>
+    <p class="sub">The cases you decided before anything gets built.</p>
+    <div class="states">
+      <div class="state"><h3>First use</h3><p>Nothing ticked. "Kulang pa" lists every document, and the button is locked.</p></div>
+      <div class="state"><h3>Saved on her phone, no login</h3><p>Her ticks stay across closes and reopens until she finishes or clears them herself.</p></div>
+      <div class="state"><h3>Reopening while in line</h3><p>The app checks with the office and lands on her current step, even if staff moved her on while it was closed.</p></div>
+      <div class="state"><h3>Offline</h3><p>Her number and step stay visible with "Offline: huling update 10:42." It refreshes by itself when the signal returns.</p></div>
+      <div class="state"><h3>Called while away</h3><p>Reopening shows a full-screen "Tinawag ka na sa [counter]."</p></div>
+      <div class="state"><h3>Between visits</h3><p>Her phone shows "Visit 1 done ✓. Balik ka sa [date]. Dalhin: ₱30," and the path highlights the waiting step. Her ticks stay.</p></div>
+      <div class="state"><h3>Next day</h3><p>A number is good for that day only. Visit 2 always gets a new number, and her ticks stay.</p></div>
+      <div class="state"><h3>No official amount</h3><p>The summary says no official amount is listed and never guesses.</p></div>
+      <div class="state"><h3>Requirements updated</h3><p>She sees the "Na-update" banner with highlights. A new document locks the button, and she keeps her place in line.</p></div>
+      <div class="state"><h3>Privacy</h3><p>Numbers only on the TV and the counter, never names.</p></div>
+      <div class="state"><h3>Empty waiting list</h3><p>The staff list says no one is waiting, and "Call next" does nothing.</p></div>
+      <div class="state"><h3>"I'm not sure" on a situation question</h3><p>Treated as required: the button stays locked, and a "?" nudges her to ask Magtanong.</p></div>
+    </div>
+  </section>
+
+  <!-- Look & feel -->
+  <section>
+    <h2>Look and feel</h2>
+    <p class="sub">"Like a helpful ate or kuya at the information desk." This preview uses your palette and Atkinson Hyperlegible, so it looks the same in light or dark mode.</p>
+    <div class="lf">
+      <div class="preview">
+        <div class="route"><span>Step 2 → Window 2</span></div>
+        <div class="stub">
+          <div class="num">B-014</div>
+          <div class="meta"><b>Ikaw na! [counter]</b>Step 1 of 3 · All documents ready ✓</div>
+        </div>
+        <div class="pills"><span class="pill ok">Ready ✓</span><span class="pill miss">Kulang pa: 1</span></div>
+      </div>
+      <div class="tvmini" aria-label="TV preview: dark background with large yellow numbers">
+        <div class="flash" style="grid-column: 1 / -1"><small>Registration Officer</small><strong>B-014</strong></div>
+      </div>
+    </div>
+    <div class="swatches">
+      <span class="sw"><i style="background:#faf6ee"></i>Warm off-white, like a paper form</span>
+      <span class="sw"><i style="background:#14213d"></i>Deep navy text</span>
+      <span class="sw"><i style="background:#ffd21f"></i>Jeepney yellow: your turn and the number only</span>
+      <span class="sw"><i style="background:#2e9e57"></i>Green: ready ✓ only</span>
+      <span class="sw"><i style="background:#e5532a"></i>Red-orange: Kulang pa only</span>
+    </div>
+    <p class="avoid"><b>Avoid:</b> government-website feel (tiny text, crowded pages, official seals), bank-app feel, and generic AI chatbots with purple gradients. <b>Rule:</b> no government logos or seals. The exact color values are placeholders for <code>4-spec</code>.</p>
+  </section>
+
+  <!-- Now / Deferred -->
+  <section>
+    <h2>Building now vs. deferred</h2>
+    <div class="split">
+      <details open>
+        <summary>What we're building <span class="count" style="margin-left:auto;color:var(--muted);font-weight:400;font-size:.88rem">9 items</span></summary>
+        <div class="body" style="display:block"><ul>
+          <li>Screen 1, with the single BIR transaction</li>
+          <li>Your plan: summary, the three-step path (with the unfiled-returns warning and relief note when they apply), checklist with "?" and "Kulang pa," situation documents, "last checked" date, locked button</li>
+          <li>Magtanong: common questions with pre-written answers from the official source, each with citations, the grey "not in the source" card, and a "?" explanation for each document</li>
+          <li>A number from scanning the TV's QR code with the phone's camera, only when the checklist is complete, plus a new number for visit 2</li>
+          <li>In line: number, step, "Ikaw na!," "Visit 1 done ✓. Balik ka sa [date]," the labeled demo switch, "Tapos na!" with the total time across both visits</li>
+          <li>Saved progress, reopening to the current step, the offline banner, "Tinawag ka na"</li>
+          <li>Staff counter: one counter, list with visit and "Documents ready ✓" badges, "Call next," "Done"</li>
+          <li>TV: one counter panel, flash and spoken call, QR code</li>
+          <li>Team edit screen (built last) and the "Na-update" behavior</li>
+        </ul></div>
+      </details>
+      <details open>
+        <summary>Deferred, with reasons <span class="count" style="margin-left:auto;color:var(--muted);font-weight:400;font-size:.88rem">15 items</span></summary>
+        <div class="body" style="display:block"><ul>
+          <li><b>"Malapit ka na!" alert when she's 3 away:</b> unreliable with her phone in her pocket</li>
+          <li><b>People-ahead count:</b> first extra if time allows</li>
+          <li><b>Next 3 in line on the TV:</b> first extra if time allows</li>
+          <li><b>Rough wait time:</b> an estimate the proof doesn't need</li>
+          <li><b>"Call again":</b> not needed for the demo</li>
+          <li><b>No-show and "Na-skip ka":</b> not needed for the demo</li>
+          <li><b>"Save this question" ("Itanong sa Window 1"):</b> nice, not part of the proof</li>
+          <li><b>Live updates of changes:</b> the next load is enough</li>
+          <li><b>Full staff or team accounts:</b> a passcode is enough</li>
+          <li><b>Philippine holidays in the return date:</b> only weekends are skipped for now</li>
+          <li><b>The real outcome of BIR's records check:</b> BIR contacts her directly; the app only warns her upfront</li>
+          <li><b>Live AI answers to any typed question:</b> replaced by pre-written cited answers, since the proof is shown on video</li>
+          <li><b>Deployment and a hosted database:</b> the app runs on the laptop, and a phone joins over the same Wi-Fi</li>
+          <li><b>An in-app camera scanner:</b> phones block the camera inside a website on a local address, so the phone's own camera scans instead</li>
+          <li><b>Editing the common questions and answers on the team screen:</b> edited in the plan data file for now</li>
+        </ul></div>
+      </details>
+    </div>
+    <details style="margin-top:2px">
+      <summary>Non-goals</summary>
+      <div class="body" style="display:block"><ul>
+        <li>Not an official BIR app: no logos or seals.</li>
+        <li>No answers from beyond the official source, no made-up amounts, and no legal or tax advice.</li>
+        <li>No claiming the pre-written answers are AI: honesty in the video and the write-up.</li>
+        <li>No names on shared screens.</li>
+        <li>No connection to BIR's real systems. The proof of concept simulates the office.</li>
+        <li>No other transactions or offices in the proof of concept.</li>
+        <li>No invented cross-office documents.</li>
+      </ul></div>
+    </details>
+    <details style="margin-top:10px">
+      <summary>Possible later enhancements</summary>
+      <div class="body" style="display:block"><ul>
+        <li>More transactions and offices: civil registry corrections, business tax registration, business and property tax payments, IDs, passports, driver's licenses, clearances, and city hall payments.</li>
+        <li>Designing for the wider user groups: small business owners, seniors, parents, students, and fresh grads.</li>
+        <li>Live AI answers grounded in the official source, with citations: the original Magtanong idea.</li>
+        <li>Deploying it so other people can try it on their own phones.</li>
+      </ul></div>
+    </details>
+  </section>
+
+  <!-- Open questions -->
+  <section>
+    <h2>Open questions and assumptions</h2>
+    <div class="callout" style="border-left-color:var(--ok)">
+      <h3>Resolved in review</h3>
+      <ul>
+        <li><b>Situation documents:</b> one question each. "Hindi" frees her. "Oo," "Hindi ko alam," or no answer keeps the document required. "Documents ready ✓" means every document that applies to her is ticked.</li>
+        <li><b>Confirmed:</b> scanning before preparing lands on Screen 1 (the phone's own camera does the scanning), "Ikaw na!" plays a sound after a one-time prompt, and an empty staff list says no one is waiting.</li>
+        <li><b>Decided in <code>5-build</code>:</b> pre-written cited answers instead of live AI, and no deployment: the app runs on the laptop and the phone scans the TV's QR code with its own camera.</li>
+      </ul>
+    </div>
+    <div class="callout" style="margin-top:10px">
+      <h3>Assumptions confirmed in spec review</h3>
+      <p>Both earlier questions were answered by the <code>4-spec</code> research (RMC 47-2026, Citizen's Charter 2026 entry 28-A, and RMC 84-2026 for the relief note). The three assumptions from the two-visit change remain:</p>
+      <ul>
+        <li>The demo switch sits on her phone's "Visit 1 done" screen.</li>
+        <li>Visit 2 stays locked before the return date unless the demo switch is on.</li>
+        <li>Total time counts time at the office on both visits, from getting each number to its "Done."</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>This page is a visual companion. The canonical PRD is <code>devpost/prd.md</code>.</footer>
+</main>
+
+<script>
+(function () {
+  var steps = [
+    { t: "1 · Choose", see: "Screen 1 asks “Ano'ng kailangan mong gawin?” with one choice: “BIR: Close my freelancer registration.”", check: ["Exactly one choice shows.", "Tapping it opens Your plan."], what: ["Other offices and transactions come later."] },
+    { t: "2 · See the plan", see: "One scrolling screen: summary (steps, money to prepare, roughly how long), the three-step path, the checklist, and the “last checked” date. All of it comes from the team's cited data.", check: ["Summary values each trace to a citation.", "The path lists the three steps with the counter for each visit.", "The “last checked” date is visible."], what: ["No amount entered: it says no official amount is listed.", "Requirements updated since her last visit: the “Na-update” banner and highlights."] },
+    { t: "3 · Ask", see: "Magtanong opens over the plan (or from a document's “?”). She picks a common question, and the pre-written answer quotes the official source with its citation.", check: ["A question the source answers gets a cited reply that quotes the official text.", "Closing keeps her place in the plan."], what: ["The source doesn't answer: her penalty question shows a grey card that says so, related cited text (RMC 47-2026 Sec. 6 and the RMC 84-2026 relief program), who to ask, and the “Gabay lang ito” note. Never a guessed penalty."] },
+    { t: "4 · Tick documents", see: "She ticks what she has. “Kulang pa: ___” names each missing document, where to get it, and its citation. “Kumuha ng number” stays locked.", check: ["Any unticked document: warning shown, button locked.", "The last tick clears the warning and unlocks the button."], what: ["First use: everything is listed as missing.", "Situation document: Hindi frees her; Oo, Hindi ko alam, or no answer keeps it required.", "Closing and reopening: her ticks stay on her phone."], cool: "Cool moment 1: the missing document is caught at home, with the official citation, before she wastes a trip." },
+    { t: "5 · Get a number", see: "At BIR she taps “Kumuha ng number,” sees “I-scan ang QR sa TV gamit ang camera ng phone mo,” scans the TV's QR code with her phone's own camera, and gets B-014. Her phone shows “Step 1 of 3: Submit, [counter],” the path highlighted, and “All documents ready ✓.”", check: ["Everything ticked: exactly one number is issued.", "B-014 joins the counter's list with a “Submit” badge and “Documents ready ✓.”"], what: ["Anything unticked: no number.", "Scanning before preparing lands on Screen 1.", "A number is good for that day only."] },
+    { t: "6 · Called", see: "Staff at the Registration Officer counter tap “Call next.” The TV flashes the counter's panel and says “Numero B-014, [counter].” At the same moment her phone shows “Ikaw na! [counter]” full-screen.", check: ["Phone and TV react to the same tap at the same moment.", "No names on the TV or the counter."], what: ["Called while the app was closed or offline: reopening shows “Tinawag ka na sa [counter].”", "Her phone plays a sound if she turned on alerts with the one-time prompt."] },
+    { t: "7 · Visit 1 done", see: "Staff tap “Done.” Her phone moves on by itself to “Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30.” Her path highlights step 2, “BIR checks your records (about 3 working days).” The return date skips weekends.", check: ["“Done” on visit 1 moves her phone to “Balik ka sa [date]” without her touching it.", "Done on a Thursday gives a return date of the following Tuesday."], what: ["She answered Oo or Hindi ko alam to the unfiled-returns question: the waiting step shows the 30-day settle warning and the cited relief-program note (until 31 Dec 2026).", "Offline: “Offline: huling update 10:42,” and it refreshes when the signal returns."], cool: "Cool moment 2: one tap at the counter makes the TV speak, and then her phone tells her exactly when to come back and what to bring." },
+    { t: "8 · Visit 2", see: "On the return date she scans the QR code again and gets a new number with a “Pay & claim” badge. Staff call her, and she pays ₱30 and receives her tax clearance at the same counter. For the demo, a labeled “Demo: lumipas ang 3 working days” switch jumps straight here.", check: ["The demo switch is visibly labeled as a demo and unlocks visit 2 right away.", "Scanning again issues a new number marked “Pay & claim.”"], what: ["Before the return date, visit 2 stays locked and shows “Balik ka sa [date]” unless the demo switch is on (assumption).", "Visit 2 always gets a new number; her ticks are still there."] },
+    { t: "9 · Tapos na", see: "When staff tap “Done” on visit 2, her phone shows “Tapos na!” with the total time across both visits.", check: ["“Tapos na!” shows with the total time across both visits."], what: ["Total time counts time at the office on visit 1 plus visit 2 (assumption).", "Finishing the transaction clears her saved ticks."] }
+  ];
+  var svg = document.getElementById("flow");
+  var detail = document.getElementById("detail");
+  var dots = document.getElementById("dots");
+  var current = 0;
+
+  steps.forEach(function (s, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(i + 1);
+    b.setAttribute("aria-label", "Step " + s.t);
+    b.addEventListener("click", function () { go(i + 1); });
+    dots.appendChild(b);
+  });
+  svg.querySelectorAll(".row").forEach(function (r) {
+    r.addEventListener("click", function () { go(Number(r.getAttribute("data-step"))); });
+  });
+
+  function list(items) {
+    var ul = document.createElement("ul");
+    ul.className = "checks";
+    items.forEach(function (x) { var li = document.createElement("li"); li.textContent = x; ul.appendChild(li); });
+    return ul;
+  }
+  function plain(items) {
+    var ul = document.createElement("ul");
+    items.forEach(function (x) { var li = document.createElement("li"); li.textContent = x; ul.appendChild(li); });
+    return ul;
+  }
+
+  function go(n) {
+    current = n;
+    svg.classList.toggle("focused", n > 0);
+    svg.querySelectorAll(".row").forEach(function (r) { r.classList.toggle("on", r.classList.contains("r" + n)); });
+    Array.prototype.forEach.call(dots.children, function (b, i) { b.setAttribute("aria-pressed", String(i + 1 === n)); });
+    detail.textContent = "";
+    if (n === 0) {
+      var h = document.createElement("h3"); h.textContent = "All nine steps";
+      var p = document.createElement("p"); p.style.margin = "0";
+      p.textContent = "Use Next, a step number, or click a row in the diagram to see what she sees, the checks, and the what-ifs for that step.";
+      detail.appendChild(h); detail.appendChild(p);
+      return;
+    }
+    var s = steps[n - 1];
+    var h3 = document.createElement("h3"); h3.textContent = s.t;
+    var see = document.createElement("p"); see.style.margin = "0"; see.textContent = s.see;
+    var cols = document.createElement("div"); cols.className = "cols";
+    var c1 = document.createElement("div"); var k1 = document.createElement("div"); k1.className = "k"; k1.textContent = "How we'll check it"; c1.appendChild(k1); c1.appendChild(list(s.check));
+    var c2 = document.createElement("div"); var k2 = document.createElement("div"); k2.className = "k"; k2.textContent = "What if"; c2.appendChild(k2); c2.appendChild(plain(s.what));
+    cols.appendChild(c1); cols.appendChild(c2);
+    detail.appendChild(h3); detail.appendChild(see); detail.appendChild(cols);
+    if (s.cool) { var c = document.createElement("div"); c.className = "cool"; c.textContent = "★ " + s.cool; detail.appendChild(c); }
+  }
+
+  document.getElementById("next").addEventListener("click", function () { go(current >= steps.length ? 1 : current + 1); });
+  document.getElementById("prev").addEventListener("click", function () { go(current <= 1 ? steps.length : current - 1); });
+  document.getElementById("all").addEventListener("click", function () { go(0); });
+  go(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pila to Tapos — Scope</title>
+<style>
+  :root {
+    --bg: #f7f5f1;
+    --surface: #ffffff;
+    --ink: #1d1c1a;
+    --muted: #66625b;
+    --line: #e2ddd4;
+    --accent: #1f4fd1;
+    --accent-soft: #e8eefc;
+    --star: #c26a00;
+    --star-soft: #fdf0dc;
+    --lane-source: #e6f3ea;
+    --lane-source-ink: #1e6b3a;
+    --lane-phone: #e8eefc;
+    --lane-phone-ink: #1f4fd1;
+    --lane-counter: #fbeedd;
+    --lane-counter-ink: #9a5200;
+    --lane-tv: #efe9fb;
+    --lane-tv-ink: #5b3cb8;
+    --cut: #b3261e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413;
+      --surface: #1d1c1a;
+      --ink: #ecebe7;
+      --muted: #a29e96;
+      --line: #35332f;
+      --accent: #86a8ff;
+      --accent-soft: #1f2a44;
+      --star: #f2a33a;
+      --star-soft: #3a2a12;
+      --lane-source: #17301f;
+      --lane-source-ink: #8fd6a6;
+      --lane-phone: #1c2640;
+      --lane-phone-ink: #9db8ff;
+      --lane-counter: #33240f;
+      --lane-counter-ink: #f0b56a;
+      --lane-tv: #2a2140;
+      --lane-tv-ink: #c4b1ff;
+      --cut: #ff8a80;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413; --surface: #1d1c1a; --ink: #ecebe7; --muted: #a29e96; --line: #35332f;
+    --accent: #86a8ff; --accent-soft: #1f2a44; --star: #f2a33a; --star-soft: #3a2a12;
+    --lane-source: #17301f; --lane-source-ink: #8fd6a6; --lane-phone: #1c2640; --lane-phone-ink: #9db8ff;
+    --lane-counter: #33240f; --lane-counter-ink: #f0b56a; --lane-tv: #2a2140; --lane-tv-ink: #c4b1ff;
+    --cut: #ff8a80;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 920px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: 2.2rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.15rem; margin: 0 0 12px; letter-spacing: -0.01em; }
+  p { margin: 0 0 10px; }
+  .eyebrow { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+  .badge { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; background: var(--surface); }
+  .badge.draft { color: var(--star); border-color: var(--star); }
+  .lede { font-size: 1.1rem; color: var(--muted); max-width: 680px; }
+  section { margin-top: 36px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .revised { max-width: 680px; font-size: 0.9rem; color: var(--muted); background: var(--star-soft); border-left: 3px solid var(--star); border-radius: 8px; padding: 10px 14px; margin-top: 14px; }
+  .kernel { border-left: 4px solid var(--accent); }
+  .kernel p:first-of-type { font-size: 1.08rem; }
+  .kernel .aside { color: var(--muted); margin: 0; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .two h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 8px; }
+  .two ul { margin: 0; padding-left: 18px; }
+
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram-wrap svg { display: block; min-width: 720px; width: 100%; height: auto; }
+  svg text { font-family: inherit; fill: var(--ink); }
+  svg .lane-label { font-size: 12px; font-weight: 600; fill: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  svg .step-num { font-size: 12px; font-weight: 700; fill: var(--muted); }
+  svg .step-name { font-size: 14px; font-weight: 600; }
+  svg .box-title { font-size: 13px; font-weight: 600; }
+  svg .box-sub { font-size: 11.5px; fill: var(--muted); }
+  svg .rowline { stroke: var(--line); stroke-width: 1; }
+  svg .b-source { fill: var(--lane-source); stroke: var(--lane-source-ink); }
+  svg .b-phone { fill: var(--lane-phone); stroke: var(--lane-phone-ink); }
+  svg .b-counter { fill: var(--lane-counter); stroke: var(--lane-counter-ink); }
+  svg .b-tv { fill: var(--lane-tv); stroke: var(--lane-tv-ink); }
+  svg rect[class^="b-"] { stroke-width: 1.2; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  svg .arrow-label { font-size: 11px; fill: var(--muted); font-style: italic; }
+  svg .star-bg { fill: var(--star-soft); stroke: var(--star); stroke-width: 1.2; }
+  svg .star-txt { font-size: 11px; font-weight: 700; fill: var(--star); }
+  svg .row { transition: opacity 180ms ease; }
+  svg.focused .row { opacity: 0.22; }
+  svg.focused .row.on { opacity: 1; }
+  svg .always { opacity: 1 !important; }
+  #arrowhead path { fill: var(--muted); }
+
+  .stepper { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .stepper button {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  }
+  .stepper button:hover { border-color: var(--accent); }
+  .stepper button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .dots { display: flex; gap: 6px; }
+  .dots button { width: 30px; padding: 6px 0; text-align: center; }
+  .dots button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+  .caption {
+    margin-top: 12px; padding: 14px 16px; border-radius: 10px; background: var(--accent-soft);
+    min-height: 74px;
+  }
+  .caption strong { display: block; margin-bottom: 2px; }
+  .caption .cool { color: var(--star); font-weight: 600; }
+
+  .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .screen.source h3 { color: var(--lane-source-ink); }
+  .screen { border-radius: 12px; padding: 14px 16px; border: 1px solid var(--line); background: var(--surface); }
+  .screen h3 { margin: 0 0 6px; font-size: 0.95rem; }
+  .screen ul { margin: 0; padding-left: 18px; font-size: 0.92rem; }
+  .screen.phone h3 { color: var(--lane-phone-ink); }
+  .screen.counter h3 { color: var(--lane-counter-ink); }
+  .screen.tv h3 { color: var(--lane-tv-ink); }
+
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+  summary {
+    cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 1.2rem; }
+  details[open] summary::after { content: "–"; }
+  summary .count { color: var(--muted); font-weight: 400; font-size: 0.88rem; margin-left: auto; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+  details .body { padding: 0 18px 16px; }
+  details ul { margin: 0; padding-left: 18px; }
+  details li { margin-bottom: 6px; }
+  .now summary { border-left: 4px solid var(--accent); border-radius: 12px; }
+  .later summary { border-left: 4px solid var(--star); border-radius: 12px; }
+  .cut summary { border-left: 4px solid var(--cut); border-radius: 12px; }
+  .why { color: var(--muted); }
+
+  blockquote { margin: 0; padding: 12px 16px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+  code { font-size: 0.9em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+
+  @media (max-width: 680px) {
+    h1 { font-size: 1.75rem; }
+    .two, .screens { grid-template-columns: 1fr; }
+    main { padding-top: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) { svg .row { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><span>Build With AI: Basics · Scope</span><span class="badge">Approved</span></div>
+  <h1>Pila to Tapos</h1>
+  <p class="lede">A BIR queue number that shows you the whole path before you leave home (every step, every document, and how much to prepare), then guides you through every visit until you're done.</p>
+  <p class="revised"><strong>Revised during <code>4-spec</code> (2026-10-22).</strong> The official source says this transaction uses one counter across two visits, about 3 working days apart, not three windows in one visit. The learner chose to follow the real process. See <code>prd.md</code> for the details.</p>
+  <p class="revised"><strong>Revised in <code>5-build</code> (2026-10-22).</strong> Magtanong uses pre-written answers from the official source, with citations, instead of live AI. The app runs on a laptop with no deployment, and the phone joins over Wi-Fi by scanning the QR code with its own camera. The learner decided this because the proof of concept is shown only on video.</p>
+
+  <section>
+    <div class="card kernel">
+      <h2>The unique kernel</h2>
+      <p>Before she leaves home, she sees the <strong>whole path</strong>: every step, every document (including any from other offices that this transaction depends on), and how much money to prepare. It all comes from the <strong>official BIR source with the citation shown</strong>, not from whatever a staff member happens to say that day. Then <strong>one queue number</strong> carries her along that same path inside the office.</p>
+      <p class="aside">Today's queue only manages the people already standing in the office. This one starts the night before.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Who it's for</h2>
+    <div class="card">
+      <p>A working individual who used to freelance as a virtual assistant (VA). She needs to <strong>close her BIR freelancer registration</strong> so she stops owing filings for work she no longer does.</p>
+      <div class="two" style="margin-top:14px">
+        <div>
+          <h3>Today</h3>
+          <ul>
+            <li>Takes a day off work</li>
+            <li>Gets the requirements one at a time, and not always correctly</li>
+            <li>Isn't told how much to prepare</li>
+            <li>Is sent home because a document is missing</li>
+          </ul>
+        </div>
+        <div>
+          <h3>With Pila to Tapos</h3>
+          <ul>
+            <li>Sees every step and document the night before</li>
+            <li>Gets pre-written answers with the official citation shown</li>
+            <li>Is warned about a missing document before spending any fare</li>
+            <li>Gets a number for each visit and is told when to come back</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The core loop and the one-minute demo</h2>
+    <p class="why">Each lane is a screen. Arrows show what triggers what. Step through the demo to follow one visit.</p>
+    <div class="card">
+      <div class="diagram-wrap">
+        <svg id="flow" viewBox="0 0 820 680" role="img" aria-labelledby="flow-title flow-desc">
+          <title id="flow-title">Pila to Tapos demo flow across four lanes</title>
+          <desc id="flow-desc">Six demo steps across four lanes: the official BIR source, her phone, the staff counter, and the TV. The official source feeds the answers and the path on her phone. Scanning the TV's QR code gives her phone a number. Tapping Call next at the Registration Officer counter makes the TV speak and her phone show You're up. Tapping Done on visit 1 moves her phone to Balik ka sa a date, bring 30 pesos. After three working days, visit 2 gets a new number, and the journey ends with Tapos na and the total time across both visits.</desc>
+          <defs>
+            <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z"/>
+            </marker>
+          </defs>
+
+          <!-- lane headers -->
+          <g class="always">
+            <text class="lane-label" x="185" y="26" text-anchor="middle">Official source</text>
+            <text class="lane-label" x="385" y="26" text-anchor="middle">Her phone</text>
+            <text class="lane-label" x="580" y="26" text-anchor="middle">Staff counter</text>
+            <text class="lane-label" x="747" y="26" text-anchor="middle">TV</text>
+          </g>
+
+          <!-- row 1: at home -->
+          <g class="row r1" data-step="1">
+            <line class="rowline" x1="0" y1="44" x2="820" y2="44"/>
+            <text class="step-num" x="8" y="80">1</text>
+            <text class="step-name" x="26" y="80">At home</text>
+            <rect class="b-phone" x="290" y="54" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="80" text-anchor="middle">Taps her question</text>
+            <text class="box-sub" x="385" y="98" text-anchor="middle">pre-written answer + citation</text>
+            <path class="arrow" d="M258,86 L288,86" marker-end="url(#arrowhead)"/>
+          </g>
+
+          <!-- row 2: whole path -->
+          <g class="row r2" data-step="2">
+            <line class="rowline" x1="0" y1="134" x2="820" y2="134"/>
+            <text class="step-num" x="8" y="170">2</text>
+            <text class="step-name" x="26" y="170">Whole path</text>
+            <rect class="b-phone" x="290" y="144" width="190" height="70" rx="10"/>
+            <text class="box-title" x="385" y="168" text-anchor="middle">Steps · documents · amount</text>
+            <text class="box-sub" x="385" y="186" text-anchor="middle">missing doc: warns her and</text>
+            <text class="box-sub" x="385" y="201" text-anchor="middle">says where to get it</text>
+            <path class="arrow" d="M258,178 L288,178" marker-end="url(#arrowhead)"/>
+            <rect class="star-bg" x="494" y="164" width="106" height="28" rx="14"/>
+            <text class="star-txt" x="547" y="182" text-anchor="middle">★ cool moment 1</text>
+          </g>
+
+          <!-- source spans rows 1 and 2; drawn after them so it sits over the row divider -->
+          <g class="row r1 r2">
+            <rect class="b-source" x="112" y="54" width="146" height="160" rx="10"/>
+            <text class="box-title" x="185" y="112" text-anchor="middle">Official BIR</text>
+            <text class="box-title" x="185" y="129" text-anchor="middle">requirements</text>
+            <text class="box-sub" x="185" y="152" text-anchor="middle">closing a freelancer's</text>
+            <text class="box-sub" x="185" y="167" text-anchor="middle">registration only</text>
+            <text class="box-sub" x="185" y="190" text-anchor="middle">kept current by your team</text>
+          </g>
+
+          <!-- row 3: arriving -->
+          <g class="row r3" data-step="3">
+            <line class="rowline" x1="0" y1="230" x2="820" y2="230"/>
+            <text class="step-num" x="8" y="266">3</text>
+            <text class="step-name" x="26" y="266">Arriving</text>
+            <rect class="b-tv" x="680" y="240" width="134" height="64" rx="10"/>
+            <text class="box-title" x="747" y="268" text-anchor="middle">QR code</text>
+            <text class="box-sub" x="747" y="286" text-anchor="middle">on the TV</text>
+            <rect class="b-phone" x="290" y="240" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="266" text-anchor="middle">Number B-014</text>
+            <text class="box-sub" x="385" y="284" text-anchor="middle">only if checklist complete</text>
+            <path class="arrow" d="M680,272 L482,272" marker-end="url(#arrowhead)"/>
+            <text class="arrow-label" x="580" y="264" text-anchor="middle">scan</text>
+          </g>
+
+          <!-- row 4: called -->
+          <g class="row r4" data-step="4">
+            <line class="rowline" x1="0" y1="320" x2="820" y2="320"/>
+            <text class="step-num" x="8" y="356">4</text>
+            <text class="step-name" x="26" y="356">Called</text>
+            <rect class="b-counter" x="512" y="330" width="136" height="64" rx="10"/>
+            <text class="box-title" x="580" y="358" text-anchor="middle">Call next</text>
+            <text class="box-sub" x="580" y="376" text-anchor="middle">one tap</text>
+            <rect class="b-tv" x="680" y="330" width="134" height="64" rx="10"/>
+            <text class="box-title" x="747" y="354" text-anchor="middle">Speaks aloud</text>
+            <text class="box-sub" x="747" y="371" text-anchor="middle">"Numero B-014,</text>
+            <text class="box-sub" x="747" y="385" text-anchor="middle">[counter]"</text>
+            <rect class="b-phone" x="290" y="330" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="358" text-anchor="middle">"You're up"</text>
+            <text class="box-sub" x="385" y="376" text-anchor="middle">at the same moment</text>
+            <path class="arrow" d="M648,362 L678,362" marker-end="url(#arrowhead)"/>
+            <path class="arrow" d="M512,362 L482,362" marker-end="url(#arrowhead)"/>
+          </g>
+
+          <!-- row 5: visit 1 done -->
+          <g class="row r5" data-step="5">
+            <line class="rowline" x1="0" y1="410" x2="820" y2="410"/>
+            <text class="step-num" x="8" y="446">5</text>
+            <text class="step-name" x="26" y="446">Come back</text>
+            <rect class="b-counter" x="512" y="420" width="136" height="64" rx="10"/>
+            <text class="box-title" x="580" y="448" text-anchor="middle">Done</text>
+            <text class="box-sub" x="580" y="466" text-anchor="middle">visit 1, one tap</text>
+            <rect class="b-phone" x="290" y="420" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="443" text-anchor="middle">Visit 1 done ✓</text>
+            <text class="box-sub" x="385" y="460" text-anchor="middle">Balik ka sa [date]</text>
+            <text class="box-sub" x="385" y="475" text-anchor="middle">Dalhin: ₱30</text>
+            <path class="arrow" d="M512,452 L482,452" marker-end="url(#arrowhead)"/>
+            <rect class="star-bg" x="112" y="438" width="146" height="28" rx="14"/>
+            <text class="star-txt" x="185" y="456" text-anchor="middle">★ cool moment 2</text>
+            <text class="arrow-label" x="747" y="446" text-anchor="middle">BIR checks records</text>
+            <text class="arrow-label" x="747" y="460" text-anchor="middle">about 3 working days</text>
+          </g>
+
+          <!-- row 6: visit 2 and done -->
+          <g class="row r6" data-step="6">
+            <line class="rowline" x1="0" y1="500" x2="820" y2="500"/>
+            <text class="step-num" x="8" y="536">6</text>
+            <text class="step-name" x="26" y="536">Visit 2, done</text>
+            <rect class="b-phone" x="112" y="510" width="146" height="64" rx="10"/>
+            <text class="box-title" x="185" y="534" text-anchor="middle">Demo switch</text>
+            <text class="box-sub" x="185" y="551" text-anchor="middle">Demo: lumipas ang</text>
+            <text class="box-sub" x="185" y="565" text-anchor="middle">3 working days</text>
+            <rect class="b-phone" x="290" y="510" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="534" text-anchor="middle">New number</text>
+            <text class="box-sub" x="385" y="551" text-anchor="middle">"Pay &amp; claim" · pay ₱30,</text>
+            <text class="box-sub" x="385" y="565" text-anchor="middle">claim the clearance</text>
+            <rect class="b-counter" x="512" y="510" width="136" height="64" rx="10"/>
+            <text class="box-title" x="580" y="538" text-anchor="middle">Call next</text>
+            <text class="box-sub" x="580" y="556" text-anchor="middle">then Done</text>
+            <path class="arrow" d="M258,542 L288,542" marker-end="url(#arrowhead)"/>
+            <path class="arrow" d="M512,542 L482,542" marker-end="url(#arrowhead)"/>
+            <rect class="b-phone" x="290" y="590" width="190" height="64" rx="10"/>
+            <text class="box-title" x="385" y="618" text-anchor="middle">"Tapos na!"</text>
+            <text class="box-sub" x="385" y="636" text-anchor="middle">total time, both visits</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="stepper" role="group" aria-label="Demo steps">
+        <button type="button" id="prev">‹ Prev</button>
+        <div class="dots" id="dots"></div>
+        <button type="button" id="next">Next ›</button>
+        <button type="button" id="all">Show all</button>
+      </div>
+      <div class="caption" id="caption" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The screens in the proof of concept</h2>
+    <div class="screens">
+      <div class="screen phone">
+        <h3>Her phone</h3>
+        <ul>
+          <li>Pick BIR and the transaction</li>
+          <li>Tap common questions; pre-written answers show citations</li>
+          <li>Path view and checklist</li>
+          <li>Number, "You're up," "Visit 1 done ✓. Balik ka sa [date]," a labeled demo switch, "Tapos na!"</li>
+        </ul>
+      </div>
+      <div class="screen counter">
+        <h3>Staff counter</h3>
+        <ul>
+          <li>One counter: the Registration Officer counter</li>
+          <li>Call next</li>
+          <li>Done</li>
+        </ul>
+      </div>
+      <div class="screen tv">
+        <h3>TV</h3>
+        <ul>
+          <li>QR code to get a number</li>
+          <li>One panel for the Registration Officer counter</li>
+          <li>Speaks each call in Filipino</li>
+        </ul>
+      </div>
+      <div class="screen source">
+        <h3>Team edit screen</h3>
+        <ul>
+          <li>Update steps, documents, and amounts</li>
+          <li>Each entry keeps its official citation</li>
+          <li>Built last; falls back to editing the file</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What's in, what's later, what's cut</h2>
+    <details class="now" open>
+      <summary>Now: the proof-of-concept boundary <span class="count">11 items</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>One office, one transaction:</strong> BIR, closing a freelancer's registration.</li>
+          <li><strong>Steps and documents:</strong> whatever the official BIR source actually lists for this transaction. Per the source (RMC 47-2026 and Citizen's Charter 28-A), that means one counter (Registration Officer) and two visits: submit, BIR checks for about 3 working days, then pay ₱30 and claim.</li>
+          <li><strong>The only source</strong> is the official BIR requirements for this transaction. Answers are pre-written from it, and every answer shows its citation.</li>
+          <li><strong>Documents from other offices:</strong> highlighted only if the official source lists one. If it doesn't, that point is dropped.</li>
+          <li><strong>Editable path data:</strong> steps, documents, and amounts are data the team can update when BIR changes the process or an amount becomes known, each with its official citation. Nothing is hardcoded. If no amount has been entered, the app says <em>no official amount is listed</em> instead of guessing.</li>
+          <li><strong>Team edit screen (the fifth screen):</strong> where the team updates that data. It's built last. If time runs short, the team edits the data file directly instead.</li>
+          <li>A checklist with a <strong>missing-document warning</strong> that says where to get the document.</li>
+          <li>A number is issued <strong>only when the checklist is complete</strong>, via the QR code on the TV.</li>
+          <li>Staff counter: <strong>Call next</strong> and <strong>Done</strong>.</li>
+          <li>TV: shows who is being served at the counter and <strong>speaks each call in Filipino</strong>.</li>
+          <li>Phone: updates live to "You're up," then "Balik ka sa [date]," then (after visit 2) "Tapos na!" with the total time.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="later">
+      <summary>Later: worth doing, just not now <span class="count">5 items</span></summary>
+      <div class="body">
+        <ul>
+          <li>"Step out" alert: the phone vibrates and beeps when she's 3 away.</li>
+          <li>A "people ahead of you" count.</li>
+          <li>A "No-show" button on the staff counter.</li>
+          <li>More transactions and offices: civil registry corrections, business tax registration, business and property tax payments, IDs, passports, driver's licenses, clearances, and city hall payments.</li>
+          <li>Designing for the wider user groups: small business owners, seniors, parents, students, and fresh grads.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="cut">
+      <summary>Explicitly cut, with reasons <span class="count">6 items</span></summary>
+      <div class="body">
+        <ul>
+          <li><strong>Business permit renewal and the barangay clearance example</strong>: <span class="why">that's a city hall transaction. The proof of concept is built on her real BIR story.</span></li>
+          <li><strong>Inventing a cross-office document for the demo</strong>: <span class="why">cross-office documents appear only if the official source lists one.</span></li>
+          <li><strong>Answers from anything beyond the official BIR source for this transaction</strong>: <span class="why">wrong or unclear information is the very problem being solved.</span></li>
+          <li><strong>Live AI answers</strong> (decided in <code>5-build</code>): <span class="why">the proof is shown only on video, so pre-written cited answers prove the same kernel with no API key, cost, or risk.</span></li>
+          <li><strong>Deployment</strong> (decided in <code>5-build</code>): <span class="why">optional for the hackathon. The app runs on the laptop, and a phone joins over Wi-Fi.</span></li>
+          <li><strong>Connecting to BIR's real systems (their queue, payments, or registration records)</strong>: <span class="why">the proof of concept simulates the office. Real integration isn't needed to prove the kernel.</span></li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Inspiration &amp; identity</h2>
+    <div class="card">
+      <ul style="margin:0;padding-left:18px">
+        <li>Plain words and Filipino/Taglish, the way she actually asks.</li>
+        <li>Spoken calls in Filipino and a full-screen phone call display, for seniors and anyone who can't read the TV well.</li>
+        <li>Trustworthy over clever: every answer shows where it came from.</li>
+        <li>Official source: BIR's published requirements for this one transaction (exact pages to be pinned down later).</li>
+      </ul>
+      <blockquote style="margin-top:14px">"May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?"</blockquote>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why this matters</h2>
+    <div class="card">
+      <p>Someone they know well lost a whole day of work at BIR and was sent home for missing documents.</p>
+      <blockquote>"Instructions are incomplete and unclear, and the requirements are never fully explained upfront."</blockquote>
+      <p style="margin-top:10px">That costs Filipinos fares, lost income, and leave from work.</p>
+    </div>
+  </section>
+
+  <footer>
+    This page is a visual companion. The canonical plan is <code>devpost/scope.md</code>.
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var steps = [
+      { t: "1 · At home (phone)", d: "She picks BIR and closing her freelancer registration, then taps her question, “May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?” The answer is pre-written from the official source, with the citation shown." },
+      { t: "2 · The whole path (phone)", d: "Every step, every document, and how much to prepare. She leaves one document unticked, and the app warns her that it's missing and where to get it.", cool: "Cool moment 1: the missing document is caught at home, with the official citation, before she wastes a trip." },
+      { t: "3 · Arriving (phone + TV)", d: "With everything ticked, she scans the QR code on the TV with her phone\u2019s own camera and gets one number: B-014." },
+      { t: "4 · Called (counter + TV + phone)", d: "Staff tap “Call next.” The TV says “Numero B-014, [counter]” out loud, and at the same moment her phone flips to “You're up.” This is visit 1, at the Registration Officer counter." },
+      { t: "5 · Visit 1 done (phone)", d: "Staff tap “Done,” and her phone shows “Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30” by itself. BIR checks her records in the meantime.", cool: "Cool moment 2: a single tap at the counter makes the TV speak, and then her phone tells her exactly when to come back and what to bring." },
+      { t: "6 · Visit 2 and done (phone)", d: "A labeled demo switch (“Demo: lumipas ang 3 working days”) skips the 3 working days. She gets a new number, is called again, pays ₱30 and claims her tax clearance at the same counter, and finishes with “Tapos na!” and the total time." }
+    ];
+    var svg = document.getElementById("flow");
+    var caption = document.getElementById("caption");
+    var dots = document.getElementById("dots");
+    var current = 0; // 0 = show all
+
+    steps.forEach(function (s, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = String(i + 1);
+      b.setAttribute("aria-label", "Step " + (i + 1) + ": " + s.t.replace(/^\d+ · /, ""));
+      b.addEventListener("click", function () { go(i + 1); });
+      dots.appendChild(b);
+    });
+
+    function go(n) {
+      current = n;
+      var rows = svg.querySelectorAll(".row");
+      rows.forEach(function (r) { r.classList.toggle("on", n > 0 && r.classList.contains("r" + n)); });
+      svg.classList.toggle("focused", n > 0);
+      Array.prototype.forEach.call(dots.children, function (b, i) {
+        b.setAttribute("aria-pressed", String(i + 1 === n));
+      });
+      if (n === 0) {
+        caption.innerHTML = "<strong>All six steps</strong>Use Next or a step number to walk through the one-minute demo.";
+      } else {
+        var s = steps[n - 1];
+        caption.innerHTML = "<strong></strong><span class=\"d\"></span>" + (s.cool ? "<div class=\"cool\"></div>" : "");
+        caption.querySelector("strong").textContent = s.t;
+        caption.querySelector(".d").textContent = s.d;
+        if (s.cool) caption.querySelector(".cool").textContent = "★ " + s.cool;
+      }
+    }
+
+    document.getElementById("next").addEventListener("click", function () { go(current >= steps.length ? 1 : current + 1); });
+    document.getElementById("prev").addEventListener("click", function () { go(current <= 1 ? steps.length : current - 1); });
+    document.getElementById("all").addEventListener("click", function () { go(0); });
+    go(0);
+  })();
+</script>
+</body>
+</html>
