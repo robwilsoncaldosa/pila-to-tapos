@@ -154,7 +154,7 @@ Commits go to the `build` branch. `main` is production and changes only with the
 
   Commit: `Guide her through both visits to Tapos na`
 
-- [ ] **5. Team edit screen and "Na-update ang requirements"**
+- [x] **5. Team edit screen and "Na-update ang requirements"**
   Becomes usable:
   - `/team` opens only with the passcode.
   - The team can edit steps, documents, fees, processing time, and the "last checked" date, saved to the plan file. Saving without a citation, or with a quote that isn't in the source, is refused.
@@ -207,3 +207,4 @@ Activity mode: not started
 - The plan file gained an optional `Step.notices` field (cited warning and related notes) for the waiting step's 30-day warning and relief note, and `next.config.ts` dropped `cacheComponents` so `/plan` re-reads the plan file each request. Slice 1 found the spec's data shape had no place for cited notes on a step.
 - Motion defaults on the shared primitives, following Emil Kowalski's design-engineering principles: easing tokens, a press scale on buttons, a drawer curve on the sheet, enter animations for content that appears, and reduced-motion support. Slices 3–5 follow the same rules (`spec.md > Look and Feel`, the Motion bullet). The learner asked for this at checkpoint 1.
 - The queue rules gained a "busy" state: `callNext` refuses while a number is still called, so staff tap Done first. The `QueueRepository` port gained `findActive` so the same journey and visit are never issued twice. Slice 3 found both were needed for a clean counter flow.
+- The team edit screen also adds and removes documents (needed for the learner check). A separate `metaRevision` keeps one save from flagging the processing-time item as changed, and only documents get the "Bago"/"Binago" highlight; changed steps and fees are listed in the banner only. Slice 5 found these while wiring the update banner.
