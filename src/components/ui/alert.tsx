@@ -12,6 +12,8 @@ const alertVariants = cva(
           "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
         missing: "border-missing/30 bg-missing-soft text-missing",
         ready: "border-ready/30 bg-ready-soft text-ready",
+        /** "Na-update ang requirements": a navy outline, not jeepney yellow. */
+        notice: "border-2 border-primary bg-card text-card-foreground",
         muted: "border-transparent bg-muted text-muted-foreground",
         /** "Your turn" moments only: jeepney yellow with navy text. */
         turn: "border-foreground/20 bg-turn text-foreground",

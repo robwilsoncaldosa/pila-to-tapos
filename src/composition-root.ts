@@ -5,8 +5,10 @@ import { createFileSourceTexts } from "@/adapters/file/source-texts"
 import { createMemoryQueueRepository } from "@/adapters/memory/queue-repository"
 import { createSystemClock } from "@/adapters/system/clock"
 import { createCryptoIds } from "@/adapters/system/ids"
+import { createTeamAccess } from "@/adapters/system/team-access"
 import { createPlanService } from "@/services/plan-service"
 import { createQueueService } from "@/services/queue-service"
+import { createTeamService } from "@/services/team-service"
 
 const buildContainer = () => {
   const clock = createSystemClock()
@@ -14,6 +16,11 @@ const buildContainer = () => {
   const plans = createFilePlanRepository()
   const sources = createFileSourceTexts()
   const queue = createMemoryQueueRepository()
+  const access = createTeamAccess({
+    passcode: process.env.TEAM_PASSCODE,
+    secret: process.env.TEAM_COOKIE_SECRET,
+    clock,
+  })
   return {
     clock,
     ids,
@@ -22,6 +29,7 @@ const buildContainer = () => {
     queue,
     planService: createPlanService({ plans, sources }),
     queueService: createQueueService({ queue, clock, ids }),
+    teamService: createTeamService({ plans, sources, access, ids }),
   }
 }
 

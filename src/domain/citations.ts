@@ -4,6 +4,30 @@ export type SourceTextMap = Record<SourceId, string>
 
 const normalize = (text: string): string => text.replace(/\s+/g, " ").trim()
 
+export type CitationError = "citation_required" | "quote_not_in_source"
+
+/**
+ * "No citation, no save": the citation must name a source, a locator and a quote,
+ * and the quote must appear word for word in that source's text (null when the source is unknown).
+ */
+export const citationError = (
+  citation: Citation | undefined,
+  sourceText: string | null
+): CitationError | null => {
+  if (
+    !citation ||
+    !citation.sourceId ||
+    !citation.locator?.trim() ||
+    !citation.quote?.trim()
+  ) {
+    return "citation_required"
+  }
+  if (sourceText === null || !normalize(sourceText).includes(normalize(citation.quote))) {
+    return "quote_not_in_source"
+  }
+  return null
+}
+
 const checkCitation = (
   label: string,
   citation: Citation | undefined,

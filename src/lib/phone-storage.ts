@@ -1,3 +1,4 @@
+import { dropChangedTicks, type SeenSnapshot } from "@/domain/plan-diff"
 import type { SituationAnswer } from "@/domain/plan"
 
 export const STORAGE_KEY = "pila:v1"
@@ -194,3 +195,14 @@ export const setDemoSkip = (demoSkip: boolean): void =>
 /** "Tapos na!": clears her ticks and answers but keeps the visits, so a reload still shows it. */
 export const finishJourney = (): void =>
   updatePhoneState((state) => ({ ...state, ticks: {}, answers: {} }))
+
+/**
+ * Remembers which plan revisions she has now seen. Documents that changed lose their tick
+ * (new ones were never ticked); everything else, including her tickets, stays as it was.
+ */
+export const recordSeenPlan = (snapshot: SeenSnapshot, changedDocuments: string[]): void =>
+  updatePhoneState((state) => ({
+    ...state,
+    ticks: dropChangedTicks(state.ticks, changedDocuments),
+    seen: snapshot,
+  }))

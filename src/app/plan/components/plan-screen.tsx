@@ -22,6 +22,8 @@ import { Checklist } from "./checklist"
 import { GetNumberButton } from "./get-number-button"
 import { LastChecked } from "./last-checked"
 import { PlanSummary } from "./plan-summary"
+import { UpdatedBanner } from "./updated-banner"
+import { usePlanUpdates } from "./use-plan-updates"
 import { ResetLink } from "./reset-link"
 
 /** The whole "Your plan" screen. Her ticks and answers live in localStorage on this phone. */
@@ -32,6 +34,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
     getServerPhoneState
   )
   useEffect(() => ensureJourney(), [])
+  const { updates, dismiss } = usePlanUpdates(plan)
 
   const status = checklistStatus(plan, phone.ticks, phone.answers)
 
@@ -39,6 +42,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
     <SourcesProvider sources={sources}>
       <AskProvider plan={plan}>
         <Stack gap={8} className="mb-20">
+          {updates ? <UpdatedBanner plan={plan} updates={updates} onDismiss={dismiss} /> : null}
           <Stack gap={2}>
             <h1>Your plan</h1>
             <p>{plan.transaction.title}</p>
@@ -61,6 +65,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
               status={status}
               ticks={phone.ticks}
               answers={phone.answers}
+              updates={updates}
               onTick={setTick}
               onAnswer={setAnswer}
             />

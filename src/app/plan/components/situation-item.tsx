@@ -11,6 +11,7 @@ import {
 import type { PlanDocument, SituationAnswer } from "@/domain/plan"
 
 import { TickRow } from "./tick-row"
+import { UpdateBadge, type UpdateKind } from "./update-badge"
 
 const OPTIONS: { value: SituationAnswer; label: string }[] = [
   { value: "oo", label: "Oo" },
@@ -24,6 +25,7 @@ type SituationItemProps = {
   checked: boolean
   onAnswer: (answer: SituationAnswer) => void
   onCheckedChange: (checked: boolean) => void
+  updateKind?: UpdateKind
 }
 
 /** A document that depends on her situation: one question, then a tick box unless she says Hindi. */
@@ -33,14 +35,16 @@ export function SituationItem({
   checked,
   onAnswer,
   onCheckedChange,
+  updateKind,
 }: SituationItemProps) {
   const notNeeded = answer === "hindi"
   const unsure = answer === undefined || answer === "hindi_ko_alam"
   const groupId = `situation-${document.id}`
   return (
-    <Card size="sm" tone={notNeeded ? "muted" : "default"}>
+    <Card size="sm" tone={notNeeded ? "muted" : updateKind ? "updated" : "default"}>
       <CardContent>
         <Stack gap={3}>
+          {updateKind ? <UpdateBadge kind={updateKind} /> : null}
           <strong id={groupId}>{document.situationQuestion}</strong>
           <RadioGroup
             aria-labelledby={groupId}

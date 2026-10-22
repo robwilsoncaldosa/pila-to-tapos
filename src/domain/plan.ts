@@ -23,7 +23,10 @@ export type Transaction = {
   processingTimeLabel: string
   processingCitation: Citation
   lastCheckedOn: string
+  /** Bumps on every saved edit; her phone compares it with what she last saw. */
   revision: number
+  /** The processing time and "last checked" date as one item; absent until first edited (counts as 1). */
+  metaRevision?: number
 }
 
 export type Counter = {
@@ -46,7 +49,7 @@ export type Step = {
   name: string
   kind: "visit" | "wait"
   visitNo?: 1 | 2
-  waitWorkingDays?: 3
+  waitWorkingDays?: number
   citation: Citation
   /** Shown when the unfiled-returns answer is Oo or Hindi ko alam. */
   notices?: StepNotice[]

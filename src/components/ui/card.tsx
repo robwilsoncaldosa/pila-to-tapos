@@ -14,6 +14,8 @@ const cardVariants = cva(
       tone: {
         default: "bg-card text-card-foreground ring-foreground/15",
         muted: "bg-muted text-muted-foreground ring-transparent",
+        /** A new or changed requirement since her last visit: a navy outline, not jeepney yellow. */
+        updated: "bg-card text-card-foreground ring-2 ring-primary",
         signboard: "bg-primary text-primary-foreground ring-primary",
         /** The number and "your turn" moments only: jeepney yellow with navy text. */
         turn: "bg-turn text-foreground ring-foreground/20",

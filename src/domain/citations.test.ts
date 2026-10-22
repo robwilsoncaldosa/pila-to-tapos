@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
 
-import { validateCitations } from "./citations"
+import { citationError, validateCitations } from "./citations"
 import type { Plan } from "./plan"
 
 const good = (quote: string) => ({
@@ -168,4 +168,13 @@ test("flags a question quote that is not verbatim, in citations and related", ()
   assert.equal(problems.length, 2)
   assert.match(problems[0], /question "q3" citation #1: quote not found/)
   assert.match(problems[1], /question "q2" related #1: quote not found/)
+})
+
+test("citationError refuses a missing citation and a quote that is not in the source", () => {
+  const text = "TOTAL  PROCESSING TIME: 3 Days"
+  assert.equal(citationError(undefined, text), "citation_required")
+  assert.equal(citationError(good("   "), text), "citation_required")
+  assert.equal(citationError(good("not there"), text), "quote_not_in_source")
+  assert.equal(citationError(good("TOTAL PROCESSING TIME: 3 Days"), null), "quote_not_in_source")
+  assert.equal(citationError(good("TOTAL PROCESSING TIME: 3 Days"), text), null)
 })
