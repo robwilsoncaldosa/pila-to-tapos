@@ -11,7 +11,7 @@ Commits go to the `build` branch. `main` is production and changes only with the
 
 ## Slices
 
-- [ ] **1. Her plan from the official source: Screen 1, then Your plan with the checklist, situation questions, and "Kulang pa"**
+- [x] **1. Her plan from the official source: Screen 1, then Your plan with the checklist, situation questions, and "Kulang pa"**
   Becomes usable: On the laptop in phone view, she opens the app, picks "BIR: Close my freelancer registration," and sees her plan:
   - the summary (₱30, about 3 working days, citations)
   - the three-step path (with the unfiled-returns warning when it applies)
@@ -204,3 +204,4 @@ Activity mode: not started
 ## Revisions
 
 - Pre-written cited answers replace live AI, and the build runs on the laptop with no deployment. This removes Supabase, Realtime, the Claude API, Vercel, and the in-app scanner; the old slice 5 (Supabase and Vercel) is gone, and the phone-over-Wi-Fi check moved into slice 3. The learner decided at the gut check that the video-only proof of concept needs neither live AI nor deployment. `prd.md`, `scope.md`, and `spec.md` were updated in the same pass.
+- The plan file gained an optional `Step.notices` field (cited warning and related notes) for the waiting step's 30-day warning and relief note, and `next.config.ts` dropped `cacheComponents` so `/plan` re-reads the plan file each request. Slice 1 found the spec's data shape had no place for cited notes on a step.
