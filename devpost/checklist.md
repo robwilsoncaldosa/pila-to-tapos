@@ -115,7 +115,7 @@ Commits go to the `build` branch. `main` is production and changes only with the
   Learner check: Run `npm run dev:lan` and open `/counter` and `/tv` side by side on the laptop. On your real phone, open the plan, tick everything, and scan the TV's QR code with your camera. Tap "Call next," hear the TV, and see "Ikaw na!" on your phone.
   Commit: `Issue numbers and call them on the counter, TV, and phone`
 
-- [ ] **4. Two visits: "Balik ka sa [date]," the demo switch, and "Tapos na!"**
+- [x] **4. Two visits: "Balik ka sa [date]," the demo switch, and "Tapos na!"**
   Becomes usable: "Done" on visit 1 moves her phone to "Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30," with step 2 highlighted. The labeled "Demo: lumipas ang 3 working days" switch unlocks visit 2. Scanning again gives a new "Pay & claim" number, and "Done" shows "Tapos na!" with the total time across both visits.
   These states also work:
   - reopening the app lands on her current step
