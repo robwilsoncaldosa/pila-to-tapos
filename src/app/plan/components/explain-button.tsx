@@ -1,13 +1,23 @@
+"use client"
+
 import { Button } from "@/components/ui"
 
-/** The small "?" beside a document. It opens the Magtanong explanation in slice 2. */
-export function ExplainButton({ documentName }: { documentName: string }) {
+import { useAsk } from "./ask-context"
+
+type ExplainButtonProps = {
+  documentId: string
+  documentName: string
+}
+
+/** The small "?" beside a document. It opens that document's explanation in the Magtanong sheet. */
+export function ExplainButton({ documentId, documentName }: ExplainButtonProps) {
+  const { openDocument } = useAsk()
   return (
     <Button
       variant="outline"
       size="icon-touch"
-      disabled
-      aria-label={`Magtanong tungkol sa ${documentName} (malapit na)`}
+      aria-label={`Magtanong tungkol sa ${documentName}`}
+      onClick={() => openDocument(documentId)}
     >
       ?
     </Button>

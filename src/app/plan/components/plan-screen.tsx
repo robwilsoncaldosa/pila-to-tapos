@@ -16,6 +16,8 @@ import {
   subscribePhoneState,
 } from "@/lib/phone-storage"
 
+import { AskButton } from "./ask-button"
+import { AskProvider } from "./ask-context"
 import { Checklist } from "./checklist"
 import { GetNumberButton } from "./get-number-button"
 import { LastChecked } from "./last-checked"
@@ -35,40 +37,43 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
 
   return (
     <SourcesProvider sources={sources}>
-      <Stack gap={8}>
-        <Stack gap={2}>
-          <h1>Your plan</h1>
-          <p>{plan.transaction.title}</p>
-          <LastChecked date={plan.transaction.lastCheckedOn} />
+      <AskProvider plan={plan}>
+        <Stack gap={8} className="mb-20">
+          <Stack gap={2}>
+            <h1>Your plan</h1>
+            <p>{plan.transaction.title}</p>
+            <LastChecked date={plan.transaction.lastCheckedOn} />
+          </Stack>
+          <PlanSummary plan={plan} />
+          <Stack gap={4}>
+            <h2>Ang path</h2>
+            <PathLine
+              steps={plan.steps}
+              counterLabel={plan.counter.label}
+              processingTimeLabel={plan.transaction.processingTimeLabel}
+              showNotices={showUnfiledReturnsWarning(phone.answers)}
+            />
+          </Stack>
+          <Stack gap={4}>
+            <h2>Checklist ng mga dokumento</h2>
+            <Checklist
+              plan={plan}
+              status={status}
+              ticks={phone.ticks}
+              answers={phone.answers}
+              onTick={setTick}
+              onAnswer={setAnswer}
+            />
+          </Stack>
+          <GetNumberButton ready={status.ready} />
+          <small data-tone="muted">
+            Independent na gabay ito, hindi opisyal na BIR app. Gabay lang ito, hindi legal o tax
+            advice.
+          </small>
+          <ResetLink />
         </Stack>
-        <PlanSummary plan={plan} />
-        <Stack gap={4}>
-          <h2>Ang path</h2>
-          <PathLine
-            steps={plan.steps}
-            counterLabel={plan.counter.label}
-            processingTimeLabel={plan.transaction.processingTimeLabel}
-            showNotices={showUnfiledReturnsWarning(phone.answers)}
-          />
-        </Stack>
-        <Stack gap={4}>
-          <h2>Checklist ng mga dokumento</h2>
-          <Checklist
-            plan={plan}
-            status={status}
-            ticks={phone.ticks}
-            answers={phone.answers}
-            onTick={setTick}
-            onAnswer={setAnswer}
-          />
-        </Stack>
-        <GetNumberButton ready={status.ready} />
-        <small data-tone="muted">
-          Independent na gabay ito, hindi opisyal na BIR app. Gabay lang ito, hindi legal o tax
-          advice.
-        </small>
-        <ResetLink />
-      </Stack>
+        <AskButton />
+      </AskProvider>
     </SourcesProvider>
   )
 }

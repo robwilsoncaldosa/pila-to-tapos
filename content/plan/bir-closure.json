@@ -226,5 +226,162 @@
       "revision": 1
     }
   ],
-  "questions": []
+  "questions": [
+    {
+      "id": "anong-form",
+      "question": "Anong form ang gagamitin ko?",
+      "kind": "direct",
+      "answer": "BIR Form 1905, ang application form para sa pag-update, pagtama, o pag-cancel ng registration. Dalawang original copy ang isusumite.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 4(1)",
+          "quote": "Application for Registration Information Update/Correction/Cancellation (BIR Form No. 1905) (2 original copies)"
+        }
+      ]
+    },
+    {
+      "id": "magkano",
+      "question": "Magkano ang babayaran ko?",
+      "kind": "direct",
+      "answer": "₱30 na documentary stamp sa visit 2, kapag kukunin mo na ang tax clearance. May babayaran lang na buwis o penalty kung may makita ang BIR na utang. Walang nakalistang halaga ang source para doon, kaya hindi ito mahuhulaan.",
+      "citations": [
+        {
+          "sourceId": "cc-28a",
+          "locator": "28-A, Client step 11",
+          "quote": "₱30.00 - DS"
+        },
+        {
+          "sourceId": "cc-28a",
+          "locator": "28-A, Total processing fee",
+          "quote": "TOTAL PROCESSING FEE: PHP 30.00"
+        },
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 6",
+          "quote": "payment of any outstanding tax liabilities, including penalties"
+        }
+      ]
+    },
+    {
+      "id": "gaano-katagal",
+      "question": "Gaano katagal bago ko makuha ang tax clearance?",
+      "kind": "direct",
+      "answer": "Hanggang 3 working days mula nang maisumite mo ang kumpletong dokumento. Ito ang sinasabi ng RMC 47-2026 para sa micro taxpayers na walang open case o utang. Hindi kasama sa 3 araw ang oras na kailangan mo para ayusin ang anumang makita ng BIR.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 6",
+          "quote": "the Tax Clearance shall be issued within three (3) working days from the date of submission of the application with complete documentary requirements, if the taxpayer has no open cases or outstanding liabilities"
+        },
+        {
+          "sourceId": "cc-28a",
+          "locator": "28-A, Total processing time",
+          "quote": "TOTAL PROCESSING TIME: 3 Days"
+        },
+        {
+          "sourceId": "cc-28a",
+          "locator": "28-A, note to client step 10",
+          "quote": "The time to which the taxpayer will comply with the findings and/or pay tax/es is not part of the total processing time for this service"
+        }
+      ]
+    },
+    {
+      "id": "ending-inventory",
+      "question": "Kailangan ko ba ng ending inventory?",
+      "kind": "direct",
+      "answer": "Para lang ito sa VAT-registered na taxpayer. Kung hindi ka VAT-registered, hindi ito hinihingi.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 4(2)",
+          "quote": "List of ending inventory of goods and supplies, including capital goods, for VAT-registered taxpayers (1 original copy)"
+        }
+      ]
+    },
+    {
+      "id": "natirang-resibo",
+      "question": "Ano ang gagawin ko sa natirang resibo o invoice?",
+      "kind": "direct",
+      "answer": "Isumite ang mga hindi nagamit na invoices, resibo, at iba pang accounting forms kasama ang listahan (inventory) nila. Kailangan itong isumite nang manu-mano, hindi online.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 4(3)",
+          "quote": "Unused invoices/supplementary documents and all other unutilized accounting forms such as vouchers, debit/credit memos, delivery receipts, purchase orders, etc., as may be applicable, together with the Inventory thereof"
+        },
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 3",
+          "quote": "Provided that, documentary requirements, under Items 3 and 4 in Section 4 hereof shall be submitted manually."
+        }
+      ]
+    },
+    {
+      "id": "ipa-file-sa-iba",
+      "question": "Pwede ko bang ipa-file sa iba?",
+      "kind": "direct",
+      "answer": "Oo, may kinatawan na puwedeng mag-file para sa iyo. Kailangan ng notarized na Special Power of Attorney at photocopy ng government-issued ID mo at ng kinatawan mo.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 4(5)(a)",
+          "quote": "Notarized Special Power of Attorney executed by the taxpayer-applicant, specifically authorizing the representative to process the application for the closure and/or cancellation of the taxpayer's registration and photocopy of any government-issued ID of the taxpayer and of the authorized representative, both with original specimen signature."
+        }
+      ]
+    },
+    {
+      "id": "online",
+      "question": "Pwede ko bang gawin online?",
+      "kind": "direct",
+      "answer": "Puwedeng i-submit ang application sa RDO sa pamamagitan ng official email mo na rehistrado sa BIR, o sa TRRA Portal at ORUS, o personal. Pero ang hindi nagamit na invoices at ang mga original na permit ay kailangang isumite nang manu-mano.",
+      "citations": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 3",
+          "quote": "either electronically, by sending the documents using the taxpayer's official email address as duly registered with the BIR, to the RDO's official email address, or through the BIR's electronic registration facilities (i.e. Taxpayer Registration-Related Application (TRRA) Portal, and Online Registration and Update System (ORUS)), or manually, by personally submitting the documents to the concerned RDO."
+        },
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 3",
+          "quote": "Provided that, documentary requirements, under Items 3 and 4 in Section 4 hereof shall be submitted manually."
+        }
+      ]
+    },
+    {
+      "id": "penalty-unfiled-returns",
+      "question": "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?",
+      "kind": "not_in_source",
+      "answer": "Walang nakasulat sa source kung magkano ang penalty sa kaso mo, kaya hindi namin ito huhulaan.",
+      "citations": [],
+      "related": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 6",
+          "quote": "Penalties for non-filing of returns shall not accrue after the submission of the required documentary requirements under Section 4 hereof."
+        },
+        {
+          "sourceId": "rmc-84-2026",
+          "locator": "RMC 84-2026, Certificate of Availment",
+          "quote": "The Certificate of Availment may be used to support an application for closure/cancellation of business registration."
+        }
+      ],
+      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado."
+    },
+    {
+      "id": "deadline",
+      "question": "May deadline ba para mag-close?",
+      "kind": "not_in_source",
+      "answer": "Walang deadline para mag-close na nakasulat sa mga source na nabasa namin.",
+      "citations": [],
+      "related": [
+        {
+          "sourceId": "rmc-47-2026",
+          "locator": "Sec. 7",
+          "quote": "shall continue to be liable for all their tax obligations, including the filing of tax returns and payment of taxes, including penalties, until closure and/or cancellation of business registration is completed with the BIR."
+        }
+      ],
+      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado."
+    }
+  ]
 }

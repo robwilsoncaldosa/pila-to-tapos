@@ -23,7 +23,7 @@ export function TickRow({ document, checked, onCheckedChange }: TickRowProps) {
         />
         <Label htmlFor={id}>{document.name}</Label>
       </Inline>
-      <ExplainButton documentName={document.name} />
+      <ExplainButton documentId={document.id} documentName={document.name} />
     </Inline>
   )
 }

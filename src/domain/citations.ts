@@ -56,6 +56,14 @@ export const validateCitations = (
     if (q.kind === "direct" && q.citations.length === 0) {
       problems.push(`question "${q.id}": a direct answer needs at least one citation`)
     }
+    if (q.kind === "not_in_source") {
+      if ((q.related ?? []).length === 0) {
+        problems.push(`question "${q.id}": a not-in-source answer needs at least one related citation`)
+      }
+      if (!q.whoToAsk?.trim()) {
+        problems.push(`question "${q.id}": a not-in-source answer needs whoToAsk`)
+      }
+    }
     q.citations.forEach((citation, i) =>
       check(`question "${q.id}" citation #${i + 1}`, citation)
     )

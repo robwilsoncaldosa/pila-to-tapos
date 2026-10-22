@@ -18,3 +18,5 @@ export function SourcesProvider({
 
 export const useSource = (id: SourceId): SourceInfo | undefined =>
   useContext(SourcesContext).find((source) => source.id === id)
+
+export const useSources = (): SourceInfo[] => useContext(SourcesContext)

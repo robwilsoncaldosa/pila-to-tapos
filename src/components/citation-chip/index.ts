@@ -1,2 +1,2 @@
 export { CitationChip } from "./citation-chip"
-export { SourcesProvider, useSource } from "./sources-context"
+export { SourcesProvider, useSource, useSources } from "./sources-context"

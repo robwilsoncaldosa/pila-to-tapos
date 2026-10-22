@@ -119,3 +119,53 @@ test("checks step notices and question citations", () => {
   const problems = validateCitations(plan, sources)
   assert.equal(problems.length, 2)
 })
+
+const notInSource = () => ({
+  id: "q2",
+  question: "?",
+  kind: "not_in_source" as const,
+  answer: "a",
+  citations: [],
+  related: [good("30.00 - DS")],
+  whoToAsk: "RDO",
+})
+
+test("accepts a complete not-in-source question", () => {
+  const plan = makePlan()
+  plan.questions = [notInSource()]
+  assert.deepEqual(validateCitations(plan, sources), [])
+})
+
+test("flags a not-in-source question with no related citation", () => {
+  const plan = makePlan()
+  plan.questions = [{ ...notInSource(), related: [] }]
+  const problems = validateCitations(plan, sources)
+  assert.equal(problems.length, 1)
+  assert.match(problems[0], /question "q2": a not-in-source answer needs at least one related/)
+})
+
+test("flags a not-in-source question with no whoToAsk", () => {
+  const plan = makePlan()
+  plan.questions = [{ ...notInSource(), whoToAsk: "  " }]
+  const problems = validateCitations(plan, sources)
+  assert.equal(problems.length, 1)
+  assert.match(problems[0], /needs whoToAsk/)
+})
+
+test("flags a question quote that is not verbatim, in citations and related", () => {
+  const plan = makePlan()
+  plan.questions = [
+    {
+      id: "q3",
+      question: "?",
+      kind: "direct",
+      answer: "a",
+      citations: [good("TOTAL PROCESSING TIME: 5 Days")],
+    },
+    { ...notInSource(), related: [good("made up penalty")] },
+  ]
+  const problems = validateCitations(plan, sources)
+  assert.equal(problems.length, 2)
+  assert.match(problems[0], /question "q3" citation #1: quote not found/)
+  assert.match(problems[1], /question "q2" related #1: quote not found/)
+})

@@ -277,7 +277,9 @@ This is the single source of the plan. **You review its wording in slice 1 and s
                  processingCitation: Citation, lastCheckedOn: "2026-10-22", revision: number },
   counter: { id: "registration", label: "Registration Officer counter", speechLabel: string },
   steps:     { id, position, name, kind: "visit" | "wait", visitNo?: 1 | 2, waitWorkingDays?: 3,
-               citation: Citation, revision }[],
+               citation: Citation, revision,
+               notices?: { id, kind: "warning" | "related", text, citations: Citation[] }[] }[],
+               // notices: the waiting step's 30-day warning and relief note (added in slice 1)
   documents: { id, position, name, whereToGet, requirement: "required" | "situation",
                situationQuestion?: string, notNeededReason?: string,
                explanation: string, citation: Citation, revision }[],
