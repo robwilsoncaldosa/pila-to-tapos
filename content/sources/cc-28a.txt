@@ -1,0 +1,391 @@
+BIR Citizen's Charter (2026 Edition), Revenue District Office External Services, entry 28-A.
+Source: https://bir-cdn.bir.gov.ph/BIR/pdf/BIR%20Citizen's%20Charter%20(2026%20Edition)%20final.pdf (PDF text layer, extracted verbatim; page headers and layout line breaks may differ from the printed page).
+
+28-A. Application for Closure of Business – Head Office Not Subject to Audit with Issuance of Tax
+Clearance
+
+Registered business taxpayers shall file Application for Closure of Business to inform the BIR of its cessation of business operation and in
+order for the RDO to verify if taxpayer has any Open Case/s and/or tax liabilities that need to be settled prior to the issuance of a Tax
+Clearance.
+
+Taxpayer Classification Where to Register
+
+1. Regular (non-large) Taxpayers 1. RDO where the Head Office is registered
+
+Office or Division: Revenue District Office (RDO) – Client Support Section (CSS)
+
+Category: External Service
+
+Classification: Simple
+
+Type of Transaction: G2C – Government to Citizen
+G2B – Government to Business
+
+Who may avail: All Business Taxpayers (Head Office) Applying for Closure Not Subject to Audit
+
+Operating Hours 8:00 AM to 5:00 PM
+
+CHECKLIST OF REQUIREMENTS WHERE TO SECURE
+
+FOR STANDARD REQUIREMENTS
+
+1. BIR Form No. 1905 (2 original copies) 1.1 RDO – Client Support Section Area
+
+1.2 Download at BIR Website (www.bir.gov.ph)
+
+2. List of ending inventory of goods, supplies, including capital good (1 original
+copy)
+
+2. Taxpayer-applicant
+
+3. Inventory of unused invoices/supplementary invoices, together with Unused
+invoices/supplementary invoices and all other unutilized accounting forms (e.g.
+vouchers, debit/credit memos, delivery receipts, purchase orders, etc.)
+
+3. Taxpayer-applicant
+
+4. Original copy of BIR Notices and Permits (e.g. ATP; NIRI; Accreditation
+Certificate and Permit to Use - for CRM/POS; etc.) issued to taxpayer as well as
+original copy of the BIR Certificate of Registration (COR)/Electronic COR
+
+4. Taxpayer-applicant
+
+ADDITIONAL DOCUMENTS, IF APPLICABLE TO THE FOLLOWING CASES:
+
+1. If transacting through a Representative:
+
+For Individuals:
+
+1.1 Special Power of Attorney (SPA) executed by the taxpayer-applicant
+indicating specific transaction/s; [1 original for first time submission; if
+authorized to more than one transaction, submit Certified True Copy
+(together with the original copy for presentation and validation only)]
+
+1.2 Any government-issued ID of the taxpayer and authorized
+representative [1 photocopy, both with one original specimen signature
+(wet)]
+
+For Corporations/Non-individuals:
+
+1.1 Board Resolution/Written Resolution (in case of OPC) or Secretary’s
+
+Certificate, indicating the purpose and the name of the authorized
+representative; [1 original for first time submission; if authorized to more
+than one transaction, submit Certified True Copy (together with the original
+copy for presentation and validation only)]
+
+1.2 Any government-issued ID of one of the signatory and authorized
+representative. ([1 photocopy, both with one original specimen signature
+(wet)]
+
+1.1 Taxpayer-applicant being represented
+
+1.2 Taxpayer-applicant/ Authorized Representative
+
+1.1 Incorporators, Board of Directors
+
+1.2 Taxpayer-applicant’s Authorized Representative
+Revenue District Office External Services
+
+Bureau of Internal Revenue 79
+
+CLIENT STEPS AGENCY ACTIONS
+FEES TO BE
+PAID
+
+PROCESSING
+TIME
+
+PERSON
+RESPONSIBLE
+
+1. Get a queuing number in the office
+entrance and wait for your number to
+be called to submit the required
+complete documentary requirements
+at the designated Registration
+Counter
+
+Note: Secure one queuing number per
+application.
+
+Location: Registration Officer Counter
+
+1.1 None None 2 Hours Taxpayer-applicant
+
+1.2 Call queuing number and
+receive the application.
+
+None 5 Minutes Registration Officer
+RDO-CSS
+
+1.3 Review the documents
+submitted by taxpayer. Verify
+
+existence of taxpayer’s TIN in the
+
+eREG TIN QUERY/ITS/IRIS.
+
+None 30 Minutes Registration Officer
+RDO-CSS
+
+1.4 Validate the accuracy and
+completeness of documentary
+requirements submitted by the
+applicant. If documents are
+complete, stamp received on the
+application and sign the Checklist of
+Documentary Requirements (CDR).
+If incomplete, return the submitted
+documents and inform the applicant
+of the lacking requirements by
+requiring the taxpayer to sign the
+CDR.
+
+None 1 Hour Registration Officer
+RDO-CSS
+
+1.5 Assign a Document Locator
+Number (DLN).
+
+None 10 Minutes Registration Officer
+RDO-CSS
+
+2. None
+
+Location: Registration Officer Counter
+
+2.1 Check the veracity of the
+surrendered hardcopies of unused
+principal/supplementary
+receipts/invoices compared with the
+inventory of listing/s, business
+notices and permits (Authority to
+
+Print and Printer’s Certificate of
+
+Delivery) and indorse to the
+Committee on Destruction and
+Disposal.
+
+Note: Destruction of unused sales
+invoices/official receipts and other
+accounting forms is a separate
+process outside the scope of this
+service.
+
+None 2 Hours Revenue Officer
+RDO
+
+3. None
+
+Location: Registration Officer Counter
+
+3.1 Deregister form type and
+transmit the application to the office
+of the Revenue District Officer.
+
+None 2 Hours Registration Officer
+RDO-CSS
+
+4. None
+Location: Office of the RDO
+
+4.1 Receive application from CSS.
+
+Return the application to CSS if
+
+taxpayer’s gross sales/receipts for
+
+the immediately preceding year is
+less than One Million
+((₱1,000,000.00) or if gross assets
+upon retirement is less than Three
+Million ((₱3,000,000.00) which will
+not be subject to audit.
+
+None 1 Hour Revenue District
+Officer
+Revenue District Office External Services
+
+Bureau of Internal Revenue 80
+
+CLIENT STEPS AGENCY ACTIONS
+FEES TO BE
+PAID
+
+PROCESSING
+TIME
+
+PERSON
+RESPONSIBLE
+
+5. None
+
+Location: Registration Officer Counter
+
+5.1 Receive the application from the
+office of the Revenue District Officer
+and prepare the routing/verification
+slip for the routing of application to
+other sections for checking of any
+open cases/tax liabilities or any
+other compliance requirements.
+
+None 2 Hours Registration Officer
+RDO-CSS
+
+6. None
+
+Location: Collection Officer Counter
+
+6.1 Receive application from CSS
+and check the ledger of the
+taxpayer if there are unposted
+payments and other compliance
+requirements that need to be
+settled and indicate such in the
+routing/verification slip then forward
+the application to Compliance
+Section.
+
+None 3 Hours Revenue Officer
+RDO-Collection
+Section
+
+7. None
+
+Location: Compliance Officer Counter
+
+7.1 Receive application from
+Collection Section and check if the
+taxpayer has open cases and other
+compliance requirements that need
+to be settled and indicate such in
+the routing/verification slip then
+forward the application to
+Assessment Section.
+
+None 3 Hours Revenue Officer
+RDO-Compliance
+Section
+
+8. None
+
+Location: Assessment Officer Counter
+
+8.1 Receive application from
+Compliance Section and if taxpayer
+is currently subject to audit and
+other compliance requirements that
+need to be settled and indicate such
+in the routing/verification slip then
+return the application to CSS.
+
+None 3 Hours Revenue Officer
+RDO- Assessment
+Section
+
+9. None
+
+Location: Registration Officer Counter
+
+9.1 Receive application and note
+comments of other sections where
+the application was routed.
+
+Inform the taxpayer of any open
+cases/tax liabilities that need to be
+settled prior to issuance of tax
+clearance via email, via call or any
+other possible means of
+communication.
+
+None 45 Minutes Registration Officer
+RDO-CSS
+
+10. Comply with any findings and/or
+pay tax/es, if applicable*
+
+Note: The time to which the taxpayer
+will comply with the findings and/or
+pay tax/es is not part of the total
+processing time for this service since it
+will be dependent solely to the
+taxpayer and not within the control of
+the BIR.
+
+Location: Registration Officer Counter
+
+10.1 If there are no open cases/tax
+liabilities or if such has been
+complied already by the taxpayer,
+deregister tax types.
+
+None 1 Hour Registration Officer
+RDO-CSS
+
+11. Buy loose Documentary Stamp
+(DS).
+
+Location: Registration Officer Counter
+
+11.1 Receive payment of loose DS
+and forward to Revenue Collection
+Officer (RCO).
+
+₱30.00 - DS 2 minutes Registration Officer
+
+RDO-CSS
+
+11.2 Receive the payment from
+NBRO and issue loose DST.
+
+None 3 minutes RCO-RDO
+Revenue District Office External Services
+
+Bureau of Internal Revenue 81
+
+CLIENT STEPS AGENCY ACTIONS FEES TO BE
+PAID
+
+PROCESSING
+TIME
+
+PERSON
+RESPONSIBLE
+
+11.3 Generate Tax Clearance
+Certificate (TCL1)
+
+None 1 hour Registration Officer
+
+RDO-CSS
+
+11.4 Review and initial/sign the
+TCL1.
+
+None 1 hour RDO-CSS/ Revenue
+District Officer
+
+11.5 Receive sign TCL and cancel/
+deregister TIN, if applicable
+
+None 20 minutes Registration Officer
+
+RDO-CSS
+
+12. Receive the TCL1.
+
+Location: Registration Officer Counter
+
+12.1 Issue TCL1 to the taxpayer. None 5 Minutes Registration Officer
+RDO-CSS
+
+TOTAL PROCESSING TIME: 3 Days
+
+TOTAL PROCESSING FEE: PHP 30.00
+
+*If the taxpayer fails to comply with any findings or settle any tax liabilities found within thirty (30) days from receipt of such notification, the
+application shall be deemed denied. In case the taxpayer complies/settles beyond the 30-day grace period, it will be considered as a new
+application, hence, the taxpayer needs to resubmit the complete documentary requirements.

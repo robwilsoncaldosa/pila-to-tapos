@@ -1,0 +1,23 @@
+[
+  {
+    "id": "rmc-47-2026",
+    "title": "BIR Revenue Memorandum Circular No. 47-2026: Closure and/or Cancellation of Business Registration",
+    "url": "https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2047-2026.pdf",
+    "effectiveDate": "2026-05-19",
+    "note": "Controlling rule. The file contains the BIR Digest text (digest PDF: https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2047-2026%20Digest.pdf), which numbers the requirements with letters, plus OCR-verified excerpts of Sections 3 to 7 of the scanned full text, which number them 1 to 5. Quotes cite the OCR-verified excerpts. Where the Citizen's Charter 28-A disagrees (ending inventory, audit thresholds), RMC 47-2026 is later and controls."
+  },
+  {
+    "id": "cc-28a",
+    "title": "BIR Citizen's Charter (2026 Edition), 28-A: Application for Closure of Business, Head Office Not Subject to Audit",
+    "url": "https://bir-cdn.bir.gov.ph/BIR/pdf/BIR%20Citizen's%20Charter%20(2026%20Edition)%20final.pdf",
+    "effectiveDate": "2026-04-01",
+    "note": "Text extracted from the PDF text layer. Published before RMC 47-2026, so its audit thresholds and its ending-inventory requirement (no VAT qualifier) are superseded by RMC 47-2026."
+  },
+  {
+    "id": "rmc-84-2026",
+    "title": "BIR Revenue Memorandum Circular No. 84-2026: One-Time Abatement for Micro Taxpayers (Digest)",
+    "url": "https://bir-cdn.bir.gov.ph/BIR/pdf/RMC%20No.%2084-2026%20Digest.pdf",
+    "effectiveDate": "2026-07-23",
+    "note": "BIR Digest text extracted from the PDF text layer. Clarifies RR No. 004-2026, the one-time abatement program for micro taxpayers; applications are timely if filed on or before 2026-12-31."
+  }
+]

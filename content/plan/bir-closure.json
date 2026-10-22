@@ -1,0 +1,230 @@
+{
+  "transaction": {
+    "id": "bir-closure-freelancer",
+    "title": "BIR: Close my freelancer registration",
+    "processingTimeLabel": "about 3 working days",
+    "processingCitation": {
+      "sourceId": "cc-28a",
+      "locator": "28-A, Total processing time",
+      "quote": "TOTAL PROCESSING TIME: 3 Days"
+    },
+    "lastCheckedOn": "2026-10-22",
+    "revision": 1
+  },
+  "counter": {
+    "id": "registration",
+    "label": "Registration Officer counter",
+    "speechLabel": "Registration counter"
+  },
+  "steps": [
+    {
+      "id": "visit-1",
+      "position": 1,
+      "name": "Visit 1: Submit",
+      "kind": "visit",
+      "visitNo": 1,
+      "citation": {
+        "sourceId": "cc-28a",
+        "locator": "28-A, Client step 1",
+        "quote": "Get a queuing number in the office entrance and wait for your number to be called to submit the required complete documentary requirements"
+      },
+      "revision": 1
+    },
+    {
+      "id": "bir-checks",
+      "position": 2,
+      "name": "BIR checks your records",
+      "kind": "wait",
+      "waitWorkingDays": 3,
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 6",
+        "quote": "the Tax Clearance shall be issued within three (3) working days from the date of submission of the application with complete documentary requirements"
+      },
+      "notices": [
+        {
+          "id": "thirty-day-warning",
+          "kind": "warning",
+          "text": "Kung may makita ang BIR na hindi pa na-file na returns o utang na buwis, kailangan mo itong ayusin sa loob ng 30 araw mula nang matanggap mo ang abiso. Kapag lumampas, ituturing itong bagong application at kailangan mong isumite ulit ang kumpletong mga dokumento.",
+          "citations": [
+            {
+              "sourceId": "cc-28a",
+              "locator": "28-A, note to client step 10",
+              "quote": "If the taxpayer fails to comply with any findings or settle any tax liabilities found within thirty (30) days from receipt of such notification, the application shall be deemed denied."
+            }
+          ]
+        },
+        {
+          "id": "relief-program",
+          "kind": "related",
+          "text": "Related, hindi direktang sagot: may one-time na pagbabawas (abatement) ng taxes at/o penalties para sa micro taxpayers. Puwedeng gamitin ang Certificate of Availment para suportahan ang closure application, at hanggang 31 Dec 2026 ang pag-file ng application. Hindi sinasabi ng source kung kwalipikado ka o magkano ang penalty mo; itanong sa iyong RDO.",
+          "citations": [
+            {
+              "sourceId": "rmc-84-2026",
+              "locator": "RMC 84-2026, Certificate of Availment",
+              "quote": "The Certificate of Availment may be used to support an application for closure/cancellation of business registration."
+            },
+            {
+              "sourceId": "rmc-84-2026",
+              "locator": "RMC 84-2026, timeliness",
+              "quote": "Applications filed on or before December 31, 2026 shall be considered timely"
+            }
+          ]
+        }
+      ],
+      "revision": 1
+    },
+    {
+      "id": "visit-2",
+      "position": 3,
+      "name": "Visit 2: Pay ₱30 & claim the tax clearance",
+      "kind": "visit",
+      "visitNo": 2,
+      "citation": {
+        "sourceId": "cc-28a",
+        "locator": "28-A, Client steps 11-12",
+        "quote": "Buy loose Documentary Stamp (DS)."
+      },
+      "revision": 1
+    }
+  ],
+  "documents": [
+    {
+      "id": "form-1905",
+      "position": 1,
+      "name": "BIR Form 1905 (2 original copies)",
+      "whereToGet": "Kunin sa Client Support Section ng RDO, o i-download sa bir.gov.ph.",
+      "requirement": "required",
+      "explanation": "Ito ang application form para sa pag-update, pagtama, o pag-cancel ng registration. Dalawang original copy ang kailangan.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(1)",
+        "quote": "Application for Registration Information Update/Correction/Cancellation (BIR Form No. 1905) (2 original copies)"
+      },
+      "revision": 1
+    },
+    {
+      "id": "cor",
+      "position": 2,
+      "name": "Original COR / eCOR (BIR Form 2303)",
+      "whereToGet": "Ikaw mismo ang may hawak nito (taxpayer-applicant).",
+      "requirement": "situation",
+      "situationQuestion": "Nasa iyo pa ba ang original COR mo?",
+      "notNeededReason": "Hindi mo madadala ang original kung wala na ito sa iyo. Hindi nakasaad sa opisyal na source kung paano ito aayusin, kaya itanong muna sa RDO bago pumunta.",
+      "explanation": "Ang Certificate of Registration (COR) o electronic COR ay kasama sa mga original na BIR notice at permit na isusumite, kung mayroon ka. Hindi sinasabi ng source kung paano kung nawala ito.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(4)(a)",
+        "quote": "Original BIR Notices and BIR Permits issued to taxpayer, as may be applicable: a. Certificate of Registration (COR)/Electronic COR (BIR Form No. 2303);"
+      },
+      "revision": 1
+    },
+    {
+      "id": "unused-invoices",
+      "position": 3,
+      "name": "Hindi nagamit na invoices/resibo at ang inventory nito",
+      "whereToGet": "Ikaw mismo ang maghahanda ng listahan at magdadala ng mga hindi nagamit na forms (taxpayer-applicant).",
+      "requirement": "situation",
+      "situationQuestion": "May natira ka pang hindi nagamit na invoices o resibo?",
+      "notNeededReason": "Kailangan lang ito kung may hindi ka pang nagamit na invoices o iba pang accounting forms (\"as may be applicable\").",
+      "explanation": "Kung may natira kang hindi nagamit na invoices, resibo, o iba pang accounting forms, isumite ang mga ito kasama ang listahan (inventory) nila.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(3)",
+        "quote": "Unused invoices/supplementary documents and all other unutilized accounting forms such as vouchers, debit/credit memos, delivery receipts, purchase orders, etc., as may be applicable, together with the Inventory thereof"
+      },
+      "revision": 1
+    },
+    {
+      "id": "other-permits",
+      "position": 4,
+      "name": "Iba pang BIR permit (Authority to Print, Notice to Issue Invoice, CRM/POS permit, EIS certificate)",
+      "whereToGet": "Ikaw mismo ang may hawak nito (taxpayer-applicant).",
+      "requirement": "situation",
+      "situationQuestion": "May iba ka pang BIR permit (hal. Authority to Print)?",
+      "notNeededReason": "Kailangan lang isumite ang mga original na permit na na-issue sa iyo, kung mayroon (\"as may be applicable\").",
+      "explanation": "Kung may na-issue sa iyong Authority to Print, Notice to Issue Invoice, permit para sa cash register o POS, o EIS certificate, isumite ang mga original.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(4)(b-e)",
+        "quote": "Original BIR Notices and BIR Permits issued to taxpayer, as may be applicable: a. Certificate of Registration (COR)/Electronic COR (BIR Form No. 2303); b. Authority To Print; c. Notice to Issue Invoice; d. Accreditation Certificate and Permit to Use - for Cash Register Machine/Point-of-Sales; and e. Electronic Invoicing/Receipting System (EIS) Certificate and Permit to Transmit."
+      },
+      "revision": 1
+    },
+    {
+      "id": "ending-inventory",
+      "position": 5,
+      "name": "Listahan ng ending inventory (goods, supplies, capital goods)",
+      "whereToGet": "Ikaw mismo ang maghahanda nito (taxpayer-applicant).",
+      "requirement": "situation",
+      "situationQuestion": "VAT-registered ka ba?",
+      "notNeededReason": "Para lang ito sa VAT-registered na taxpayer.",
+      "explanation": "Ang listahan ng ending inventory ng goods at supplies, kasama ang capital goods, ay hinihingi lang sa mga VAT-registered na taxpayer. Isang original copy.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(2)",
+        "quote": "List of ending inventory of goods and supplies, including capital goods, for VAT-registered taxpayers (1 original copy)"
+      },
+      "revision": 1
+    },
+    {
+      "id": "spa-ids",
+      "position": 6,
+      "name": "Notarized Special Power of Attorney at mga ID",
+      "whereToGet": "Galing sa iyo bilang taxpayer-applicant; ang ID ay mula sa iyo at sa kinatawan mo.",
+      "requirement": "situation",
+      "situationQuestion": "May ibang magpa-file para sa iyo?",
+      "notNeededReason": "Kailangan lang ito kapag kinatawan mo ang magpa-file ng application, hindi ikaw mismo.",
+      "explanation": "Kung ibang tao ang magpa-file para sa iyo, kailangan ng notarized na Special Power of Attorney at photocopy ng government-issued ID ninyong dalawa, parehong may original na specimen signature.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 4(5)(a)",
+        "quote": "For applications filed by a representative of the taxpayer: a. For individual taxpayer: Notarized Special Power of Attorney executed by the taxpayer-applicant, specifically authorizing the representative to process the application for the closure and/or cancellation of the taxpayer's registration and photocopy of any government-issued ID of the taxpayer and of the authorized representative, both with original specimen signature."
+      },
+      "revision": 1
+    },
+    {
+      "id": "final-returns",
+      "position": 7,
+      "name": "Na-file na ang final o short-period returns (zero return kung walang negosyo)",
+      "whereToGet": "Ikaw ang magpa-file ng mga return. Hindi nakalista sa source kung aling forms; itanong sa RDO.",
+      "requirement": "situation",
+      "situationQuestion": "May hindi ka pa na-file na returns?",
+      "notNeededReason": "Kung wala kang hindi pa na-file na returns, wala kang idadagdag dito.",
+      "explanation": "Sabi ng RMC 47-2026, i-file ang lahat ng final o short-period returns hanggang sa petsa ng closure, at zero return para sa panahong walang negosyo. Kung hindi ka sigurado kung alin ang kulang, itanong sa RDO.",
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 5",
+        "quote": "The taxpayer shall file all final or short-period tax returns covering the period from the beginning of the taxable year up to the date of closure for all applicable tax types and pay the corresponding taxes due thereon. For periods during which there was no business activity, the taxpayer shall file zero returns."
+      },
+      "revision": 1
+    }
+  ],
+  "fees": [
+    {
+      "id": "dst-30",
+      "label": "Documentary stamp para sa tax clearance",
+      "amountPhp": 30,
+      "visitNo": 2,
+      "citation": {
+        "sourceId": "cc-28a",
+        "locator": "28-A, Client step 11",
+        "quote": "₱30.00 - DS"
+      },
+      "revision": 1
+    },
+    {
+      "id": "taxes-penalties",
+      "label": "Taxes or penalties, if BIR finds any",
+      "amountPhp": null,
+      "visitNo": 1,
+      "citation": {
+        "sourceId": "rmc-47-2026",
+        "locator": "Sec. 6",
+        "quote": "payment of any outstanding tax liabilities, including penalties"
+      },
+      "revision": 1
+    }
+  ],
+  "questions": []
+}
