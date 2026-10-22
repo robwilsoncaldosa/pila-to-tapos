@@ -52,7 +52,7 @@ Commits go to the `build` branch. `main` is production and changes only with the
 
   Commit: `Show the official BIR closure plan with checklist`
 
-- [ ] **2. Magtanong: pre-written answers from the official text, with citations**
+- [x] **2. Magtanong: pre-written answers from the official text, with citations**
   Becomes usable: She taps "Magtanong" and sees the common questions. Tapping one shows a normal card that quotes the official text, with its citation. Her penalty question shows the grey "not in the source" card, with the related RMC 47-2026 and relief-program passages and who to ask. The "?" on a document opens its explanation. Closing the sheet leaves her where she was.
   Why now: This completes the kernel, and you review the answer wording while there's time to change it.
   PRD ref: `prd.md > Asking Questions (Magtanong)`, `prd.md > Your Plan` (the "?" and the "Hindi ko alam" nudge)
