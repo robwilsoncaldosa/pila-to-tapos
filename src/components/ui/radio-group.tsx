@@ -11,6 +11,7 @@ const radioGroupVariants = cva("w-full", {
     layout: {
       stack: "grid gap-2",
       wrap: "flex flex-wrap gap-x-6 gap-y-2",
+      segmented: "grid grid-cols-3 gap-2",
     },
   },
   defaultVariants: { layout: "stack" },
@@ -38,6 +39,9 @@ const radioItemVariants = cva(
       size: {
         default: "size-4",
         lg: "size-7 border-2 border-foreground bg-card",
+        /** A wide labelled button in a segmented group; the label is the children. */
+        segment:
+          "aspect-auto min-h-12 w-full items-center justify-center rounded-lg border-2 border-foreground bg-card px-2 py-2 text-center text-base font-medium whitespace-normal transition-[scale,background-color,color] duration-160 ease-out active:scale-[0.97]",
       },
     },
     defaultVariants: { size: "default" },
@@ -47,9 +51,21 @@ const radioItemVariants = cva(
 function RadioGroupItem({
   className,
   size = "default",
+  children,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Item> &
   VariantProps<typeof radioItemVariants>) {
+  if (size === "segment") {
+    return (
+      <RadioGroupPrimitive.Item
+        data-slot="radio-group-item"
+        className={cn(radioItemVariants({ size }), className)}
+        {...props}
+      >
+        {children}
+      </RadioGroupPrimitive.Item>
+    )
+  }
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"

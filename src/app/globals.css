@@ -217,3 +217,16 @@
     opacity: 1;
   }
 }
+
+/* The sticky bottom bar on the plan screen: solid, clear of the phone's home bar. */
+@utility action-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  padding-top: 0.75rem;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  background: var(--background);
+  border-top: 1px solid var(--border);
+}
+

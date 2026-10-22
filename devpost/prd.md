@@ -10,6 +10,8 @@ Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
 
 > **Revised during `4-spec` (2026-10-22).** The official source ([research](research/bir-closure-sources.md)) says she deals with one counter, the Registration Officer counter, across two visits about 3 working days apart. The learner chose to follow the real process. This replaced the earlier demo assumption of three windows in one visit. The affected sections are the Core Journey, Screens and Layout, Being Called, Visit 1 Done, the Staff Counter, the TV Display, States, and Product Decisions.
 >
+> **Final review (2026-10-22):** the plan screen was reworked for friendliness (a "what's next" card, "Saan galing?" links, compact situation questions, progress-first "Kulang pa," and a sticky action bar), the COR became a required document (agent default, learner to confirm), and the TV call is now spoken in English in the Kokoro "Heart" voice. The UX rework and the voice were learner decisions.
+>
 > **Revised again in `5-build` (2026-10-22).** The learner chose pre-written cited answers instead of live AI, and a laptop-only build with no deployment, where the phone scans the QR code with its own camera over Wi-Fi. The affected sections are Asking Questions (Magtanong), Getting a Number, Product Decisions, Deferred, Possible Later Enhancements, and Non-Goals.
 
 ## The Core Journey
@@ -24,7 +26,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 **At BIR (her phone, the staff counter, the TV)**
 
 5. **Get a number (visit 1).** With everything ticked, she scans the QR code on the TV and gets one number, for example B-014. Her phone shows the number big, "Step 1 of 3: Submit, [counter]," her path with the current step highlighted, and "All documents ready ✓."
-6. **Called.** At the Registration Officer counter, staff see her number in the waiting list with a "Submit" badge and "Documents ready ✓," and tap "Call next." The TV flashes the counter's panel and says the call out loud in Filipino ("Numero B-014, [counter]"). At the same moment, her phone goes full-screen: "Ikaw na! [counter]" (It's your turn).
+6. **Called.** At the Registration Officer counter, staff see her number in the waiting list with a "Submit" badge and "Documents ready ✓," and tap "Call next." The TV flashes the counter's panel and says the call out loud in English, in the Heart voice ("Number B, zero, one, four. Registration counter."). At the same moment, her phone goes full-screen: "Ikaw na! [counter]" (It's your turn).
 7. **Visit 1 done.** Staff tap "Done." Her phone moves on by itself to "Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30" (Come back on [date]. Bring ₱30.). Her path highlights step 2, "BIR checks your records (about 3 working days)." The return date skips weekends.
 8. **Visit 2.** On the return date she scans the QR code again and gets a new number with a "Pay & claim" badge. Staff call her, and she pays ₱30 and receives her tax clearance at the same counter. For the demo, a clearly labeled "Demo: lumipas ang 3 working days" (Demo: 3 working days have passed) switch jumps straight to visit 2.
 9. **Tapos na.** When staff tap "Done" on visit 2, her phone shows "Tapos na!" with the total time across both visits.
@@ -49,7 +51,7 @@ Source: `scope.md > The POC Boundary`.
   3. The checklist: every document, each with a tick box and a small "?". When anything is unticked, the "Kulang pa" warning sits at the top of the checklist.
   4. The "Kumuha ng number" button at the bottom.
 
-  A floating "Magtanong" button sits over the plan.
+  A sticky bottom bar holds "Kumuha ng number" and "Magtanong" (revised in final review, so nothing covers the main action).
 - **Magtanong panel:** opens over the plan with the list of common questions and their pre-written, cited answers. Closing it returns her to the same place.
 - **In line:** her number, her current step and counter, the path with the current step highlighted, and "All documents ready ✓." It shows "Ikaw na!" full-screen when she's called. After visit 1, it shows "Visit 1 done ✓. Balik ka sa [date]" with the labeled demo switch. "Tapos na!" comes at the end of visit 2.
 
@@ -93,7 +95,8 @@ Source: `scope.md > The Unique Kernel`, `scope.md > The POC Boundary`.
 
 Everything on this screen comes from the team's data for this transaction, which is drawn from the official source.
 
-- **Summary:** the number of steps, how much money to prepare, and roughly how long it takes. When no amount has been entered, it says no official amount is listed, never a guess.
+- **"What's next" card** (revised in final review, at the learner's request for a friendlier screen): progress ("N sa M dokumento, handa na"), the single next action ("Sagutin ang N tanong sa ibaba" → "I-tick ang N dokumentong kulang" → "Handa ka na! Kumuha ng number sa TV"), how much money to prepare, and roughly how long it takes. When no amount has been entered, it says no official amount is listed, never a guess.
+- **"Saan galing?":** one link per section opens that section's exact quotes with official links, instead of a citation chip on every item.
 - **Path:** three steps in order: "Visit 1: Submit" at the Registration Officer counter; "BIR checks your records (about 3 working days)," a waiting step that happens behind the scenes; and "Visit 2: Pay ₱30 & claim the tax clearance," at the same counter with a new number.
 - **Unfiled-returns warning on the path:** if she answered Oo or Hindi ko alam to "May hindi ka pa na-file na returns?", the waiting step warns her upfront: if BIR finds unfiled returns, she must settle them within 30 days. It also shows the cited "Related" note about the one-time penalty relief program for micro taxpayers, which runs until 31 Dec 2026.
 - **Checklist:** every document with a tick box and a "?". The "?" opens the Magtanong panel for that document.
@@ -101,7 +104,8 @@ Everything on this screen comes from the team's data for this transaction, which
   - **Hindi (No):** the document greys out with "Hindi kailangan sa iyo" (Not needed for you) and the cited reason. It doesn't lock anything.
   - **Oo (Yes):** it becomes a normal required document with a tick box and locks "Kumuha ng number" until ticked.
   - **Hindi ko alam (I'm not sure), or no answer yet:** treated as required, so it locks the button, with a "?" nudge to ask Magtanong. An unanswered question is exactly the kind of surprise that wastes a trip.
-- **"Kulang pa" warning:** while anything that applies to her is unticked, a warning at the top of the checklist names each missing document, where to get it, and its citation.
+- **"Kulang pa" warning:** while situation questions are still open, it says "Sagutin muna ang N tanong para makita ang kumpletong listahan." Once they're answered, it names each missing applicable document, where to get it, and its citation.
+- **Situation questions** are compact rows with large Oo / Hindi / Hindi ko alam buttons. Answered rows collapse to one line with "Baguhin."
 - **Last checked:** "Huling sinuri sa opisyal na source: [date]" (Last checked against the official source: [date]).
 - **"Kumuha ng number":** locked until every document is ticked.
 
@@ -123,7 +127,7 @@ Source: `scope.md > The POC Boundary` (the official source is the only source).
 
 > **Revised in `5-build`:** pre-written answers replace live AI. The learner decided the video-only proof of concept doesn't need free-form questions. Answers are written ahead of time from the official source and always show their citation. The video and write-up call them pre-written answers from the official source, not AI.
 
-- A floating "Magtanong" button opens a panel over the plan with a short list of common questions, written in Taglish. Her real question is one of them: "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?"
+- The "Magtanong" button in the bottom bar opens a panel over the plan with a short list of common questions, written in Taglish. Her real question is one of them: "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?"
 - Tapping a question shows its pre-written answer. When the source answers it, the reply uses the normal style, quotes the official text, and shows its citation underneath.
 - **When the source doesn't answer the question**, the reply:
   1. Says so plainly, without guessing: "Hindi ito direktang sinasagot ng opisyal na source." (The official source doesn't directly answer this.) It never makes up a penalty amount.
@@ -187,12 +191,12 @@ Source: `scope.md > The Unique Kernel` (a plan that spans days).
 
 ### TV Display
 - One panel for the Registration Officer counter, showing the number being served.
-- When a number is called, the panel flashes and the TV says it out loud in Filipino: "Numero B-014, [counter]."
+- When a number is called, the panel flashes and the TV says it out loud in English, in the Heart voice: "Number B, zero, one, four. Registration counter."
 - A QR code in the corner lets arriving people join.
 - Numbers only, never names. Dark background with huge yellow numbers.
 
 - [ ] The counter's panel shows its current number.
-- [ ] "Call next" makes the panel flash and the TV say "Numero [number], [counter]" in Filipino.
+- [ ] "Call next" makes the panel flash and the TV say "Number [letter, digits]. [counter]." in English.
 - [ ] The QR code is visible in a corner.
 - [ ] No names appear anywhere on the TV.
 
@@ -220,7 +224,7 @@ Source: `scope.md > The POC Boundary` (editable path data, team edit screen). It
 - [ ] Someone already in line keeps her number and step after an edit.
 
 ## States and Boundaries
-- **First use:** nothing is ticked and no situation question is answered. "Kulang pa" lists every document, and "Kumuha ng number" is locked.
+- **First use:** nothing is ticked and no situation question is answered. The "what's next" card asks her to answer the questions, "Kulang pa" asks her to answer them first, and "Kumuha ng number" is locked.
 - **All ticked:** the warning is gone and "Kumuha ng number" is unlocked.
 - **Saved on her phone, no login:** her ticks stay on her phone across closes and reopens until she finishes the transaction or clears them herself.
 - **Reopening while in line:** the app checks with the office and shows where she is now. If staff moved her on while the app was closed, she lands on the new step.
@@ -273,7 +277,7 @@ Source: `scope.md > The POC Boundary` (editable path data, team edit screen). It
 - The In line view: number, current step, path, "Ikaw na!" full-screen, "Visit 1 done ✓. Balik ka sa [date]," the labeled demo switch, and "Tapos na!" with the total time across both visits.
 - Progress saved on her phone, reopening to the current step, the offline banner, and "Tinawag ka na."
 - The staff counter: one counter, waiting list with visit and "Documents ready ✓" badges, "Call next," and "Done."
-- The TV: one counter panel, flash and spoken call in Filipino, and the QR code.
+- The TV: one counter panel, flash and spoken call in English (Heart voice), and the QR code.
 - The team edit screen (built last): passcode, edit forms, no citation no save, and the "Na-update ang requirements" behavior on her phone.
 
 ## Deferred From the POC

@@ -4,9 +4,29 @@ import { CitationChip } from "@/components/citation-chip"
 import { Alert, AlertDescription, AlertTitle, Inline, Stack } from "@/components/ui"
 import type { PlanDocument } from "@/domain/plan"
 
-/** "Kulang pa": names each missing document, where to get it, and its citation. */
-export function MissingWarning({ missing }: { missing: PlanDocument[] }) {
+type MissingWarningProps = {
+  missing: PlanDocument[]
+  /** Situation questions she has not answered yet. */
+  unanswered: number
+}
+
+/**
+ * "Kulang pa": while questions are open it only says how many to answer. Once they are all
+ * answered it names each missing document, where to get it, and its citation.
+ */
+export function MissingWarning({ missing, unanswered }: MissingWarningProps) {
   if (missing.length === 0) return null
+  if (unanswered > 0) {
+    return (
+      <Alert variant="missing" enter>
+        <TriangleAlertIcon />
+        <AlertTitle>Kulang pa:</AlertTitle>
+        <AlertDescription>
+          Sagutin muna ang {unanswered} tanong para makita ang kumpletong listahan.
+        </AlertDescription>
+      </Alert>
+    )
+  }
   return (
     <Alert variant="missing" enter>
       <TriangleAlertIcon />

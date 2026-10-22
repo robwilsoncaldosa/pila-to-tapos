@@ -24,12 +24,12 @@ What she does today: takes a day off work, goes to BIR, gets the requirements on
 ## The Core Loop
 1. **Night before (phone):** She picks BIR and the transaction. She taps her real questions (in plain Taglish) and reads pre-written answers that quote the official source, with a citation. She sees the full path (steps, documents, amount to prepare) and ticks off documents. If one is missing, the app tells her what it is and where to get it, before she spends any fare.
 2. **At the office:** With everything ticked, she scans the QR code on the TV and gets one number (B-014) that knows her path.
-3. **Visit 1:** Staff tap "Call next," the TV says the call out loud in Filipino, and her phone shows "You're up." Staff tap "Done," and her phone moves on by itself to "Balik ka sa [date]. Dalhin: ₱30."
+3. **Visit 1:** Staff tap "Call next," the TV says the call out loud in English, in the Heart voice, and her phone shows "You're up." Staff tap "Done," and her phone moves on by itself to "Balik ka sa [date]. Dalhin: ₱30."
 4. **Visit 2 and finish:** She comes back, gets a new number, pays ₱30, and claims her tax clearance. Her phone shows "Tapos na!" with the total time.
 
 ## Inspiration & Identity
 - Plain words and Filipino/Taglish, the way she actually asks: "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?"
-- Spoken calls in Filipino ("Numero B-014, [counter]") and a full-screen phone call display, for seniors and anyone who can't read the TV well.
+- Spoken calls in English, in a natural voice (Kokoro "Heart": "Number B, zero, one, four. Registration counter.") and a full-screen phone call display, for seniors and anyone who can't read the TV well.
 - Trustworthy over clever: every answer shows where it came from.
 - Official source: BIR's published requirements for this one transaction (exact pages to be pinned down later).
 
@@ -41,7 +41,7 @@ A one-minute demo:
 1. **At home (phone):** She picks BIR and closing her freelancer registration. She taps her question, "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?", and sees what the official source says, with the citation shown.
 2. **The whole path (phone):** Every step, every document, and how much to prepare. She leaves one document unticked, and the app warns her that it's missing and where to get it.
 3. **Arriving (phone + TV):** With everything ticked, she scans the QR code on the TV and gets B-014.
-4. **Called (counter + TV + phone, side by side):** Staff tap "Call next." The TV says "Numero B-014, [counter]" out loud, and at the same moment her phone flips to "You're up."
+4. **Called (counter + TV + phone, side by side):** Staff tap "Call next." The TV says "Number B, zero, one, four. Registration counter." out loud, and at the same moment her phone flips to "You're up."
 5. **Visit 1 done:** Staff tap "Done," and her phone shows "Visit 1 done ✓. Balik ka sa [date] (3 working days). Dalhin: ₱30" by itself.
 6. **Visit 2 and done:** A labeled demo switch skips the 3 working days. She gets a new number, is called again, and finishes with "Tapos na!" and the total time.
 
@@ -57,7 +57,7 @@ A one-minute demo:
 - **Checklist with a missing-document warning** that says where to get the document.
 - **A number is issued only when the checklist is complete,** via the QR code on the TV.
 - **Staff counter:** "Call next" and "Done."
-- **TV:** shows who is being served at the counter and speaks each call in Filipino.
+- **TV:** shows who is being served at the counter and speaks each call in English (Heart voice).
 - **Phone:** updates live to "You're up," then "Balik ka sa [date]," then (after visit 2) "Tapos na!" with the total time.
 
 ## Later

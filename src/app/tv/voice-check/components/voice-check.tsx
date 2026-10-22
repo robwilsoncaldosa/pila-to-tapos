@@ -5,7 +5,7 @@ import { isFilipinoVoice, pickFilipinoVoice, speakLine } from "@/lib/speech"
 
 import { useVoices } from "./use-voices"
 
-const TEST_LINE = "Numero B-001, Registration counter"
+const TEST_LINE = "Number B, zero, zero, one. Registration counter."
 
 /** Lists the browser's voices and test-speaks the call, so we know how the TV will sound. */
 export function VoiceCheck() {

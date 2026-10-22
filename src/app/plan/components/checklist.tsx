@@ -24,9 +24,10 @@ export function Checklist({ plan, status, ticks, answers, updates, onTick, onAns
   const documents = sortByPosition(plan.documents)
   const required = documents.filter((doc) => doc.requirement === "required")
   const situational = documents.filter((doc) => doc.requirement === "situation")
+  const unanswered = situational.filter((doc) => !answers[doc.id]).length
   return (
     <Stack gap={4}>
-      <MissingWarning missing={status.missing} />
+      <MissingWarning missing={status.missing} unanswered={unanswered} />
       {required.map((doc) => (
         <ChecklistItem
           key={doc.id}

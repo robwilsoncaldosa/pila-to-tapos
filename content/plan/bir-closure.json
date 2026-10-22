@@ -2,7 +2,7 @@
   "transaction": {
     "id": "bir-closure-freelancer",
     "title": "BIR: Close my freelancer registration",
-    "processingTimeLabel": "about 3 working days",
+    "processingTimeLabel": "mga 3 working days",
     "processingCitation": {
       "sourceId": "cc-28a",
       "locator": "28-A, Total processing time",
@@ -108,10 +108,8 @@
       "position": 2,
       "name": "Original COR / eCOR (BIR Form 2303)",
       "whereToGet": "Ikaw mismo ang may hawak nito (taxpayer-applicant).",
-      "requirement": "situation",
-      "situationQuestion": "Nasa iyo pa ba ang original COR mo?",
-      "notNeededReason": "Hindi mo madadala ang original kung wala na ito sa iyo. Hindi nakasaad sa opisyal na source kung paano ito aayusin, kaya itanong muna sa RDO bago pumunta.",
-      "explanation": "Ang Certificate of Registration (COR) o electronic COR ay kasama sa mga original na BIR notice at permit na isusumite, kung mayroon ka. Hindi sinasabi ng source kung paano kung nawala ito.",
+      "requirement": "required",
+      "explanation": "Ito ang original na Certificate of Registration (COR) o electronic COR (BIR Form 2303) na isusumite mo. Kung nawala ito o electronic copy lang ang hawak mo, hindi sakop ng opisyal na source dito ang ganoong kaso, kaya itanong muna sa Client Support Section ng RDO.",
       "citation": {
         "sourceId": "rmc-47-2026",
         "locator": "Sec. 4(4)(a)",

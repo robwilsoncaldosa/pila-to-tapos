@@ -33,10 +33,14 @@ const buttonVariants = cva(
         "icon-lg": "size-9",
         touch:
           "h-auto min-h-12 gap-2 px-5 py-2 text-base whitespace-normal [&_svg:not([class*='size-'])]:size-5",
+        /** A 48px button with tighter side padding, so two fit side by side in the sticky bar. */
+        bar: "h-auto min-h-12 gap-2 px-3 py-2 text-base whitespace-normal",
         choice:
           "h-auto min-h-16 justify-between gap-3 px-5 py-3 text-left text-lg font-bold whitespace-normal [&_svg:not([class*='size-'])]:size-6",
         chip: "h-auto min-h-9 max-w-full shrink gap-1.5 px-3 py-1 text-left text-sm whitespace-normal",
         huge: "h-auto min-h-20 gap-3 px-8 py-4 text-2xl font-bold whitespace-normal [&_svg:not([class*='size-'])]:size-7",
+        /** A text button with a 48px tap target and no side padding, so it lines up with the text above. */
+        "link-touch": "h-auto min-h-12 px-0 py-2 text-base whitespace-normal",
         "icon-touch": "size-12 rounded-full text-lg font-bold",
       },
     },

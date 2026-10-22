@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import { Button } from "@/components/ui"
 
-/** The one choice for the proof of concept. One tap opens Your plan. */
+/** The one choice for the proof of concept. One tap opens Ang plano mo. */
 export function TransactionChoice() {
   return (
     <Button asChild size="choice" className="w-full">

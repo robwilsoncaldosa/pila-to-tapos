@@ -3,7 +3,7 @@ import { test } from "node:test"
 
 import {
   announcementText,
-  clipSequence,
+  clipSequences,
   isFilipinoVoice,
   parseSpeechMode,
   pickFilipinoVoice,
@@ -28,41 +28,38 @@ test("prefers fil over tl and a local voice over a remote one", () => {
   assert.equal(pickFilipinoVoice([{ lang: "en-US" }]), undefined)
 })
 
-test("spells the number with the letter as is and digits in Filipino", () => {
-  assert.equal(spellTicketNumber("B-001"), "Numero B, zero, zero, isa")
-  assert.equal(spellTicketNumber("B-014"), "Numero B, zero, isa, apat")
-  assert.equal(
-    spellTicketNumber("B-1234"),
-    "Numero B, isa, dalawa, tatlo, apat"
-  )
-  assert.equal(
-    spellTicketNumber("B-567"),
-    "Numero B, lima, anim, pito"
-  )
-  assert.equal(spellTicketNumber("B-089"), "Numero B, zero, walo, siyam")
+test("spells the number with the letter as is and each digit as an English word", () => {
+  assert.equal(spellTicketNumber("B-001"), "Number B, zero, zero, one")
+  assert.equal(spellTicketNumber("B-014"), "Number B, zero, one, four")
+  assert.equal(spellTicketNumber("B-1234"), "Number B, one, two, three, four")
+  assert.equal(spellTicketNumber("B-567"), "Number B, five, six, seven")
+  assert.equal(spellTicketNumber("B-089"), "Number B, zero, eight, nine")
 })
 
 test("an unrecognised number is read as is", () => {
-  assert.equal(spellTicketNumber("???"), "Numero ???")
+  assert.equal(spellTicketNumber("???"), "Number ???")
 })
 
 test("the announcement ends with the counter's speech label", () => {
   assert.equal(
     announcementText("B-001", "Registration counter"),
-    "Numero B, zero, zero, isa, Registration counter"
+    "Number B, zero, zero, one. Registration counter."
   )
 })
 
-test("clips play in order: numero, letter, each digit, counter", () => {
-  assert.deepEqual(clipSequence("B-014"), [
-    "/audio/numero.mp3",
-    "/audio/letter-b.mp3",
-    "/audio/digit-0.mp3",
-    "/audio/digit-1.mp3",
-    "/audio/digit-4.mp3",
-    "/audio/counter.mp3",
+test("clips try the whole-call clip first, then number, letter, each digit, counter", () => {
+  assert.deepEqual(clipSequences("B-014"), [
+    ["/audio/call-b-014.m4a"],
+    [
+      "/audio/word-number.m4a",
+      "/audio/letter-b.m4a",
+      "/audio/digit-0.m4a",
+      "/audio/digit-1.m4a",
+      "/audio/digit-4.m4a",
+      "/audio/counter.m4a",
+    ],
   ])
-  assert.equal(clipSequence("nonsense"), null)
+  assert.equal(clipSequences("nonsense"), null)
 })
 
 test("speech mode defaults to auto", () => {

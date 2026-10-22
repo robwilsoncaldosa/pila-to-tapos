@@ -187,6 +187,19 @@ Commits go to the `build` branch. `main` is production and changes only with the
 
 ## Final Review
 
+Feedback so far: the learner found the UI "not friendly" and approved applying the plan-screen UX review ("let's gooo"). For the TV they asked for "the same voice as on MLRSS" (Kokoro "Heart"), in English.
+
+- [ ] UX: a "what's next" card at the top of the plan, with progress, the next action, ₱30, and about 3 working days
+- [ ] UX: one "Saan galing?" per section instead of 13 citation chips (the citations stay one tap away)
+- [ ] UX: compact situation questions with large Oo / Hindi / Hindi ko alam buttons; answered ones collapse to one line with "Baguhin"
+- [ ] UX: "Kulang pa" shows progress first and lists missing documents once the questions are answered
+- [ ] UX: consistent Taglish for "Your plan" (now "Ang plano mo"), "3 steps," and "about 3 working days"
+- [ ] UX: a sticky bottom action bar with "Kumuha ng number" plus "Magtanong," so nothing covers the main action
+- [ ] Content: the COR becomes a required document, and its explanation sends lost-COR or eCOR cases to the RDO (agent default, learner to confirm)
+- [ ] Content: keep the grey card's short summary line (agent default, learner to confirm)
+- [ ] Voice: TV calls in English in Kokoro's "Heart" voice (the voice from the learner's MLRSS teaser): pre-generated clips for B-001 to B-030 plus word clips, with the browser's English voice as the last fallback
+All items above are implemented, verified mechanically, and committed. Each waits for the learner to retry it.
+
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

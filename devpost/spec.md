@@ -31,7 +31,7 @@ A real phone reaches the laptop over **the same Wi-Fi**. The TV's QR code holds 
 
 **How Magtanong works:** the panel lists common questions. Each answer was written ahead of time from the official excerpts and shows its citation. When the source doesn't answer a question, the answer is the grey "not in the source" card. A check script confirms every quoted passage really appears in its source file, so nothing is invented. There's no AI call.
 
-**How the TV speaks:** the browser's built-in speech says "Numero B-014, [counter]" with a Filipino voice if the browser has one. If not, it plays short clips the team records.
+**How the TV speaks:** it plays pre-generated clips in Kokoro's "Heart" voice, the same voice as your MLRSS teaser: "Number B, zero, zero, one. Registration counter." If a clip is missing, the browser's own English voice reads the same line.
 
 **Why this shape:** the proof of concept is shown on video, so one laptop server is enough. There are no accounts, no keys, no hosting, and nothing to pay for.
 
@@ -265,7 +265,10 @@ Dark theme. PRD ref: `prd.md > TV Display`.
 
 ### Speech
 `src/lib/speech.ts`. `speak(ticketNumber, counterSpeechLabel)`:
-1. If `speechSynthesis.getVoices()` has a voice whose `lang` starts with `fil` or `tl`, speak "Numero B, zero, zero, isa, [counter]" (exact wording settled in the voice check).
+1. (Revised in final review: English and the Heart voice, the learner's choice.) Play the whole-call clip `public/audio/call-b-NNN.m4a` (pre-generated for B-001 to B-030 with Kokoro `af_heart` through the product-video engine).
+1. If it's missing, play the word clips in sequence (`word-number`, `letter-b`, `digit-0` … `digit-9`, `counter`, all `.m4a`).
+1. If those are missing too, the browser's voice reads "Number B, zero, zero, one. Registration counter." in `en-US`.
+1. `NEXT_PUBLIC_SPEECH_MODE=voice` skips the clips.
 2. Otherwise, play clips in sequence from `public/audio/` (`numero.mp3`, `letter-b.mp3`, `digit-0.mp3` … `digit-9.mp3`, `counter.mp3`), recorded by the team.
 
 `src/app/tv/voice-check/page.tsx` lists the available voices and test-speaks the call. **This is built in slice 1** (see Decisions and Open Issues).
