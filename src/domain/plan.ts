@@ -117,3 +117,7 @@ export const summarizeFees = (fees: Fee[]): FeeSummary => {
 
 export const sortByPosition = <T extends { position: number }>(items: T[]): T[] =>
   [...items].sort((a, b) => a.position - b.position)
+
+/** What she brings for a visit: the sum of its fees with an official amount, or null when none has one. */
+export const feeForVisit = (fees: Fee[], visitNo: 1 | 2): number | null =>
+  summarizeFees(fees.filter((fee) => fee.visitNo === visitNo)).totalPhp

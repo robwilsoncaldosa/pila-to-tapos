@@ -65,7 +65,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
               onAnswer={setAnswer}
             />
           </Stack>
-          <GetNumberButton ready={status.ready} />
+          <GetNumberButton ready={status.ready} phone={phone} />
           <small data-tone="muted">
             Independent na gabay ito, hindi opisyal na BIR app. Gabay lang ito, hindi legal o tax
             advice.

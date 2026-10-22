@@ -1,14 +1,16 @@
-import { Card, CardContent, Stack } from "@/components/ui"
+import { Badge, Card, CardContent, Stack } from "@/components/ui"
 
 type TicketStubProps = {
   number: string
   /** "Step 1 of 3: Submit". */
   stepLabel: string
   counterLabel: string
+  /** "Pay & claim" on the visit 2 stub. */
+  badge?: string
 }
 
 /** Her number big on a jeepney-yellow stub, a dashed tear line, then the step and counter. */
-export function TicketStub({ number, stepLabel, counterLabel }: TicketStubProps) {
+export function TicketStub({ number, stepLabel, counterLabel, badge }: TicketStubProps) {
   return (
     <Card tone="turn" enter aria-label="Ang number mo">
       <CardContent>
@@ -19,9 +21,16 @@ export function TicketStub({ number, stepLabel, counterLabel }: TicketStubProps)
       </CardContent>
       <div className="border-t-2 border-dashed border-foreground/40" aria-hidden />
       <CardContent>
-        <Stack gap={0}>
-          <strong>{stepLabel}</strong>
-          <span>{counterLabel}</span>
+        <Stack gap={2} align="start">
+          <Stack gap={0}>
+            <strong>{stepLabel}</strong>
+            <span>{counterLabel}</span>
+          </Stack>
+          {badge ? (
+            <Badge variant="chip" size="md">
+              {badge}
+            </Badge>
+          ) : null}
         </Stack>
       </CardContent>
     </Card>

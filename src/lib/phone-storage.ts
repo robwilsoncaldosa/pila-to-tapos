@@ -168,5 +168,29 @@ export const setVisitTicket = (visit: 1 | 2, ticketId: string, issuedAt: string)
 export const clearVisits = (): void =>
   updatePhoneState((state) => ({ ...state, visits: {} }))
 
+/** Forgets one visit's ticket (the server no longer knows it), keeping the other visit. */
+export const clearVisit = (visit: 1 | 2): void =>
+  updatePhoneState((state) => {
+    const visits = { ...state.visits }
+    delete visits[visit]
+    return { ...state, visits }
+  })
+
 export const setSoundOn = (soundOn: boolean): void =>
   updatePhoneState((state) => ({ ...state, soundOn }))
+
+/** Remembers when a visit's ticket was marked done, if her phone knows that ticket. */
+export const setVisitDone = (visit: 1 | 2, doneAt: string): void =>
+  updatePhoneState((state) => {
+    const record = state.visits[visit]
+    if (!record || record.doneAt) return state
+    return { ...state, visits: { ...state.visits, [visit]: { ...record, doneAt } } }
+  })
+
+/** The labeled demo switch: pretends the 3 working days have passed. */
+export const setDemoSkip = (demoSkip: boolean): void =>
+  updatePhoneState((state) => ({ ...state, demoSkip }))
+
+/** "Tapos na!": clears her ticks and answers but keeps the visits, so a reload still shows it. */
+export const finishJourney = (): void =>
+  updatePhoneState((state) => ({ ...state, ticks: {}, answers: {} }))

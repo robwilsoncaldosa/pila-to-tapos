@@ -56,3 +56,12 @@ export const minutesBetween = (fromIso: string, to: Date): number =>
 /** The visit badge on the counter's list and the step name on her stub. */
 export const visitLabel = (visitNo: VisitNo): string =>
   visitNo === 1 ? "Submit" : "Pay & claim"
+
+/** The Manila clock time of an instant, 24-hour "HH:MM". */
+export const formatManilaTime = (date: Date): string =>
+  new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Manila",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date)

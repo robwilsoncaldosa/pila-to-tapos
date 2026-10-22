@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle, Button, Stack } from "@/components
 import { checklistStatus } from "@/domain/checklist"
 import { decideJoin } from "@/domain/journey"
 import type { Plan } from "@/domain/plan"
+import { manilaDay } from "@/domain/queue"
 import { ensureJourney, getPhoneState, setVisitTicket } from "@/lib/phone-storage"
 import { useHydrated } from "@/lib/use-phone-state"
 
@@ -23,23 +24,26 @@ export function JoinScreen({ plan }: { plan: Plan }) {
     if (!hydrated || started.current) return
     started.current = true
 
-    const { ticks, answers, visits } = getPhoneState()
+    const { ticks, answers, visits, demoSkip } = getPhoneState()
     const ready = checklistStatus(plan, ticks, answers).ready
-    const decision = decideJoin(visits, ready)
+    const decision = decideJoin(visits, ready, manilaDay(new Date()), demoSkip)
 
     if (decision === "not_ready") return router.replace("/")
-    if (decision === "go_to_line") return router.replace("/line")
+    if (decision === "go_to_line" || decision === "visit_2_locked") {
+      return router.replace("/line")
+    }
+    const visit = decision === "issue_visit_2" ? 2 : 1
 
     ensureJourney()
     const { journeyId } = getPhoneState()
-    void issueTicket({ journeyId, visit: 1, docsReady: true })
+    void issueTicket({ journeyId, visit, docsReady: true })
       .then((result) => {
         if (!result.ok) {
           if (result.error === "not_ready") return router.replace("/")
           setFailed(true)
           return
         }
-        setVisitTicket(1, result.value.id, result.value.issuedAt)
+        setVisitTicket(visit, result.value.id, result.value.issuedAt)
         router.replace("/line")
       })
       .catch(() => setFailed(true))

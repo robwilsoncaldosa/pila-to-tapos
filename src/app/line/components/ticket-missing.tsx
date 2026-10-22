@@ -3,10 +3,10 @@
 import Link from "next/link"
 
 import { Alert, AlertDescription, AlertTitle, Button, Stack } from "@/components/ui"
-import { clearVisits } from "@/lib/phone-storage"
+import { clearVisit, clearVisits } from "@/lib/phone-storage"
 
-/** The server forgot her number (it was restarted). She starts over from the plan. */
-export function TicketMissing() {
+/** The server forgot her number (it was restarted). She starts over from the plan; visit 1 stays done. */
+export function TicketMissing({ visitNo }: { visitNo: 1 | 2 }) {
   return (
     <Stack gap={4}>
       <Alert variant="missing" enter>
@@ -14,7 +14,7 @@ export function TicketMissing() {
         <AlertDescription>Kumuha ulit.</AlertDescription>
       </Alert>
       <Button asChild size="touch">
-        <Link href="/plan" onClick={clearVisits}>
+        <Link href="/plan" onClick={() => (visitNo === 2 ? clearVisit(2) : clearVisits())}>
           Bumalik sa plano
         </Link>
       </Button>

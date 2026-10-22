@@ -5,37 +5,57 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { getTicket } from "@/app/actions/queue"
 import { PathLine } from "@/components/path-line"
 import { Badge, Stack } from "@/components/ui"
-import { currentStepId } from "@/domain/journey"
-import type { Plan } from "@/domain/plan"
+import { currentStepId, journeyStage } from "@/domain/journey"
+import { feeForVisit, type Plan } from "@/domain/plan"
 import { visitLabel, type Ticket } from "@/domain/queue"
 import { playChime, unlockAudio } from "@/lib/chime"
+import { finishJourney, setVisitDone } from "@/lib/phone-storage"
 import { useHydrated, usePhoneState } from "@/lib/use-phone-state"
 import { usePoll } from "@/lib/use-poll"
 
+import { BetweenVisits } from "./between-visits"
 import { CalledBanner } from "./called-banner"
 import { CalledOverlay } from "./called-overlay"
 import { NoTicket } from "./no-ticket"
+import { OfflineBanner } from "./offline-banner"
 import { SoundPrompt } from "./sound-prompt"
+import { TaposNa } from "./tapos-na"
 import { TicketMissing } from "./ticket-missing"
 import { TicketStub } from "./ticket-stub"
-import { VisitOneDone } from "./visit-one-done"
 
-/** Her phone while she is in line: reads the ticket id it saved, then asks the server every 2 seconds. */
+/**
+ * Her phone while she is in line: reads the tickets it saved, then asks the server every 2 seconds
+ * about the active one (visit 2 if she has it, else visit 1). Between the visits and at the end
+ * there is nothing to poll, so those screens come from what the phone saved.
+ */
 export function LineScreen({ plan }: { plan: Plan }) {
   const phone = usePhoneState()
   const hydrated = useHydrated()
-  const ticketId = phone.visits[1]?.ticketId
 
   if (!hydrated) return null
-  if (!ticketId) return <NoTicket />
-  return <TicketView key={ticketId} ticketId={ticketId} plan={plan} soundOn={phone.soundOn} />
+  const stage = journeyStage(phone.visits)
+  if (stage === "before") return <NoTicket />
+  if (stage === "between") return <BetweenVisits plan={plan} phone={phone} />
+  if (stage === "finished") return <TaposNa visits={phone.visits} />
+
+  const visitNo = stage === "visit_2" ? 2 : 1
+  const ticketId = phone.visits[visitNo]?.ticketId ?? ""
+  return (
+    <TicketView
+      key={ticketId}
+      ticketId={ticketId}
+      visitNo={visitNo}
+      plan={plan}
+      soundOn={phone.soundOn}
+    />
+  )
 }
 
-type TicketViewProps = { ticketId: string; plan: Plan; soundOn: boolean }
+type TicketViewProps = { ticketId: string; visitNo: 1 | 2; plan: Plan; soundOn: boolean }
 
-function TicketView({ ticketId, plan, soundOn }: TicketViewProps) {
+function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
   const fetchTicket = useCallback(() => getTicket(ticketId), [ticketId])
-  const { data, error } = usePoll(fetchTicket)
+  const { data, error, lastUpdatedAt } = usePoll(fetchTicket)
 
   const ticket = data?.ok ? data.value : undefined
   const status = ticket?.status
@@ -56,7 +76,15 @@ function TicketView({ ticketId, plan, soundOn }: TicketViewProps) {
     return () => window.removeEventListener("pointerdown", unlock)
   }, [soundOn])
 
-  if (data && !data.ok) return <TicketMissing />
+  // A done ticket moves the phone on: the saved doneAt switches the screen to the next stage.
+  const doneAt = ticket?.doneAt
+  useEffect(() => {
+    if (status !== "done") return
+    setVisitDone(visitNo, doneAt ?? new Date().toISOString())
+    if (visitNo === 2) finishJourney()
+  }, [status, doneAt, visitNo])
+
+  if (data && !data.ok) return <TicketMissing visitNo={visitNo} />
   if (!ticket) {
     return (
       <p data-tone="muted" aria-live="polite">
@@ -66,11 +94,15 @@ function TicketView({ ticketId, plan, soundOn }: TicketViewProps) {
   }
 
   const { counter } = plan
-  const stepName = visitLabel(ticket.visitNo)
+  if (ticket.status === "done") return null
+
+  const stepName =
+    ticket.visitNo === 1 ? visitLabel(1) : payAndClaimLabel(feeForVisit(plan.fees, 2))
   const called = ticket.status === "called"
 
   return (
     <Stack gap={6}>
+      <OfflineBanner lastUpdatedAt={lastUpdatedAt} />
       {called && dismissedId !== ticket.id ? (
         <CalledOverlay
           number={ticket.number}
@@ -79,15 +111,12 @@ function TicketView({ ticketId, plan, soundOn }: TicketViewProps) {
         />
       ) : null}
       {called ? <CalledBanner counterLabel={counter.label} /> : null}
-      {ticket.status === "done" ? (
-        <VisitOneDone />
-      ) : (
-        <TicketStub
-          number={ticket.number}
-          stepLabel={`Step ${ticket.visitNo === 1 ? 1 : 3} of 3: ${stepName}`}
-          counterLabel={counter.label}
-        />
-      )}
+      <TicketStub
+        number={ticket.number}
+        stepLabel={`Step ${ticket.visitNo === 1 ? 1 : 3} of 3: ${stepName}`}
+        counterLabel={counter.label}
+        badge={ticket.visitNo === 2 ? visitLabel(2) : undefined}
+      />
       {ticket.docsReady ? (
         <Badge variant="ready" size="lg">
           All documents ready ✓
@@ -106,3 +135,6 @@ function TicketView({ ticketId, plan, soundOn }: TicketViewProps) {
     </Stack>
   )
 }
+
+const payAndClaimLabel = (feePhp: number | null): string =>
+  feePhp === null ? visitLabel(2) : `Pay ₱${feePhp} & claim`
