@@ -13,6 +13,8 @@ const alertVariants = cva(
         missing: "border-missing/30 bg-missing-soft text-missing",
         ready: "border-ready/30 bg-ready-soft text-ready",
         muted: "border-transparent bg-muted text-muted-foreground",
+        /** "Your turn" moments only: jeepney yellow with navy text. */
+        turn: "border-foreground/20 bg-turn text-foreground",
       },
       enter: {
         true: "enter-rise",

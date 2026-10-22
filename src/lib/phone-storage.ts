@@ -156,3 +156,17 @@ export const resetPhoneState = (): void => {
   emit()
   ensureJourney()
 }
+
+/** Remembers the ticket she took for a visit. */
+export const setVisitTicket = (visit: 1 | 2, ticketId: string, issuedAt: string): void =>
+  updatePhoneState((state) => ({
+    ...state,
+    visits: { ...state.visits, [visit]: { ticketId, issuedAt } },
+  }))
+
+/** Forgets her tickets (the server no longer knows them), keeping her ticks and answers. */
+export const clearVisits = (): void =>
+  updatePhoneState((state) => ({ ...state, visits: {} }))
+
+export const setSoundOn = (soundOn: boolean): void =>
+  updatePhoneState((state) => ({ ...state, soundOn }))

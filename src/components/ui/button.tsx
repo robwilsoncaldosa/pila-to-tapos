@@ -36,6 +36,7 @@ const buttonVariants = cva(
         choice:
           "h-auto min-h-16 justify-between gap-3 px-5 py-3 text-left text-lg font-bold whitespace-normal [&_svg:not([class*='size-'])]:size-6",
         chip: "h-auto min-h-9 max-w-full shrink gap-1.5 px-3 py-1 text-left text-sm whitespace-normal",
+        huge: "h-auto min-h-20 gap-3 px-8 py-4 text-2xl font-bold whitespace-normal [&_svg:not([class*='size-'])]:size-7",
         "icon-touch": "size-12 rounded-full text-lg font-bold",
       },
     },

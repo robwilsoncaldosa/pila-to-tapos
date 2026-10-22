@@ -1,4 +1,5 @@
-import { PlanScreen, PlanUnavailable } from "./components"
+import { PlanScreen } from "./components"
+import { PlanUnavailable } from "@/components/plan-unavailable"
 import { Container } from "@/components/ui"
 import { getContainer } from "@/composition-root"
 

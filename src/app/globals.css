@@ -144,6 +144,48 @@
   animation: enter-rise 200ms var(--ease-out) both;
 }
 
+/* "Ikaw na!" overlay (rare, important): scale 0.96 to 1 plus a fade, 250ms. */
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility enter-pop {
+  animation: enter-pop 250ms var(--ease-out) both;
+}
+
+/* TV call: an opacity pulse on the panel for 3s. Opacity only, so nothing moves. */
+@keyframes tv-pulse {
+  0%,
+  33%,
+  66%,
+  100% {
+    opacity: 1;
+  }
+  16%,
+  50%,
+  83% {
+    opacity: 0.2;
+  }
+}
+@keyframes tv-pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+@utility tv-pulse {
+  animation: tv-pulse 3s var(--ease-in-out) both;
+}
+
 /* Reduced motion: no movement or scaling, only short opacity fades. */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -159,8 +201,12 @@
     --tw-exit-rotate: 0 !important;
     scale: none !important;
   }
-  .enter-rise {
+  .enter-rise,
+  .enter-pop {
     animation-name: enter-fade;
+  }
+  .tv-pulse {
+    animation-name: tv-pulse-soft;
   }
 }
 @keyframes enter-fade {

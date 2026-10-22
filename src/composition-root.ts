@@ -2,21 +2,26 @@ import "server-only"
 
 import { createFilePlanRepository } from "@/adapters/file/plan-repository"
 import { createFileSourceTexts } from "@/adapters/file/source-texts"
+import { createMemoryQueueRepository } from "@/adapters/memory/queue-repository"
 import { createSystemClock } from "@/adapters/system/clock"
 import { createCryptoIds } from "@/adapters/system/ids"
 import { createPlanService } from "@/services/plan-service"
+import { createQueueService } from "@/services/queue-service"
 
 const buildContainer = () => {
   const clock = createSystemClock()
   const ids = createCryptoIds()
   const plans = createFilePlanRepository()
   const sources = createFileSourceTexts()
+  const queue = createMemoryQueueRepository()
   return {
     clock,
     ids,
     plans,
     sources,
+    queue,
     planService: createPlanService({ plans, sources }),
+    queueService: createQueueService({ queue, clock, ids }),
   }
 }
 

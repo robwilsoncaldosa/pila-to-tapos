@@ -15,11 +15,18 @@ const cardVariants = cva(
         default: "bg-card text-card-foreground ring-foreground/15",
         muted: "bg-muted text-muted-foreground ring-transparent",
         signboard: "bg-primary text-primary-foreground ring-primary",
+        /** The number and "your turn" moments only: jeepney yellow with navy text. */
+        turn: "bg-turn text-foreground ring-foreground/20",
+      },
+      enter: {
+        true: "enter-rise",
+        false: "",
       },
     },
     defaultVariants: {
       size: "default",
       tone: "default",
+      enter: false,
     },
   }
 )
@@ -28,6 +35,7 @@ function Card({
   className,
   size = "default",
   tone = "default",
+  enter = false,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
   return (
@@ -35,7 +43,7 @@ function Card({
       data-slot="card"
       data-size={size}
       data-tone={tone}
-      className={cn(cardVariants({ size, tone }), className)}
+      className={cn(cardVariants({ size, tone, enter }), className)}
       {...props}
     />
   )
