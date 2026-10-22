@@ -59,7 +59,7 @@ export function SituationItem({
             })}
           </RadioGroup>
           {notNeeded ? (
-            <Stack gap={2}>
+            <Stack key="not-needed" gap={2} enter>
               <strong>Hindi kailangan sa iyo</strong>
               <p>
                 <s>{document.name}</s>
@@ -70,14 +70,14 @@ export function SituationItem({
               </Inline>
             </Stack>
           ) : (
-            <Stack gap={2}>
+            <Stack key="needed" gap={2}>
               <TickRow
                 document={document}
                 checked={checked}
                 onCheckedChange={onCheckedChange}
               />
               {unsure ? (
-                <small data-tone="muted">
+                <small data-tone="muted" className="enter-rise">
                   Hindi pa sigurado? Kailangan mo pa rin ito hangga&apos;t hindi mo
                   nasasagot nang Hindi. Pindutin ang ? para magtanong.
                 </small>

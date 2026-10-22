@@ -22,14 +22,19 @@ const stackVariants = cva("flex flex-col", {
       end: "items-end",
       stretch: "items-stretch",
     },
+    enter: {
+      true: "enter-rise",
+      false: "",
+    },
   },
-  defaultVariants: { gap: 4, align: "stretch" },
+  defaultVariants: { gap: 4, align: "stretch", enter: false },
 })
 
 function Stack({
   className,
   gap,
   align,
+  enter,
   asChild = false,
   ...props
 }: React.ComponentProps<"div"> &
@@ -38,7 +43,7 @@ function Stack({
   return (
     <Comp
       data-slot="stack"
-      className={cn(stackVariants({ gap, align }), className)}
+      className={cn(stackVariants({ gap, align, enter }), className)}
       {...props}
     />
   )

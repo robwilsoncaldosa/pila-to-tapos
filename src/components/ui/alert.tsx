@@ -14,9 +14,14 @@ const alertVariants = cva(
         ready: "border-ready/30 bg-ready-soft text-ready",
         muted: "border-transparent bg-muted text-muted-foreground",
       },
+      enter: {
+        true: "enter-rise",
+        false: "",
+      },
     },
     defaultVariants: {
       variant: "default",
+      enter: false,
     },
   }
 )
@@ -24,13 +29,14 @@ const alertVariants = cva(
 function Alert({
   className,
   variant,
+  enter,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
   return (
     <div
       data-slot="alert"
       role="alert"
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(alertVariants({ variant, enter }), className)}
       {...props}
     />
   )
@@ -41,7 +47,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="alert-title"
       className={cn(
-        "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+        "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover-fine:text-foreground",
         className
       )}
       {...props}
@@ -57,7 +63,7 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        "text-base text-current md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+        "text-base text-current md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover-fine:text-foreground [&_p:not(:last-child)]:mb-4",
         className
       )}
       {...props}

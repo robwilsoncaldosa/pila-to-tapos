@@ -8,7 +8,7 @@ import type { PlanDocument } from "@/domain/plan"
 export function MissingWarning({ missing }: { missing: PlanDocument[] }) {
   if (missing.length === 0) return null
   return (
-    <Alert variant="missing">
+    <Alert variant="missing" enter>
       <TriangleAlertIcon />
       <AlertTitle>Kulang pa:</AlertTitle>
       <AlertDescription>

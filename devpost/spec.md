@@ -153,6 +153,20 @@ From `prd.md > Look and Feel` and `scope.md > Inspiration & Identity`. Not re-as
 - **Density:** spacious and calm, one column on the phone, large tap targets (48px minimum).
 - **Copy tone:** plain Taglish exactly as written in the PRD, like a helpful ate or kuya at the info desk.
 - **Never:** government logos or seals, purple gradients, tiny text.
+- **Motion** (learner request at checkpoint 1, following Emil Kowalski's design-engineering principles; these are the defaults on the shared primitives):
+  - **Easing tokens** in `globals.css`: `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`, `--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1)`, `--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1)`. Never use `ease-in`.
+  - **Only `transform` and `opacity` animate.** Name the exact properties; never `transition: all`.
+  - **Buttons and other pressable elements:** `transform` over 160ms `--ease-out`, `scale(0.97)` on `:active`.
+  - **Sheet:** enters over 300ms `--ease-drawer` and exits over 200ms `--ease-out`.
+  - **Dialog:** 180ms `--ease-out`, from `scale(0.95)` and opacity 0, centered.
+  - **Checkbox check:** fades in from `scale(0.9)` over 120ms.
+  - **Content that appears or disappears** ("Kulang pa," path notices, situation results): opacity plus `translateY(8px)`, 200ms `--ease-out`.
+  - **"Ikaw na!" overlay** (rare, important): `scale(0.96)` → 1 plus a fade, 250ms `--ease-out`.
+  - **TV call:** an opacity pulse on the panel, with no layout movement.
+  - **Ticket stub and "Balik ka sa [date]" card:** a short enter animation (200–250ms).
+  - **Never animate** repeated staff actions ("Call next," "Done"), beyond the button's press scale.
+  - **Hover effects** only behind `@media (hover: hover) and (pointer: fine)`.
+  - **`prefers-reduced-motion: reduce`:** no movement, only short opacity fades.
 - **Stack fit:** shadcn primitives are used as-is (Button, Card, Checkbox, Badge, Sheet, Dialog, Switch, Alert, Input, Textarea, RadioGroup). The look comes from theme tokens and `cva` variants, not from restyling primitives inline, so `shadcn/no-restyle` stays green.
 
 ## Components

@@ -62,6 +62,7 @@ export function PathLine({
                   ? (step.notices ?? []).map((notice) => (
                       <Alert
                         key={notice.id}
+                        enter
                         variant={notice.kind === "warning" ? "default" : "muted"}
                       >
                         {notice.kind === "warning" ? <TriangleAlertIcon /> : null}
