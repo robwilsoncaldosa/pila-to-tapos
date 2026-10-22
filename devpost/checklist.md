@@ -74,7 +74,7 @@ Commits go to the `build` branch. `main` is production and changes only with the
   Learner check: Open your plan and tap "Magtanong." Tap "May penalty ba ako sa mga hindi ko na-file na returns bago ako makapag-close?" and read the grey card. Tap a question the source answers, and the "?" on a document. Edit any wording you'd change.
   Commit: `Add pre-written Magtanong answers with citations`
 
-- [ ] **3. Get a number and get called (visit 1), including your real phone over Wi-Fi**
+- [x] **3. Get a number and get called (visit 1), including your real phone over Wi-Fi**
   Becomes usable: With her checklist done, "Kumuha ng number" says to scan the TV's QR code. Scanning it with the phone's camera (or opening `/join` in the laptop's phone view) gives B-001, shown on a ticket stub with "Step 1 of 3: Submit."
   - `/counter` shows the waiting list, with "Submit" and "Documents ready ✓."
   - "Call next" makes `/tv` flash and say the call, and her phone goes full-screen with "Ikaw na!" and a sound, within about 2 s.
@@ -206,3 +206,4 @@ Activity mode: not started
 - Pre-written cited answers replace live AI, and the build runs on the laptop with no deployment. This removes Supabase, Realtime, the Claude API, Vercel, and the in-app scanner; the old slice 5 (Supabase and Vercel) is gone, and the phone-over-Wi-Fi check moved into slice 3. The learner decided at the gut check that the video-only proof of concept needs neither live AI nor deployment. `prd.md`, `scope.md`, and `spec.md` were updated in the same pass.
 - The plan file gained an optional `Step.notices` field (cited warning and related notes) for the waiting step's 30-day warning and relief note, and `next.config.ts` dropped `cacheComponents` so `/plan` re-reads the plan file each request. Slice 1 found the spec's data shape had no place for cited notes on a step.
 - Motion defaults on the shared primitives, following Emil Kowalski's design-engineering principles: easing tokens, a press scale on buttons, a drawer curve on the sheet, enter animations for content that appears, and reduced-motion support. Slices 3–5 follow the same rules (`spec.md > Look and Feel`, the Motion bullet). The learner asked for this at checkpoint 1.
+- The queue rules gained a "busy" state: `callNext` refuses while a number is still called, so staff tap Done first. The `QueueRepository` port gained `findActive` so the same journey and visit are never issued twice. Slice 3 found both were needed for a clean counter flow.
