@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "look": "minimal-light",
+  "colors": { "accent": "#14213D" },
+  "captions": { "enabled": true, "position": "bottom", "size": "lg" },
+  "voice": { "provider": "kokoro", "kokoroVoice": "af_heart", "wpm": 140 },
+  "music": { "volume": 0.16, "duckTo": 0.05 },
+  "cursor": "pointer-dark",
+  "transitions": "calm"
+}

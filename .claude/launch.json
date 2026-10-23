@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "pila-demo",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "PILA_DEMO_RESET=1 npx next start -p 3105 -H 127.0.0.1"],
+      "port": 3105
+    }
+  ]
+}

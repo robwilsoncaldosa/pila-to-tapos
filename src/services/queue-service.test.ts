@@ -51,6 +51,9 @@ const fakeQueue = (): QueueRepository => {
       return ticket ? replace({ ...ticket, status: "done", doneAt: at }) : null
     },
     getTicket: async (id) => tickets.find((t) => t.id === id) ?? null,
+    clear: async () => {
+      tickets.length = 0
+    },
   }
 }
 
@@ -151,6 +154,17 @@ test("call next is busy until the called ticket is finished", async () => {
   const second = await service.callNext(REGISTRATION_COUNTER_ID)
   assert.ok(second.ok)
   assert.equal(second.value.number, "B-002")
+})
+
+test("reset demo empties the line and the current ticket", async () => {
+  const { service, issue } = setup()
+  await issue("a")
+  await issue("b")
+  await service.callNext(REGISTRATION_COUNTER_ID)
+  await service.resetDemo()
+  const board = await service.boardState(REGISTRATION_COUNTER_ID)
+  assert.equal(board.current, null)
+  assert.deepEqual(board.waiting, [])
 })
 
 test("finishing marks the ticket done and clears the current ticket", async () => {

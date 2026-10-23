@@ -73,5 +73,8 @@ export const createMemoryQueueRepository = (): QueueRepository => {
       return replace({ ...ticket, status: "done", doneAt: at })
     },
     getTicket: async (id) => tickets.find((ticket) => ticket.id === id) ?? null,
+    clear: async () => {
+      tickets.length = 0
+    },
   }
 }

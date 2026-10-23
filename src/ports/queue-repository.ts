@@ -24,4 +24,6 @@ export type QueueRepository = {
   /** Marks a called ticket done. Returns null when the ticket does not exist. */
   finish: (ticketId: string, at: string) => Promise<Ticket | null>
   getTicket: (id: string) => Promise<Ticket | null>
+  /** Removes every ticket. Only the demo reset calls this. */
+  clear: () => Promise<void>
 }

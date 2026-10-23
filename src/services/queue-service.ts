@@ -83,6 +83,11 @@ export const createQueueService = (deps: {
     current: await deps.queue.getCurrent(counterId),
     waiting: await deps.queue.listWaiting(counterId),
   }),
+
+  /** Empties the queue so the video recorder can start a clean demo. Gated at the route, not here. */
+  resetDemo: async (): Promise<void> => {
+    await deps.queue.clear()
+  },
 })
 
 export type QueueService = ReturnType<typeof createQueueService>
