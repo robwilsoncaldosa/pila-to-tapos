@@ -1,5 +1,6 @@
 import { Badge, Card, CardContent, Inline, Stack } from "@/components/ui"
 import { minutesBetween, visitLabel, type Ticket } from "@/domain/queue"
+import { useT } from "@/i18n"
 
 type WaitingListProps = {
   tickets: Ticket[]
@@ -9,11 +10,12 @@ type WaitingListProps = {
 
 /** The line in order. Numbers only, never names. */
 export function WaitingList({ tickets, asOf }: WaitingListProps) {
+  const { t } = useT()
   return (
     <Stack gap={3}>
-      <h2>Naghihintay ({tickets.length})</h2>
+      <h2>{t("counter.waiting", { n: tickets.length })}</h2>
       {tickets.length === 0 ? (
-        <p data-tone="muted">Walang naghihintay</p>
+        <p data-tone="muted">{t("counter.nobody")}</p>
       ) : (
         <Stack asChild gap={2}>
           <ul>
@@ -25,7 +27,7 @@ export function WaitingList({ tickets, asOf }: WaitingListProps) {
                       <Inline gap={4}>
                         <strong className="text-3xl tabular-nums">{ticket.number}</strong>
                         <span data-tone="muted">
-                          {minutesBetween(ticket.issuedAt, asOf)} min
+                          {t("counter.minutes", { n: minutesBetween(ticket.issuedAt, asOf) })}
                         </span>
                       </Inline>
                       <Inline gap={2} wrap>
@@ -34,7 +36,7 @@ export function WaitingList({ tickets, asOf }: WaitingListProps) {
                         </Badge>
                         {ticket.docsReady ? (
                           <Badge variant="ready" size="md">
-                            Documents ready ✓
+                            {t("counter.docsReady")}
                           </Badge>
                         ) : null}
                       </Inline>

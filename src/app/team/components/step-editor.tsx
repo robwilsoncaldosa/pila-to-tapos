@@ -3,6 +3,7 @@
 import { saveStep } from "@/app/actions/team"
 import { Card, CardContent, Input, Stack } from "@/components/ui"
 import type { Counter, SourceInfo, Step } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { CitationFields } from "./citation-fields"
 import { Field } from "./field"
@@ -13,6 +14,7 @@ type StepEditorProps = { step: Step; counter: Counter; sources: SourceInfo[] }
 
 /** Name, order and counter of one step, plus the working days of the waiting step. */
 export function StepEditor({ step, counter, sources }: StepEditorProps) {
+  const { t } = useT()
   const { pending, error, saved, onSubmit } = useSaveForm((data) =>
     saveStep({
       id: step.id,
@@ -30,10 +32,10 @@ export function StepEditor({ step, counter, sources }: StepEditorProps) {
         <Stack asChild gap={4}>
           <form onSubmit={onSubmit}>
             <h3>{step.name}</h3>
-            <Field htmlFor={`${id}-name`} label="Pangalan ng hakbang">
+            <Field htmlFor={`${id}-name`} label={t("team.step.name")}>
               <Input id={`${id}-name`} name="name" defaultValue={step.name} required />
             </Field>
-            <Field htmlFor={`${id}-position`} label="Pagkakasunod-sunod (1, 2, 3...)">
+            <Field htmlFor={`${id}-position`} label={t("team.step.position")}>
               <Input
                 id={`${id}-position`}
                 name="position"
@@ -46,8 +48,8 @@ export function StepEditor({ step, counter, sources }: StepEditorProps) {
             {step.kind === "visit" ? (
               <Field
                 htmlFor={`${id}-counter`}
-                label="Pangalan ng counter"
-                hint="Iisang counter ito para sa lahat ng visit."
+                label={t("team.step.counter")}
+                hint={t("team.step.counterHint")}
               >
                 <Input
                   id={`${id}-counter`}
@@ -57,7 +59,7 @@ export function StepEditor({ step, counter, sources }: StepEditorProps) {
                 />
               </Field>
             ) : (
-              <Field htmlFor={`${id}-days`} label="Ilang working days ang hintay">
+              <Field htmlFor={`${id}-days`} label={t("team.step.days")}>
                 <Input
                   id={`${id}-days`}
                   name="waitWorkingDays"

@@ -1,3 +1,5 @@
+import { localizePlan } from "@/domain/localize"
+import type { Locale } from "@/domain/locale"
 import type { Plan, SourceInfo } from "@/domain/plan"
 import { err, ok, type Result } from "@/domain/result"
 import type { PlanRepository } from "@/ports/plan-repository"
@@ -14,10 +16,11 @@ export const createPlanService = (deps: {
   plans: PlanRepository
   sources: SourceTexts
 }) => ({
-  getPlan: async (): Promise<Result<PlanBundle, "plan_not_found">> => {
+  /** The plan in the reader's language ("fil" is the plan as stored, which the team edits). */
+  getPlan: async (locale: Locale): Promise<Result<PlanBundle, "plan_not_found">> => {
     const result = await deps.plans.getPlan(BIR_CLOSURE_TRANSACTION_ID)
     if (!result.ok) return err("plan_not_found")
-    return ok({ plan: result.value, sources: await deps.sources.list() })
+    return ok({ plan: localizePlan(result.value, locale), sources: await deps.sources.list() })
   },
 })
 

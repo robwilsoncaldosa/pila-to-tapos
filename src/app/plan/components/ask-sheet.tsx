@@ -12,6 +12,7 @@ import {
   Stack,
 } from "@/components/ui"
 import type { Plan } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { AnswerCard } from "./answer-card"
 import type { AskView } from "./ask-view"
@@ -27,8 +28,9 @@ type AskSheetProps = {
   onViewChange: (view: AskView) => void
 }
 
-/** The Magtanong sheet. It overlays the plan, so closing it leaves her where she was. */
+/** The Ask sheet. It overlays the plan, so closing it leaves her where she was. */
 export function AskSheet({ plan, open, onOpenChange, view, onViewChange }: AskSheetProps) {
+  const { t } = useT()
   const question =
     view.kind === "question"
       ? plan.questions.find((item) => item.id === view.questionId)
@@ -38,7 +40,7 @@ export function AskSheet({ plan, open, onOpenChange, view, onViewChange }: AskSh
       ? plan.documents.find((item) => item.id === view.documentId)
       : undefined
 
-  const title = question?.question ?? document?.name ?? "Magtanong"
+  const title = question?.question ?? document?.name ?? t("ask.title")
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -46,7 +48,7 @@ export function AskSheet({ plan, open, onOpenChange, view, onViewChange }: AskSh
         <SheetHeader className="mr-16">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription className="sr-only">
-            Pre-written na sagot mula sa opisyal na source.
+            {t("ask.description")}
           </SheetDescription>
         </SheetHeader>
         <div
@@ -63,7 +65,7 @@ export function AskSheet({ plan, open, onOpenChange, view, onViewChange }: AskSh
                   onClick={() => onViewChange({ kind: "list" })}
                 >
                   <ChevronLeftIcon />
-                  Mga tanong
+                  {t("ask.list")}
                 </Button>
                 {question.kind === "direct" ? (
                   <AnswerCard question={question} />

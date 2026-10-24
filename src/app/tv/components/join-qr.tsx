@@ -4,6 +4,7 @@ import { QRCodeSVG } from "qrcode.react"
 import { useSyncExternalStore } from "react"
 
 import { Card, CardContent, Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 
 const noopSubscribe = () => () => {}
 
@@ -29,6 +30,7 @@ const isLocalHost = (baseUrl: string): boolean => {
 
 /** The corner QR code: her phone's own camera opens it. The address is printed under it. */
 export function JoinQr({ counterId }: { counterId: string }) {
+  const { t } = useT()
   const baseUrl = useBaseUrl()
   if (!baseUrl) return null
   const joinUrl = `${baseUrl}/join?c=${counterId}`
@@ -37,13 +39,11 @@ export function JoinQr({ counterId }: { counterId: string }) {
     <Card size="sm">
       <CardContent>
         <Stack gap={2} align="center" className="max-w-56 text-center">
-          <p className="font-bold">I-scan para kumuha ng number</p>
-          <QRCodeSVG value={joinUrl} size={176} marginSize={2} title="QR code para kumuha ng number" />
+          <p className="font-bold">{t("tv.scan")}</p>
+          <QRCodeSVG value={joinUrl} size={176} marginSize={2} title={t("tv.qrTitle")} />
           <small className="break-all">{joinUrl}</small>
           {isLocalHost(baseUrl) ? (
-            <small data-tone="muted">
-              Para sa phone: buksan ang TV gamit ang IP address ng laptop (npm run dev:lan)
-            </small>
+            <small data-tone="muted">{t("tv.lanHint")}</small>
           ) : null}
         </Stack>
       </CardContent>

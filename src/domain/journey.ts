@@ -1,3 +1,4 @@
+import type { Locale } from "./locale"
 import { addWorkingDays } from "./working-days"
 
 /** What her phone remembers about one ticket. */
@@ -70,13 +71,14 @@ const minutesOf = (visit: JourneyVisit | undefined): number => {
 export const totalVisitTime = (visits: JourneyVisits): number =>
   minutesOf(visits[1]) + minutesOf(visits[2])
 
-/** "12 min", "1 oras", "1 oras 5 min". */
-export const formatDuration = (minutes: number): string => {
+/** Filipino: "12 min", "1 oras", "1 oras 5 min". English: "12 min", "1 hr", "1 hr 5 min". */
+export const formatDuration = (minutes: number, locale: Locale): string => {
   const whole = Math.max(0, Math.round(minutes))
   const hours = Math.floor(whole / 60)
   const rest = whole % 60
+  const hourUnit = locale === "en" ? "hr" : "oras"
   if (hours === 0) return `${rest} min`
-  return rest === 0 ? `${hours} oras` : `${hours} oras ${rest} min`
+  return rest === 0 ? `${hours} ${hourUnit}` : `${hours} ${hourUnit} ${rest} min`
 }
 
 type StepLike = { id: string; kind: "visit" | "wait"; visitNo?: 1 | 2 }

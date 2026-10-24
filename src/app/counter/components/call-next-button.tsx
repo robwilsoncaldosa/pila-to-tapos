@@ -1,4 +1,5 @@
 import { Button, Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 
 type CallNextButtonProps = {
   /** True when somebody is waiting. */
@@ -11,13 +12,14 @@ type CallNextButtonProps = {
 
 /** Big, and off whenever there is nobody to call or the current number is not finished. */
 export function CallNextButton({ hasWaiting, busy, pending, onCall }: CallNextButtonProps) {
+  const { t } = useT()
   return (
     <Stack gap={2}>
       <Button size="huge" disabled={!hasWaiting || busy || pending} onClick={onCall}>
-        Call next
+        {t("counter.callNext")}
       </Button>
       {busy ? (
-        <small data-tone="muted">Pindutin muna ang Done sa kasalukuyang number.</small>
+        <small data-tone="muted">{t("counter.busy")}</small>
       ) : null}
     </Stack>
   )

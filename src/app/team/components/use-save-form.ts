@@ -4,8 +4,9 @@ import { useState, useTransition, type FormEvent } from "react"
 
 import type { TeamActionError } from "@/app/actions/team"
 import type { Result } from "@/domain/result"
+import { useT } from "@/i18n"
 
-import { teamErrorMessage } from "./team-errors"
+import { teamErrorKey } from "./team-errors"
 
 type SaveOptions = { resetOnSuccess?: boolean }
 
@@ -14,6 +15,7 @@ export function useSaveForm(
   save: (data: FormData) => Promise<Result<null, TeamActionError>>,
   { resetOnSuccess = false }: SaveOptions = {}
 ) {
+  const { t } = useT()
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
@@ -30,7 +32,7 @@ export function useSaveForm(
         setSaved(true)
         if (resetOnSuccess) form.reset()
       } else {
-        setError(teamErrorMessage(result.error))
+        setError(t(teamErrorKey(result.error)))
       }
     })
   }

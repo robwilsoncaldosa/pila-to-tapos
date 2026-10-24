@@ -12,17 +12,19 @@ import {
   Stack,
 } from "@/components/ui"
 import type { Citation } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { useSources } from "./sources-context"
 
 type SectionCitationsProps = {
-  /** What the section is about, e.g. "Ang path". Used as the dialog title. */
+  /** What the section is about, e.g. "your path". Used as the dialog title. */
   title: string
   citations: Citation[]
 }
 
-/** One "Saan galing?" button per section. It lists every quote the section rests on. */
+/** One "Where is this from?" button per section. It lists every quote the section rests on. */
 export function SectionCitations({ title, citations }: SectionCitationsProps) {
+  const { t } = useT()
   const sources = useSources()
   const unique = citations.filter(
     (citation, i) =>
@@ -34,13 +36,13 @@ export function SectionCitations({ title, citations }: SectionCitationsProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="link" size="link-touch" className="self-start">
-          Saan galing?
+          {t("cite.where")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[85dvh] overflow-y-auto">
         <Stack gap={4}>
-          <DialogTitle>Saan galing: {title}</DialogTitle>
-          <DialogDescription>Eksaktong sipi mula sa opisyal na source.</DialogDescription>
+          <DialogTitle>{t("cite.whereTitle", { title })}</DialogTitle>
+          <DialogDescription>{t("cite.exact")}</DialogDescription>
           {unique.map((citation) => {
             const source = sources.find((item) => item.id === citation.sourceId)
             return (
@@ -53,7 +55,7 @@ export function SectionCitations({ title, citations }: SectionCitationsProps) {
                 </small>
                 {source ? (
                   <a href={source.url} target="_blank" rel="noopener noreferrer">
-                    Buksan ang opisyal na source <ExternalLinkIcon className="inline size-4" />
+                    {t("cite.open")} <ExternalLinkIcon className="inline size-4" />
                   </a>
                 ) : null}
               </Stack>

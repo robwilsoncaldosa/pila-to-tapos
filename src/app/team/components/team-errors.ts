@@ -1,11 +1,13 @@
 import type { TeamActionError } from "@/app/actions/team"
+import type { MessageKey } from "@/i18n"
 
-const MESSAGES: Record<TeamActionError, string> = {
-  citation_required: "Walang citation, hindi mase-save.",
-  quote_not_in_source: "Wala sa opisyal na source ang quote na ito.",
-  unauthorized: "Naka-lock na ulit ang page. I-refresh ito at ilagay muli ang passcode.",
-  invalid_input: "May kulang o maling laman ang form. Tingnan ang mga field.",
-  not_found: "Hindi na nahanap ang item na ito. I-refresh ang page.",
+const KEYS: Record<TeamActionError, MessageKey> = {
+  citation_required: "team.err.citation_required",
+  quote_not_in_source: "team.err.quote_not_in_source",
+  unauthorized: "team.err.unauthorized",
+  invalid_input: "team.err.invalid_input",
+  not_found: "team.err.not_found",
 }
 
-export const teamErrorMessage = (error: TeamActionError): string => MESSAGES[error]
+/** The dictionary key of the message for a failed team save. */
+export const teamErrorKey = (error: TeamActionError): MessageKey => KEYS[error]

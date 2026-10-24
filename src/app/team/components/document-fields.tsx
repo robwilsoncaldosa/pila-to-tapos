@@ -6,6 +6,7 @@ import {
   Textarea,
 } from "@/components/ui"
 import type { PlanDocument, SourceInfo } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { CitationFields } from "./citation-fields"
 import { Field } from "./field"
@@ -30,12 +31,13 @@ export const documentInput = (data: FormData) => ({
 
 /** The fields shared by editing a document and adding a new one. */
 export function DocumentFields({ idPrefix, sources, document }: DocumentFieldsProps) {
+  const { t } = useT()
   return (
     <Stack gap={4}>
-      <Field htmlFor={`${idPrefix}-name`} label="Pangalan ng dokumento">
+      <Field htmlFor={`${idPrefix}-name`} label={t("team.doc.name")}>
         <Input id={`${idPrefix}-name`} name="name" defaultValue={document?.name} required />
       </Field>
-      <Field htmlFor={`${idPrefix}-where`} label="Saan kukuha">
+      <Field htmlFor={`${idPrefix}-where`} label={t("team.doc.where")}>
         <Input
           id={`${idPrefix}-where`}
           name="whereToGet"
@@ -43,22 +45,20 @@ export function DocumentFields({ idPrefix, sources, document }: DocumentFieldsPr
           required
         />
       </Field>
-      <Field htmlFor={`${idPrefix}-requirement`} label="Kailangan ba ito ng lahat?">
+      <Field htmlFor={`${idPrefix}-requirement`} label={t("team.doc.requirement")}>
         <NativeSelect
           id={`${idPrefix}-requirement`}
           name="requirement"
           defaultValue={document?.requirement ?? "required"}
         >
-          <NativeSelectOption value="required">Required: kailangan ng lahat</NativeSelectOption>
-          <NativeSelectOption value="situation">
-            Situation: depende sa sitwasyon niya
-          </NativeSelectOption>
+          <NativeSelectOption value="required">{t("team.doc.required")}</NativeSelectOption>
+          <NativeSelectOption value="situation">{t("team.doc.situation")}</NativeSelectOption>
         </NativeSelect>
       </Field>
       <Field
         htmlFor={`${idPrefix}-question`}
-        label="Tanong sa kanya (para sa situation lang)"
-        hint="Isang tanong na sinasagot niya ng Oo, Hindi, o Hindi ko alam."
+        label={t("team.doc.question")}
+        hint={t("team.doc.questionHint")}
       >
         <Input
           id={`${idPrefix}-question`}
@@ -68,7 +68,7 @@ export function DocumentFields({ idPrefix, sources, document }: DocumentFieldsPr
       </Field>
       <Field
         htmlFor={`${idPrefix}-reason`}
-        label="Bakit hindi kailangan kapag Hindi ang sagot (para sa situation lang)"
+        label={t("team.doc.reason")}
       >
         <Textarea
           id={`${idPrefix}-reason`}
@@ -76,7 +76,7 @@ export function DocumentFields({ idPrefix, sources, document }: DocumentFieldsPr
           defaultValue={document?.notNeededReason}
         />
       </Field>
-      <Field htmlFor={`${idPrefix}-explanation`} label="Paliwanag (lumalabas sa ?)">
+      <Field htmlFor={`${idPrefix}-explanation`} label={t("team.doc.explanation")}>
         <Textarea
           id={`${idPrefix}-explanation`}
           name="explanation"

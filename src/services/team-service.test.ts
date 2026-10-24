@@ -34,6 +34,7 @@ const makePlan = (): Plan => ({
       explanation: "e",
       citation: good,
       revision: 1,
+      en: { name: "A in English" },
     },
   ],
   fees: [{ id: "f1", label: "F", amountPhp: 30, visitNo: 2, citation: good, revision: 1 }],
@@ -140,6 +141,13 @@ test("a valid save bumps the item's revision and the transaction's", async () =>
   assert.equal(plan().documents[0].name, "A2")
   assert.equal(plan().documents[0].revision, 2)
   assert.equal(plan().transaction.revision, 2)
+})
+
+test("saving a document keeps its English text", async () => {
+  const { service, plan } = setup()
+  await service.saveDocument({ id: "a", ...docEdit() })
+  assert.equal(plan().documents[0].name, "A2")
+  assert.equal(plan().documents[0].en?.name, "A in English")
 })
 
 test("a step save keeps its kind and only the waiting step takes working days", async () => {

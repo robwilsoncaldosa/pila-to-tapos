@@ -3,6 +3,7 @@
 import { saveMeta } from "@/app/actions/team"
 import { Card, CardContent, Input, Stack } from "@/components/ui"
 import type { SourceInfo, Transaction } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { CitationFields } from "./citation-fields"
 import { Field } from "./field"
@@ -13,6 +14,7 @@ type MetaEditorProps = { transaction: Transaction; sources: SourceInfo[] }
 
 /** The processing time and the "last checked" date that customers see. */
 export function MetaEditor({ transaction, sources }: MetaEditorProps) {
+  const { t } = useT()
   const { pending, error, saved, onSubmit } = useSaveForm((data) =>
     saveMeta({
       processingTimeLabel: field(data, "processingTimeLabel"),
@@ -25,7 +27,7 @@ export function MetaEditor({ transaction, sources }: MetaEditorProps) {
       <CardContent>
         <Stack asChild gap={4}>
           <form onSubmit={onSubmit}>
-            <Field htmlFor="meta-time" label="Gaano katagal ang proseso">
+            <Field htmlFor="meta-time" label={t("team.meta.time")}>
               <Input
                 id="meta-time"
                 name="processingTimeLabel"
@@ -33,7 +35,7 @@ export function MetaEditor({ transaction, sources }: MetaEditorProps) {
                 required
               />
             </Field>
-            <Field htmlFor="meta-checked" label="Huling na-check ang source">
+            <Field htmlFor="meta-checked" label={t("team.meta.checked")}>
               <Input
                 id="meta-checked"
                 name="lastCheckedOn"

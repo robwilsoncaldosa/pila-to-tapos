@@ -75,11 +75,15 @@ test("total visit time adds both visits", () => {
   assert.equal(totalVisitTime({}), 0)
 })
 
-test("durations read in Taglish", () => {
-  assert.equal(formatDuration(12), "12 min")
-  assert.equal(formatDuration(65), "1 oras 5 min")
-  assert.equal(formatDuration(120), "2 oras")
-  assert.equal(formatDuration(0), "0 min")
+test("durations read per language", () => {
+  assert.equal(formatDuration(12, "fil"), "12 min")
+  assert.equal(formatDuration(65, "fil"), "1 oras 5 min")
+  assert.equal(formatDuration(120, "fil"), "2 oras")
+  assert.equal(formatDuration(0, "fil"), "0 min")
+  assert.equal(formatDuration(12, "en"), "12 min")
+  assert.equal(formatDuration(65, "en"), "1 hr 5 min")
+  assert.equal(formatDuration(120, "en"), "2 hr")
+  assert.equal(formatDuration(0, "en"), "0 min")
 })
 
 test("the current step follows her ticket", () => {

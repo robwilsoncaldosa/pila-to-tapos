@@ -13,22 +13,17 @@ import {
   Stack,
 } from "@/components/ui"
 import type { PlanDocument, SituationAnswer } from "@/domain/plan"
+import { useT, type MessageKey } from "@/i18n"
 
 import { ExplainButton } from "./explain-button"
 import { TickRow } from "./tick-row"
 import { UpdateBadge, type UpdateKind } from "./update-badge"
 
-const OPTIONS: { value: SituationAnswer; label: string }[] = [
-  { value: "oo", label: "Oo" },
-  { value: "hindi", label: "Hindi" },
-  { value: "hindi_ko_alam", label: "Hindi ko alam" },
-]
-
-const OUTCOME: Record<SituationAnswer, string> = {
-  oo: "kasama sa checklist",
-  hindi: "Hindi kailangan sa iyo",
-  hindi_ko_alam: "kasama pa rin sa checklist",
-}
+const OPTIONS = [
+  { value: "oo", label: "answer.yes", outcome: "outcome.yes" },
+  { value: "hindi", label: "answer.no", outcome: "outcome.no" },
+  { value: "hindi_ko_alam", label: "answer.unsure", outcome: "outcome.unsure" },
+] as const satisfies readonly { value: SituationAnswer; label: MessageKey; outcome: MessageKey }[]
 
 type SituationItemProps = {
   document: PlanDocument
@@ -41,7 +36,7 @@ type SituationItemProps = {
 
 /**
  * A document that depends on her situation. Unanswered, it is one question with three big
- * buttons. Answered, it collapses to one line ("Oo — kasama sa checklist") with "Baguhin".
+ * buttons. Answered, it collapses to one line ("Yes — included in the checklist") with "Change".
  */
 export function SituationItem({
   document,
@@ -51,11 +46,12 @@ export function SituationItem({
   onCheckedChange,
   updateKind,
 }: SituationItemProps) {
+  const { t } = useT()
   const [editing, setEditing] = useState(false)
   const notNeeded = answer === "hindi"
   const groupId = `situation-${document.id}`
   const asking = answer === undefined || editing
-  const answerLabel = OPTIONS.find((option) => option.value === answer)?.label
+  const selected = OPTIONS.find((option) => option.value === answer)
   return (
     <Card size="sm" tone={notNeeded ? "muted" : updateKind ? "updated" : "default"}>
       <CardContent>
@@ -81,7 +77,7 @@ export function SituationItem({
                     value={option.value}
                     onClick={() => setEditing(false)}
                   >
-                    {option.label}
+                    {t(option.label)}
                   </RadioGroupItem>
                 ))}
               </RadioGroup>
@@ -90,15 +86,16 @@ export function SituationItem({
             <Stack key="answered" gap={3} enter>
               <Inline justify="between" gap={3}>
                 <span>
-                  <strong>{answerLabel}</strong> — {OUTCOME[answer]}
+                  <strong>{selected ? t(selected.label) : null}</strong> —{" "}
+                  {selected ? t(selected.outcome) : null}
                 </span>
                 <Button
                   variant="outline"
                   size="touch"
-                  aria-label={`Baguhin ang sagot: ${document.situationQuestion}`}
+                  aria-label={t("situation.changeAria", { question: document.situationQuestion ?? "" })}
                   onClick={() => setEditing(true)}
                 >
-                  Baguhin
+                  {t("situation.change")}
                 </Button>
               </Inline>
               {notNeeded ? (
@@ -119,10 +116,7 @@ export function SituationItem({
                     onCheckedChange={onCheckedChange}
                   />
                   {answer === "hindi_ko_alam" ? (
-                    <small data-tone="muted">
-                      Kailangan mo pa rin ito hangga&apos;t hindi mo nasasagot nang Hindi.
-                      Pindutin ang ? para magtanong.
-                    </small>
+                    <small data-tone="muted">{t("situation.unsureNote")}</small>
                   ) : null}
                 </Stack>
               )}

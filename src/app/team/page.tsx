@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic"
 export default async function TeamPage() {
   const { teamService, planService } = getContainer()
   const unlocked = teamService.isAuthorized((await cookies()).get(TEAM_COOKIE)?.value)
-  const plan = unlocked ? await planService.getPlan() : null
+  const plan = unlocked ? await planService.getPlan("fil") : null
   return (
     <Container asChild size="wide">
       <main>

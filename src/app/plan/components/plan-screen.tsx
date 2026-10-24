@@ -4,10 +4,12 @@ import { useEffect, useSyncExternalStore } from "react"
 
 import { SectionCitations, SourcesProvider } from "@/components/citation-chip"
 import { PathLine } from "@/components/path-line"
-import { Stack } from "@/components/ui"
+import { LocaleSwitch } from "@/components/locale-switch"
+import { Inline, Stack } from "@/components/ui"
 import { checklistStatus, showUnfiledReturnsWarning } from "@/domain/checklist"
 import { sortByPosition } from "@/domain/plan"
 import { planProgress } from "@/domain/progress"
+import { useT } from "@/i18n"
 import type { PlanBundle } from "@/services/plan-service"
 import {
   ensureJourney,
@@ -27,8 +29,9 @@ import { usePlanUpdates } from "./use-plan-updates"
 import { ResetLink } from "./reset-link"
 import { WhatsNextCard } from "./whats-next-card"
 
-/** The whole "Ang plano mo" screen. Her ticks and answers live in localStorage on this phone. */
+/** The whole "Your plan" screen. Her ticks and answers live in localStorage on this phone. */
 export function PlanScreen({ plan, sources }: PlanBundle) {
+  const { t } = useT()
   const phone = useSyncExternalStore(
     subscribePhoneState,
     getPhoneState,
@@ -46,15 +49,18 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
     <SourcesProvider sources={sources}>
       <AskProvider plan={plan}>
         <Stack gap={8} className="mb-32">
+          <Inline justify="end">
+            <LocaleSwitch />
+          </Inline>
           {updates ? <UpdatedBanner plan={plan} updates={updates} onDismiss={dismiss} /> : null}
           <Stack gap={2}>
-            <h1>Ang plano mo</h1>
+            <h1>{t("plan.title")}</h1>
             <p>{plan.transaction.title}</p>
             <LastChecked date={plan.transaction.lastCheckedOn} />
           </Stack>
           <WhatsNextCard plan={plan} progress={progress} phone={phone} />
           <Stack gap={4}>
-            <h2>Ang path</h2>
+            <h2>{t("plan.pathHeading")}</h2>
             <PathLine
               steps={plan.steps}
               counterLabel={plan.counter.label}
@@ -62,7 +68,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
               showNotices={showNotices}
             />
             <SectionCitations
-              title="ang path"
+              title={t("plan.pathSection")}
               citations={[
                 ...steps.map((step) => step.citation),
                 ...(showNotices ? steps.flatMap((step) => step.notices ?? []) : []).flatMap(
@@ -72,7 +78,7 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
             />
           </Stack>
           <Stack gap={4}>
-            <h2>Checklist ng mga dokumento</h2>
+            <h2>{t("plan.checklistHeading")}</h2>
             <Checklist
               plan={plan}
               status={status}
@@ -83,14 +89,11 @@ export function PlanScreen({ plan, sources }: PlanBundle) {
               onAnswer={setAnswer}
             />
             <SectionCitations
-              title="checklist ng mga dokumento"
+              title={t("plan.checklistSection")}
               citations={sortByPosition(plan.documents).map((doc) => doc.citation)}
             />
           </Stack>
-          <small data-tone="muted">
-            Independent na gabay ito, hindi opisyal na BIR app. Gabay lang ito, hindi legal o tax
-            advice.
-          </small>
+          <small data-tone="muted">{t("plan.disclaimer")}</small>
           <ResetLink />
         </Stack>
         <ActionBar missingCount={status.missing.length} phone={phone} />

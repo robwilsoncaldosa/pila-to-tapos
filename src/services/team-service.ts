@@ -131,6 +131,7 @@ export const createTeamService = (deps: {
         id: existing.id,
         position: existing.position,
         revision: existing.revision,
+        ...(existing.en ? { en: existing.en } : {}),
         ...fields,
       })
     },

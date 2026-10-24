@@ -1,7 +1,10 @@
+"use client"
+
 import { ExternalLinkIcon } from "lucide-react"
 
 import { Stack } from "@/components/ui"
 import type { Citation, SourceInfo } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 type QuotedCitationProps = {
   citation: Citation
@@ -10,6 +13,7 @@ type QuotedCitationProps = {
 
 /** The exact official quote, then its source title and locator, linking to the official PDF. */
 export function QuotedCitation({ citation, source }: QuotedCitationProps) {
+  const { t } = useT()
   return (
     <Stack gap={1}>
       <blockquote className="border-l-4 border-primary pl-3">
@@ -20,7 +24,7 @@ export function QuotedCitation({ citation, source }: QuotedCitationProps) {
       </small>
       {source ? (
         <a href={source.url} target="_blank" rel="noopener noreferrer">
-          Buksan ang opisyal na source <ExternalLinkIcon className="inline size-4" />
+          {t("cite.open")} <ExternalLinkIcon className="inline size-4" />
         </a>
       ) : null}
     </Stack>

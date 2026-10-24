@@ -1,12 +1,12 @@
 import { Stack } from "@/components/ui"
+import { getT } from "@/i18n/server"
 
-export function Welcome() {
+export async function Welcome() {
+  const { t } = await getT()
   return (
     <Stack gap={3}>
-      <h1>Ano&apos;ng kailangan mong gawin?</h1>
-      <p data-tone="muted">
-        Piliin ang gagawin mo, at ipapakita namin ang buong plano bago ka pumunta.
-      </p>
+      <h1>{t("home.title")}</h1>
+      <p data-tone="muted">{t("home.intro")}</p>
     </Stack>
   )
 }

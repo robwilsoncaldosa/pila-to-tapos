@@ -3,6 +3,7 @@
 import { saveFee } from "@/app/actions/team"
 import { Card, CardContent, Input, Stack } from "@/components/ui"
 import type { Fee, SourceInfo } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { CitationFields } from "./citation-fields"
 import { Field } from "./field"
@@ -13,6 +14,7 @@ type FeeEditorProps = { fee: Fee; sources: SourceInfo[] }
 
 /** A fee's label and amount. A blank amount means the official source lists none. */
 export function FeeEditor({ fee, sources }: FeeEditorProps) {
+  const { t } = useT()
   const { pending, error, saved, onSubmit } = useSaveForm((data) => {
     const amount = field(data, "amountPhp").trim()
     return saveFee({
@@ -29,13 +31,13 @@ export function FeeEditor({ fee, sources }: FeeEditorProps) {
         <Stack asChild gap={4}>
           <form onSubmit={onSubmit}>
             <h3>{fee.label}</h3>
-            <Field htmlFor={`${id}-label`} label="Pangalan ng bayad">
+            <Field htmlFor={`${id}-label`} label={t("team.fee.label")}>
               <Input id={`${id}-label`} name="label" defaultValue={fee.label} required />
             </Field>
             <Field
               htmlFor={`${id}-amount`}
-              label="Halaga (₱)"
-              hint="Iwanang blangko kung walang opisyal na halaga sa source."
+              label={t("team.fee.amount")}
+              hint={t("team.fee.amountHint")}
             >
               <Input
                 id={`${id}-amount`}

@@ -1,4 +1,5 @@
 export * from "./citation-chip"
+export * from "./locale-switch"
 export * from "./path-line"
 export * from "./plan-unavailable"
 export * from "./scan-instructions"

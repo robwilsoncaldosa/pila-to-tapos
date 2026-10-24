@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react"
 
 import { boardState } from "@/app/actions/queue"
+import { LocaleSwitch } from "@/components/locale-switch"
 import { Inline, Stack } from "@/components/ui"
 import type { Counter } from "@/domain/plan"
 import { unlockAudio } from "@/lib/chime"
@@ -37,6 +38,9 @@ export function TvScreen({ counter }: { counter: Counter }) {
     <main className="min-h-svh bg-tv p-8 text-white">
       {started ? null : <StartTvOverlay onStart={start} />}
       <Stack gap={8} align="center" className="min-h-[calc(100svh-4rem)] justify-between">
+        <Inline justify="end" className="w-full">
+          <LocaleSwitch size="chip" />
+        </Inline>
         <Stack gap={0} className="w-full flex-1 justify-center">
           <CounterPanel
             key={newCall ?? "idle"}

@@ -10,11 +10,13 @@ import {
   Input,
   Stack,
 } from "@/components/ui"
+import { useT } from "@/i18n"
 
 import { Field } from "./field"
 
 /** The only thing /team shows until the passcode is right. */
 export function PasscodeForm() {
+  const { t } = useT()
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
@@ -27,8 +29,8 @@ export function PasscodeForm() {
       if (!result.ok) {
         setError(
           result.error === "not_configured"
-            ? "Hindi pa naka-set ang TEAM_PASSCODE sa .env.local"
-            : "Mali ang passcode"
+            ? t("team.notConfiguredTitle")
+            : t("team.wrongPasscode")
         )
       }
     })
@@ -37,8 +39,8 @@ export function PasscodeForm() {
   return (
     <Stack asChild gap={4}>
       <form onSubmit={onSubmit}>
-        <h1>Team</h1>
-        <Field htmlFor="passcode" label="Passcode">
+        <h1>{t("team.title")}</h1>
+        <Field htmlFor="passcode" label={t("team.passcode")}>
           <Input id="passcode" name="passcode" type="password" autoComplete="off" required />
         </Field>
         {error ? (
@@ -47,7 +49,7 @@ export function PasscodeForm() {
           </Alert>
         ) : null}
         <Button type="submit" size="touch" disabled={pending}>
-          Buksan
+          {t("team.open")}
         </Button>
       </form>
     </Stack>

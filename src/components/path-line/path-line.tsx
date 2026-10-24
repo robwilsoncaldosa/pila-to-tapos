@@ -1,3 +1,5 @@
+"use client"
+
 import { ArrowDownIcon, TriangleAlertIcon } from "lucide-react"
 
 import { CitationChip } from "@/components/citation-chip"
@@ -11,6 +13,7 @@ import {
   Stack,
 } from "@/components/ui"
 import type { Step } from "@/domain/plan"
+import { useT } from "@/i18n"
 import { sortByPosition } from "@/domain/plan"
 
 type PathLineProps = {
@@ -31,10 +34,11 @@ export function PathLine({
   currentStepId,
   showNotices = false,
 }: PathLineProps) {
+  const { t } = useT()
   const ordered = sortByPosition(steps)
   return (
     <Stack asChild gap={2}>
-      <ol aria-label="Ang path mo">
+      <ol aria-label={t("path.heading")}>
         {ordered.map((step, index) => {
           const active = !currentStepId || step.id === currentStepId
           return (

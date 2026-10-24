@@ -6,6 +6,7 @@ import {
   Textarea,
 } from "@/components/ui"
 import type { Citation, SourceInfo } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { Field } from "./field"
 
@@ -18,13 +19,14 @@ type CitationFieldsProps = {
 
 /** The required citation block: which official source, which part, and the exact words. */
 export function CitationFields({ idPrefix, sources, citation }: CitationFieldsProps) {
+  const { t } = useT()
   return (
     <Stack asChild gap={4}>
       <fieldset>
         <legend>
-          <strong>Citation (kailangan, hindi mase-save kung wala)</strong>
+          <strong>{t("team.cite.legend")}</strong>
         </legend>
-        <Field htmlFor={`${idPrefix}-source`} label="Source">
+        <Field htmlFor={`${idPrefix}-source`} label={t("team.cite.source")}>
           <NativeSelect
             id={`${idPrefix}-source`}
             name="sourceId"
@@ -39,8 +41,8 @@ export function CitationFields({ idPrefix, sources, citation }: CitationFieldsPr
         </Field>
         <Field
           htmlFor={`${idPrefix}-locator`}
-          label="Aling bahagi"
-          hint='Halimbawa: "Sec. 4(1)" o "28-A, Client step 1".'
+          label={t("team.cite.locator")}
+          hint={t("team.cite.locatorHint")}
         >
           <Input
             id={`${idPrefix}-locator`}
@@ -50,8 +52,8 @@ export function CitationFields({ idPrefix, sources, citation }: CitationFieldsPr
         </Field>
         <Field
           htmlFor={`${idPrefix}-quote`}
-          label="Quote"
-          hint="Dapat salita-por-salita itong nasa opisyal na source."
+          label={t("team.cite.quote")}
+          hint={t("team.cite.quoteHint")}
         >
           <Textarea
             id={`${idPrefix}-quote`}

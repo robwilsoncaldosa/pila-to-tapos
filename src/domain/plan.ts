@@ -27,6 +27,8 @@ export type Transaction = {
   revision: number
   /** The processing time and "last checked" date as one item; absent until first edited (counts as 1). */
   metaRevision?: number
+  /** English versions of the user-facing text. Citation quotes are never translated. */
+  en?: { title?: string; processingTimeLabel?: string }
 }
 
 export type Counter = {
@@ -41,6 +43,7 @@ export type StepNotice = {
   kind: "warning" | "related"
   text: string
   citations: Citation[]
+  en?: { text?: string }
 }
 
 export type Step = {
@@ -54,6 +57,7 @@ export type Step = {
   /** Shown when the unfiled-returns answer is Oo or Hindi ko alam. */
   notices?: StepNotice[]
   revision: number
+  en?: { name?: string }
 }
 
 export type PlanDocument = {
@@ -67,6 +71,12 @@ export type PlanDocument = {
   explanation: string
   citation: Citation
   revision: number
+  en?: Partial<
+    Pick<
+      PlanDocument,
+      "name" | "whereToGet" | "situationQuestion" | "notNeededReason" | "explanation"
+    >
+  >
 }
 
 export type Fee = {
@@ -76,6 +86,7 @@ export type Fee = {
   visitNo: 1 | 2
   citation: Citation
   revision: number
+  en?: { label?: string }
 }
 
 export type Question = {
@@ -86,6 +97,7 @@ export type Question = {
   citations: Citation[]
   related?: Citation[]
   whoToAsk?: string
+  en?: { question?: string; answer?: string; whoToAsk?: string }
 }
 
 export type Plan = {

@@ -8,6 +8,7 @@ import { Badge, Stack } from "@/components/ui"
 import { currentStepId, journeyStage } from "@/domain/journey"
 import { feeForVisit, type Plan } from "@/domain/plan"
 import { visitLabel, type Ticket } from "@/domain/queue"
+import { useT, type Translator } from "@/i18n"
 import { playChime, unlockAudio } from "@/lib/chime"
 import { finishJourney, setVisitDone } from "@/lib/phone-storage"
 import { useHydrated, usePhoneState } from "@/lib/use-phone-state"
@@ -54,6 +55,7 @@ export function LineScreen({ plan }: { plan: Plan }) {
 type TicketViewProps = { ticketId: string; visitNo: 1 | 2; plan: Plan; soundOn: boolean }
 
 function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
+  const { t } = useT()
   const fetchTicket = useCallback(() => getTicket(ticketId), [ticketId])
   const { data, error, lastUpdatedAt } = usePoll(fetchTicket)
 
@@ -88,7 +90,7 @@ function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
   if (!ticket) {
     return (
       <p data-tone="muted" aria-live="polite">
-        {error ? "Walang koneksyon. Susubukan ulit…" : "Kinukuha ang number mo…"}
+        {error ? t("line.noConnection") : t("line.fetching")}
       </p>
     )
   }
@@ -97,7 +99,9 @@ function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
   if (ticket.status === "done") return null
 
   const stepName =
-    ticket.visitNo === 1 ? visitLabel(1) : payAndClaimLabel(feeForVisit(plan.fees, 2))
+    ticket.visitNo === 1
+      ? visitLabel(1)
+      : payAndClaimLabel(t, feeForVisit(plan.fees, 2))
   const called = ticket.status === "called"
 
   return (
@@ -113,18 +117,18 @@ function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
       {called ? <CalledBanner counterLabel={counter.label} /> : null}
       <TicketStub
         number={ticket.number}
-        stepLabel={`Step ${ticket.visitNo === 1 ? 1 : 3} of 3: ${stepName}`}
+        stepLabel={t("line.stepLabel", { n: ticket.visitNo === 1 ? 1 : 3, step: stepName })}
         counterLabel={counter.label}
         badge={ticket.visitNo === 2 ? visitLabel(2) : undefined}
       />
       {ticket.docsReady ? (
         <Badge variant="ready" size="lg">
-          All documents ready ✓
+          {t("line.docsReady")}
         </Badge>
       ) : null}
       {soundOn ? null : <SoundPrompt />}
       <Stack gap={4}>
-        <h2>Ang path mo</h2>
+        <h2>{t("path.heading")}</h2>
         <PathLine
           steps={plan.steps}
           counterLabel={counter.label}
@@ -136,5 +140,5 @@ function TicketView({ ticketId, visitNo, plan, soundOn }: TicketViewProps) {
   )
 }
 
-const payAndClaimLabel = (feePhp: number | null): string =>
-  feePhp === null ? visitLabel(2) : `Pay ₱${feePhp} & claim`
+const payAndClaimLabel = (t: Translator["t"], feePhp: number | null): string =>
+  feePhp === null ? visitLabel(2) : t("line.pay", { fee: feePhp })

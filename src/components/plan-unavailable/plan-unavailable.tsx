@@ -1,12 +1,12 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui"
+import { getT } from "@/i18n/server"
 
-export function PlanUnavailable() {
+export async function PlanUnavailable() {
+  const { t } = await getT()
   return (
     <Alert variant="muted">
-      <AlertTitle>Hindi mabuksan ang plano ngayon.</AlertTitle>
-      <AlertDescription>
-        Subukan ulit mamaya, o sabihan ang team na hindi mabasa ang plan file.
-      </AlertDescription>
+      <AlertTitle>{t("planUnavailable.title")}</AlertTitle>
+      <AlertDescription>{t("planUnavailable.body")}</AlertDescription>
     </Alert>
   )
 }

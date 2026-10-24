@@ -9,7 +9,7 @@ type ActionBarProps = {
   phone: PhoneState
 }
 
-/** The sticky bottom bar: the main "Kumuha ng number" action plus "Magtanong". */
+/** The sticky bottom bar: the main "Get my number" action plus "Ask". */
 export function ActionBar({ missingCount, phone }: ActionBarProps) {
   return (
     <div className="action-bar">

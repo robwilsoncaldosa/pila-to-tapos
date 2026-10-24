@@ -1,3 +1,4 @@
+import type { Locale } from "./locale"
 import { manilaDay } from "./queue"
 
 const toUtcDate = (day: string): Date => new Date(`${day}T00:00:00Z`)
@@ -17,9 +18,9 @@ export const addWorkingDays = (date: Date | string, n: number): string => {
   return cursor.toISOString().slice(0, 10)
 }
 
-/** A Manila calendar day as friendly Filipino, e.g. "Martes, Oktubre 27". */
-export const formatManilaDate = (day: string): string =>
-  new Intl.DateTimeFormat("fil-PH", {
+/** A Manila calendar day as a friendly date: "Martes, Oktubre 27" or "Tuesday, October 27". */
+export const formatManilaDate = (day: string, locale: Locale): string =>
+  new Intl.DateTimeFormat(locale === "en" ? "en-PH" : "fil-PH", {
     timeZone: "Asia/Manila",
     weekday: "long",
     month: "long",

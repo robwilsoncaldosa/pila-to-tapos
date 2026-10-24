@@ -1,4 +1,7 @@
+"use client"
+
 import { Badge, Card, CardContent, Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 
 type TicketStubProps = {
   number: string
@@ -11,11 +14,12 @@ type TicketStubProps = {
 
 /** Her number big on a jeepney-yellow stub, a dashed tear line, then the step and counter. */
 export function TicketStub({ number, stepLabel, counterLabel, badge }: TicketStubProps) {
+  const { t } = useT()
   return (
-    <Card tone="turn" enter aria-label="Ang number mo">
+    <Card tone="turn" enter aria-label={t("line.numberLabel")}>
       <CardContent>
         <Stack gap={1} align="center">
-          <small>Ang number mo</small>
+          <small>{t("line.numberLabel")}</small>
           <p className="text-6xl font-bold tabular-nums">{number}</p>
         </Stack>
       </CardContent>

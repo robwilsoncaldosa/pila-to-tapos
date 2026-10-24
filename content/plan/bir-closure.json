@@ -9,7 +9,11 @@
       "quote": "TOTAL PROCESSING TIME: 3 Days"
     },
     "lastCheckedOn": "2026-10-22",
-    "revision": 1
+    "revision": 1,
+    "en": {
+      "title": "BIR: Close my freelancer registration",
+      "processingTimeLabel": "about 3 working days"
+    }
   },
   "counter": {
     "id": "registration",
@@ -28,7 +32,10 @@
         "locator": "28-A, Client step 1",
         "quote": "Get a queuing number in the office entrance and wait for your number to be called to submit the required complete documentary requirements"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Visit 1: Submit"
+      }
     },
     {
       "id": "bir-checks",
@@ -52,7 +59,10 @@
               "locator": "28-A, note to client step 10",
               "quote": "If the taxpayer fails to comply with any findings or settle any tax liabilities found within thirty (30) days from receipt of such notification, the application shall be deemed denied."
             }
-          ]
+          ],
+          "en": {
+            "text": "If BIR finds any unfiled returns or unpaid taxes, you must settle them within 30 days from the day you receive the notice. If you go past that, it is treated as a new application and you must submit the complete documents again."
+          }
         },
         {
           "id": "relief-program",
@@ -69,10 +79,16 @@
               "locator": "RMC 84-2026, timeliness",
               "quote": "Applications filed on or before December 31, 2026 shall be considered timely"
             }
-          ]
+          ],
+          "en": {
+            "text": "Related, not a direct answer: there is a one-time abatement of taxes and/or penalties for micro taxpayers. The Certificate of Availment can be used to support the closure application, and applications can be filed until 31 Dec 2026. The source doesn't say whether you qualify or how much your penalty is; ask your RDO."
+          }
         }
       ],
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "BIR checks your records"
+      }
     },
     {
       "id": "visit-2",
@@ -85,7 +101,10 @@
         "locator": "28-A, Client steps 11-12",
         "quote": "Buy loose Documentary Stamp (DS)."
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Visit 2: Pay ₱30 & claim the tax clearance"
+      }
     }
   ],
   "documents": [
@@ -101,7 +120,12 @@
         "locator": "Sec. 4(1)",
         "quote": "Application for Registration Information Update/Correction/Cancellation (BIR Form No. 1905) (2 original copies)"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "BIR Form 1905 (2 original copies)",
+        "whereToGet": "Get it from the Client Support Section of the RDO, or download it from bir.gov.ph.",
+        "explanation": "This is the application form for updating, correcting, or cancelling a registration. Two original copies are needed."
+      }
     },
     {
       "id": "cor",
@@ -115,7 +139,12 @@
         "locator": "Sec. 4(4)(a)",
         "quote": "Original BIR Notices and BIR Permits issued to taxpayer, as may be applicable: a. Certificate of Registration (COR)/Electronic COR (BIR Form No. 2303);"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Original COR / eCOR (BIR Form 2303)",
+        "whereToGet": "You hold this yourself (taxpayer-applicant).",
+        "explanation": "This is the original Certificate of Registration (COR) or electronic COR (BIR Form 2303) that you will submit. If it was lost or you only have an electronic copy, the official source doesn't cover that case here, so ask the Client Support Section of the RDO first."
+      }
     },
     {
       "id": "unused-invoices",
@@ -131,7 +160,14 @@
         "locator": "Sec. 4(3)",
         "quote": "Unused invoices/supplementary documents and all other unutilized accounting forms such as vouchers, debit/credit memos, delivery receipts, purchase orders, etc., as may be applicable, together with the Inventory thereof"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Unused invoices/receipts and their inventory",
+        "whereToGet": "You prepare the list yourself and bring the unused forms (taxpayer-applicant).",
+        "situationQuestion": "Do you have any unused invoices or receipts left?",
+        "notNeededReason": "You only need this if you have unused invoices or other accounting forms (\"as may be applicable\").",
+        "explanation": "If you have unused invoices, receipts, or other accounting forms left, submit them together with their list (inventory)."
+      }
     },
     {
       "id": "other-permits",
@@ -147,7 +183,14 @@
         "locator": "Sec. 4(4)(b-e)",
         "quote": "Original BIR Notices and BIR Permits issued to taxpayer, as may be applicable: a. Certificate of Registration (COR)/Electronic COR (BIR Form No. 2303); b. Authority To Print; c. Notice to Issue Invoice; d. Accreditation Certificate and Permit to Use - for Cash Register Machine/Point-of-Sales; and e. Electronic Invoicing/Receipting System (EIS) Certificate and Permit to Transmit."
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Other BIR permits (Authority to Print, Notice to Issue Invoice, CRM/POS permit, EIS certificate)",
+        "whereToGet": "You hold these yourself (taxpayer-applicant).",
+        "situationQuestion": "Do you have any other BIR permit (e.g., Authority to Print)?",
+        "notNeededReason": "You only need to submit the original permits that were issued to you, if any (\"as may be applicable\").",
+        "explanation": "If you were issued an Authority to Print, a Notice to Issue Invoice, a permit for a cash register or POS, or an EIS certificate, submit the originals."
+      }
     },
     {
       "id": "ending-inventory",
@@ -163,7 +206,14 @@
         "locator": "Sec. 4(2)",
         "quote": "List of ending inventory of goods and supplies, including capital goods, for VAT-registered taxpayers (1 original copy)"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "List of ending inventory (goods, supplies, capital goods)",
+        "whereToGet": "You prepare this yourself (taxpayer-applicant).",
+        "situationQuestion": "Are you VAT-registered?",
+        "notNeededReason": "This is only for VAT-registered taxpayers.",
+        "explanation": "The list of ending inventory of goods and supplies, including capital goods, is only required from VAT-registered taxpayers. One original copy."
+      }
     },
     {
       "id": "spa-ids",
@@ -179,7 +229,14 @@
         "locator": "Sec. 4(5)(a)",
         "quote": "For applications filed by a representative of the taxpayer: a. For individual taxpayer: Notarized Special Power of Attorney executed by the taxpayer-applicant, specifically authorizing the representative to process the application for the closure and/or cancellation of the taxpayer's registration and photocopy of any government-issued ID of the taxpayer and of the authorized representative, both with original specimen signature."
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Notarized Special Power of Attorney and IDs",
+        "whereToGet": "From you as the taxpayer-applicant; the IDs come from you and your representative.",
+        "situationQuestion": "Will someone else file for you?",
+        "notNeededReason": "You only need this when a representative will file the application instead of you.",
+        "explanation": "If someone else will file for you, you need a notarized Special Power of Attorney and a photocopy of a government-issued ID of both of you, each with an original specimen signature."
+      }
     },
     {
       "id": "final-returns",
@@ -195,7 +252,14 @@
         "locator": "Sec. 5",
         "quote": "The taxpayer shall file all final or short-period tax returns covering the period from the beginning of the taxable year up to the date of closure for all applicable tax types and pay the corresponding taxes due thereon. For periods during which there was no business activity, the taxpayer shall file zero returns."
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "name": "Final or short-period returns already filed (zero return if there was no business)",
+        "whereToGet": "You file the returns. The source doesn't list which forms; ask the RDO.",
+        "situationQuestion": "Do you have any returns you haven't filed yet?",
+        "notNeededReason": "If you have no unfiled returns, you have nothing to add here.",
+        "explanation": "RMC 47-2026 says to file all final or short-period returns up to the date of closure, and zero returns for periods with no business. If you aren't sure which ones are missing, ask the RDO."
+      }
     }
   ],
   "fees": [
@@ -209,7 +273,10 @@
         "locator": "28-A, Client step 11",
         "quote": "₱30.00 - DS"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "label": "Documentary stamp for the tax clearance"
+      }
     },
     {
       "id": "taxes-penalties",
@@ -221,7 +288,10 @@
         "locator": "Sec. 6",
         "quote": "payment of any outstanding tax liabilities, including penalties"
       },
-      "revision": 1
+      "revision": 1,
+      "en": {
+        "label": "Taxes or penalties, if BIR finds any"
+      }
     }
   ],
   "questions": [
@@ -236,7 +306,11 @@
           "locator": "Sec. 4(1)",
           "quote": "Application for Registration Information Update/Correction/Cancellation (BIR Form No. 1905) (2 original copies)"
         }
-      ]
+      ],
+      "en": {
+        "question": "Which form do I use?",
+        "answer": "BIR Form 1905, the application form for updating, correcting, or cancelling a registration. Submit two original copies."
+      }
     },
     {
       "id": "magkano",
@@ -259,7 +333,11 @@
           "locator": "Sec. 6",
           "quote": "payment of any outstanding tax liabilities, including penalties"
         }
-      ]
+      ],
+      "en": {
+        "question": "How much will I pay?",
+        "answer": "A ₱30 documentary stamp at visit 2, when you pick up the tax clearance. You only pay taxes or penalties if BIR finds an amount owed. The source lists no amount for that, so it can't be predicted."
+      }
     },
     {
       "id": "gaano-katagal",
@@ -282,7 +360,11 @@
           "locator": "28-A, note to client step 10",
           "quote": "The time to which the taxpayer will comply with the findings and/or pay tax/es is not part of the total processing time for this service"
         }
-      ]
+      ],
+      "en": {
+        "question": "How long until I get the tax clearance?",
+        "answer": "Up to 3 working days from when you submit the complete documents. This is what RMC 47-2026 says for micro taxpayers with no open case or unpaid liabilities. The time you need to settle anything BIR finds is not part of the 3 days."
+      }
     },
     {
       "id": "ending-inventory",
@@ -295,7 +377,11 @@
           "locator": "Sec. 4(2)",
           "quote": "List of ending inventory of goods and supplies, including capital goods, for VAT-registered taxpayers (1 original copy)"
         }
-      ]
+      ],
+      "en": {
+        "question": "Do I need an ending inventory?",
+        "answer": "Only for VAT-registered taxpayers. If you aren't VAT-registered, it isn't required."
+      }
     },
     {
       "id": "natirang-resibo",
@@ -313,7 +399,11 @@
           "locator": "Sec. 3",
           "quote": "Provided that, documentary requirements, under Items 3 and 4 in Section 4 hereof shall be submitted manually."
         }
-      ]
+      ],
+      "en": {
+        "question": "What do I do with my leftover receipts or invoices?",
+        "answer": "Submit the unused invoices, receipts, and other accounting forms together with their list (inventory). They must be submitted manually, not online."
+      }
     },
     {
       "id": "ipa-file-sa-iba",
@@ -326,7 +416,11 @@
           "locator": "Sec. 4(5)(a)",
           "quote": "Notarized Special Power of Attorney executed by the taxpayer-applicant, specifically authorizing the representative to process the application for the closure and/or cancellation of the taxpayer's registration and photocopy of any government-issued ID of the taxpayer and of the authorized representative, both with original specimen signature."
         }
-      ]
+      ],
+      "en": {
+        "question": "Can someone else file for me?",
+        "answer": "Yes, a representative can file for you. You need a notarized Special Power of Attorney and a photocopy of a government-issued ID of yours and of your representative."
+      }
     },
     {
       "id": "online",
@@ -344,7 +438,11 @@
           "locator": "Sec. 3",
           "quote": "Provided that, documentary requirements, under Items 3 and 4 in Section 4 hereof shall be submitted manually."
         }
-      ]
+      ],
+      "en": {
+        "question": "Can I do this online?",
+        "answer": "You can submit the application to the RDO through your official email address registered with the BIR, through the TRRA Portal and ORUS, or in person. But unused invoices and the original permits must be submitted manually."
+      }
     },
     {
       "id": "penalty-unfiled-returns",
@@ -364,7 +462,12 @@
           "quote": "The Certificate of Availment may be used to support an application for closure/cancellation of business registration."
         }
       ],
-      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado."
+      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado.",
+      "en": {
+        "question": "Will I get a penalty for the returns I haven't filed before I can close?",
+        "answer": "The source doesn't say how much the penalty is in your case, so we won't guess.",
+        "whoToAsk": "The Client Support Section (Registration Officer counter) of the RDO where you are registered."
+      }
     },
     {
       "id": "deadline",
@@ -379,7 +482,12 @@
           "quote": "shall continue to be liable for all their tax obligations, including the filing of tax returns and payment of taxes, including penalties, until closure and/or cancellation of business registration is completed with the BIR."
         }
       ],
-      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado."
+      "whoToAsk": "Ang Client Support Section (Registration Officer counter) ng RDO kung saan ka rehistrado.",
+      "en": {
+        "question": "Is there a deadline to close?",
+        "answer": "The sources we read don't state any deadline for closing.",
+        "whoToAsk": "The Client Support Section (Registration Officer counter) of the RDO where you are registered."
+      }
     }
   ]
 }

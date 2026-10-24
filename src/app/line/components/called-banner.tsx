@@ -1,10 +1,14 @@
-import { Alert, AlertTitle } from "@/components/ui"
+"use client"
 
-/** Stays on screen while her number is called, even after she taps "Sige". */
+import { Alert, AlertTitle } from "@/components/ui"
+import { useT } from "@/i18n"
+
+/** Stays on screen while her number is called, even after she taps "OK". */
 export function CalledBanner({ counterLabel }: { counterLabel: string }) {
+  const { t } = useT()
   return (
     <Alert variant="turn" enter>
-      <AlertTitle>Tinawag ka na sa {counterLabel}</AlertTitle>
+      <AlertTitle>{t("line.calledBanner", { counter: counterLabel })}</AlertTitle>
     </Alert>
   )
 }

@@ -1,6 +1,7 @@
 import { cva } from "class-variance-authority"
 
 import { Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 
 const panelVariants = cva("w-full rounded-3xl border border-white/20 px-6 py-10", {
   variants: {
@@ -35,6 +36,7 @@ type CounterPanelProps = {
 
 /** The one counter's panel: its name and the number being served, huge and yellow. */
 export function CounterPanel({ label, number, pulse }: CounterPanelProps) {
+  const { t } = useT()
   return (
     <Stack asChild gap={4} align="center">
       <section
@@ -47,7 +49,7 @@ export function CounterPanel({ label, number, pulse }: CounterPanelProps) {
           {number ?? "—"}
         </p>
         {number === null ? (
-          <p className="text-xl text-white/70">Walang tinatawag ngayon</p>
+          <p className="text-xl text-white/70">{t("tv.idle")}</p>
         ) : null}
       </section>
     </Stack>

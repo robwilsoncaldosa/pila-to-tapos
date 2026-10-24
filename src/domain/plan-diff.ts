@@ -58,9 +58,9 @@ export const sameSnapshot = (a: SeenSnapshot, b: SeenSnapshot): boolean => {
   )
 }
 
-/** What to call each item in the "Na-update" banner. */
-export const itemNames = (plan: Plan): Record<string, string> => {
-  const names: Record<string, string> = { [META_ITEM_ID]: "Oras ng proseso at petsa ng huling check" }
+/** What to call each item in the update banner. `metaName` names the processing time and date item. */
+export const itemNames = (plan: Plan, metaName: string): Record<string, string> => {
+  const names: Record<string, string> = { [META_ITEM_ID]: metaName }
   for (const step of plan.steps) names[step.id] = step.name
   for (const doc of plan.documents) names[doc.id] = doc.name
   for (const fee of plan.fees) names[fee.id] = fee.label

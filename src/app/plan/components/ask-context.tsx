@@ -14,7 +14,7 @@ type AskActions = {
 
 const AskContext = createContext<AskActions | null>(null)
 
-/** Holds the one Magtanong sheet so the bottom-bar button and every "?" can open it. */
+/** Holds the one Ask sheet so the bottom-bar button and every "?" can open it. */
 export function AskProvider({ plan, children }: { plan: Plan; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   // Kept after closing so the content does not change while the sheet slides away.

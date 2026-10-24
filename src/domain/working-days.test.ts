@@ -29,8 +29,17 @@ test("zero working days stays on the same Manila day", () => {
 })
 
 test("the friendly date has the weekday and the day number", () => {
-  const text = formatManilaDate("2026-10-27")
+  const text = formatManilaDate("2026-10-27", "fil")
   assert.match(text, /27/)
   assert.ok(text.length > "27".length + 3)
-  assert.notEqual(formatManilaDate("2026-10-28"), text)
+  assert.notEqual(formatManilaDate("2026-10-28", "fil"), text)
+})
+
+test("the English date reads like \"Tuesday, October 27\"", () => {
+  assert.equal(formatManilaDate("2026-10-27", "en"), "Tuesday, October 27")
+})
+
+test("the Filipino date names the weekday and month in Filipino", () => {
+  assert.notEqual(formatManilaDate("2026-10-27", "fil"), formatManilaDate("2026-10-27", "en"))
+  assert.match(formatManilaDate("2026-10-27", "fil"), /Martes/i)
 })

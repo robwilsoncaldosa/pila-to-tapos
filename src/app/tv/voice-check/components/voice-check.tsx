@@ -1,6 +1,7 @@
 "use client"
 
 import { Badge, Button, Card, CardContent, Inline, Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 import { isFilipinoVoice, pickFilipinoVoice, speakLine } from "@/lib/speech"
 
 import { useVoices } from "./use-voices"
@@ -9,14 +10,11 @@ const TEST_LINE = "Number B, zero, zero, one. Registration counter."
 
 /** Lists the browser's voices and test-speaks the call, so we know how the TV will sound. */
 export function VoiceCheck() {
+  const { t } = useT()
   const { supported, voices } = useVoices()
 
   if (!supported) {
-    return (
-      <p>
-        Walang speech sa browser na ito. Gagamit ang TV ng mga recorded na clip (slice 3).
-      </p>
-    )
+    return <p>{t("voice.unsupported")}</p>
   }
 
   const best = pickFilipinoVoice(voices)
@@ -25,31 +23,25 @@ export function VoiceCheck() {
   return (
     <Stack gap={6}>
       <Stack gap={2}>
-        <h1>Voice check</h1>
-        <p data-tone="muted">
-          Buksan ito sa browser na gagamitin bilang TV. Pindutin ang button at pakinggan kung
-          tama ang tunog ng: &ldquo;{TEST_LINE}&rdquo;
-        </p>
+        <h1>{t("voice.title")}</h1>
+        <p data-tone="muted">{t("voice.intro", { line: TEST_LINE })}</p>
       </Stack>
       <Stack gap={3}>
         <Button size="touch" disabled={!best} onClick={() => speakLine(TEST_LINE, best)}>
           {best
-            ? `Subukan ang pinakamalapit na Filipino: ${best.name} (${best.lang})`
-            : "Walang Filipino voice na nakita"}
+            ? t("voice.best", { name: best.name, lang: best.lang })
+            : t("voice.noFilipino")}
         </Button>
         <Button size="touch" variant="outline" onClick={() => speakLine(TEST_LINE)}>
-          Subukan ang default voice (pang-kumpara)
+          {t("voice.default")}
         </Button>
       </Stack>
       <Stack gap={3}>
         <h2>
-          {voices.length} voices, {filipinoCount} Filipino (fil o tl)
+          {t("voice.count", { n: voices.length, filipino: filipinoCount })}
         </h2>
         {voices.length === 0 ? (
-          <p data-tone="muted">
-            Wala pang nakalistang voice. Maaaring hindi pa tapos mag-load ang browser; i-refresh
-            kung walang lumabas.
-          </p>
+          <p data-tone="muted">{t("voice.empty")}</p>
         ) : null}
         <Stack asChild gap={2}>
           <ul>
@@ -64,14 +56,14 @@ export function VoiceCheck() {
                           <strong>{voice.name}</strong>
                           <small>
                             {voice.lang}
-                            {voice.localService ? " · local" : " · online"}
-                            {voice.default ? " · default" : ""}
+                            {voice.localService ? ` · ${t("voice.local")}` : ` · ${t("voice.online")}`}
+                            {voice.default ? ` · ${t("voice.defaultTag")}` : ""}
                           </small>
                         </Stack>
                         <Inline gap={2}>
                           {filipino ? (
                             <Badge variant="chip" size="md">
-                              Filipino
+                              {t("voice.filipinoBadge")}
                             </Badge>
                           ) : null}
                           <Button
@@ -79,7 +71,7 @@ export function VoiceCheck() {
                             variant="outline"
                             onClick={() => speakLine(TEST_LINE, voice)}
                           >
-                            Subukan
+                            {t("voice.try")}
                           </Button>
                         </Inline>
                       </Inline>

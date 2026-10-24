@@ -2,6 +2,7 @@ import type { PlanDiff } from "@/domain/plan-diff"
 import type { ChecklistStatus } from "@/domain/checklist"
 import { sortByPosition, type Plan, type SituationAnswer } from "@/domain/plan"
 import { Stack } from "@/components/ui"
+import { useT } from "@/i18n"
 
 import { ChecklistItem } from "./checklist-item"
 import { MissingWarning } from "./missing-warning"
@@ -19,6 +20,7 @@ type ChecklistProps = {
 }
 
 export function Checklist({ plan, status, ticks, answers, updates, onTick, onAnswer }: ChecklistProps) {
+  const { t } = useT()
   const updateKind = (id: string): UpdateKind | undefined =>
     updates?.added.includes(id) ? "added" : updates?.changed.includes(id) ? "changed" : undefined
   const documents = sortByPosition(plan.documents)
@@ -37,7 +39,7 @@ export function Checklist({ plan, status, ticks, answers, updates, onTick, onAns
           onCheckedChange={(ticked) => onTick(doc.id, ticked)}
         />
       ))}
-      {situational.length > 0 ? <h3>Kung naaangkop sa iyo</h3> : null}
+      {situational.length > 0 ? <h3>{t("plan.situationHeading")}</h3> : null}
       {situational.map((doc) => (
         <SituationItem
           key={doc.id}

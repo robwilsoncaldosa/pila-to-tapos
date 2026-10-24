@@ -12,6 +12,7 @@ import {
   Stack,
 } from "@/components/ui"
 import type { Citation, SourceId } from "@/domain/plan"
+import { useT } from "@/i18n"
 
 import { useSource } from "./sources-context"
 
@@ -23,6 +24,7 @@ const SHORT_LABEL: Record<SourceId, string> = {
 
 /** A small "where does this come from" chip. Tapping it shows the exact official quote. */
 export function CitationChip({ citation }: { citation: Citation }) {
+  const { t } = useT()
   const source = useSource(citation.sourceId)
   return (
     <Dialog>
@@ -40,7 +42,7 @@ export function CitationChip({ citation }: { citation: Citation }) {
           </blockquote>
           {source ? (
             <a href={source.url} target="_blank" rel="noreferrer">
-              Buksan ang opisyal na source <ExternalLinkIcon className="inline size-4" />
+              {t("cite.open")} <ExternalLinkIcon className="inline size-4" />
             </a>
           ) : null}
         </Stack>

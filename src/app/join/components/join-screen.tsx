@@ -9,11 +9,13 @@ import { checklistStatus } from "@/domain/checklist"
 import { decideJoin } from "@/domain/journey"
 import type { Plan } from "@/domain/plan"
 import { manilaDay } from "@/domain/queue"
+import { useT } from "@/i18n"
 import { ensureJourney, getPhoneState, setVisitTicket } from "@/lib/phone-storage"
 import { useHydrated } from "@/lib/use-phone-state"
 
 /** The QR code's target: decides from this phone's saved checklist and sends her on. */
 export function JoinScreen({ plan }: { plan: Plan }) {
+  const { t } = useT()
   const router = useRouter()
   const hydrated = useHydrated()
   const started = useRef(false)
@@ -53,8 +55,8 @@ export function JoinScreen({ plan }: { plan: Plan }) {
     return (
       <Stack gap={4}>
         <Alert variant="missing">
-          <AlertTitle>Hindi makakuha ng number ngayon.</AlertTitle>
-          <AlertDescription>Tingnan ang koneksyon at subukan ulit.</AlertDescription>
+          <AlertTitle>{t("join.failTitle")}</AlertTitle>
+          <AlertDescription>{t("join.failBody")}</AlertDescription>
         </Alert>
         <Button
           size="touch"
@@ -64,7 +66,7 @@ export function JoinScreen({ plan }: { plan: Plan }) {
             setAttempt((n) => n + 1)
           }}
         >
-          Subukan ulit
+          {t("join.retry")}
         </Button>
       </Stack>
     )
@@ -72,8 +74,8 @@ export function JoinScreen({ plan }: { plan: Plan }) {
 
   return (
     <Stack gap={2} align="center" aria-live="polite">
-      <h1>Kumukuha ng number…</h1>
-      <p data-tone="muted">Sandali lang, tinitingnan ang checklist mo.</p>
+      <h1>{t("join.title")}</h1>
+      <p data-tone="muted">{t("join.body")}</p>
     </Stack>
   )
 }

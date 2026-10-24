@@ -7,6 +7,8 @@ status: approved
 
 Implements `prd.md`, as revised for the one-counter, two-visit process in `4-spec` and for pre-written answers and a laptop-only build in `5-build`. Official-source research: [devpost/research/bir-closure-sources.md](research/bir-closure-sources.md).
 
+> **Language (2026-10-24):** an English option was added. The locale is `fil` (the default) or `en`, kept in the `pila-lang` cookie, set by a switch or by `?lang=en|fil` on any URL (middleware/proxy redirects without the param). It uses typed dictionaries (the English keys must match the Filipino ones), `localizePlan(plan, locale)` for the plan file's per-item `en` fields, and locale-aware dates and durations. `check:content` also fails when an English field is missing. Quotes are unchanged.
+>
 > **Revised in `5-build` (2026-10-22).** The learner replaced live AI with pre-written cited answers and dropped deployment. This removes Supabase, Realtime, the Claude API, Vercel, and the in-app scanner. The app now runs as one server on the laptop. The data lives in a plan file and in the server's memory, the screens check for updates every 2 seconds, and a phone on the same Wi-Fi scans the TV's QR code with its own camera. The earlier choices and their reasons are kept under Decisions and Open Issues.
 
 ## How This Works, In Plain Language

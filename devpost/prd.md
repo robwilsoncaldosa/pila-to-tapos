@@ -10,6 +10,8 @@ Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
 
 > **Revised during `4-spec` (2026-10-22).** The official source ([research](research/bir-closure-sources.md)) says she deals with one counter, the Registration Officer counter, across two visits about 3 working days apart. The learner chose to follow the real process. This replaced the earlier demo assumption of three windows in one visit. The affected sections are the Core Journey, Screens and Layout, Being Called, Visit 1 Done, the Staff Counter, the TV Display, States, and Product Decisions.
 >
+> **Language (2026-10-24, before shipping):** the learner added an **English language option**. Filipino/Taglish stays the default, and English is one tap away (an "English | Filipino" switch on Screen 1, the plan, the counter, and the TV, or `?lang=en` in any URL). The reasons: the judges and many users read English, and the English "Heart" voice mispronounces Filipino words. The demo video is recorded with the app in English and fully English narration. The official quotes are unchanged, and the plan's Filipino text has faithful English versions.
+>
 > **Final review (2026-10-22):** the plan screen was reworked for friendliness (a "what's next" card, "Saan galing?" links, compact situation questions, progress-first "Kulang pa," and a sticky action bar), the COR became a required document (agent default, learner to confirm), and the TV call is now spoken in English in the Kokoro "Heart" voice. The UX rework and the voice were learner decisions.
 >
 > **Revised again in `5-build` (2026-10-22).** The learner chose pre-written cited answers instead of live AI, and a laptop-only build with no deployment, where the phone scans the QR code with its own camera over Wi-Fi. The affected sections are Asking Questions (Magtanong), Getting a Number, Product Decisions, Deferred, Possible Later Enhancements, and Non-Goals.
@@ -80,6 +82,7 @@ Source: `scope.md > Inspiration & Identity`.
 - **Text size:** large and easy to read throughout, for seniors.
 - **Language:** Filipino/Taglish labels as written in this document ("Ano'ng kailangan mong gawin?", "Kulang pa," "Kumuha ng number," "Magtanong," "Ikaw na!," "Tapos na!," and so on).
 - **Trust cue:** a "not in the source" reply is a plain grey card with an info icon, visibly different from a real answer.
+- **Languages:** Filipino/Taglish by default, with an English option that uses the English glosses in this document ("What do you need to do?", "Still missing," "Get my number," "Ask," "It's your turn!," "Come back on [date]," "All done!").
 - **One rule:** no government logos or seals. Pila to Tapos is an independent helper, not an official BIR app.
 
 ## Features and Behavior
