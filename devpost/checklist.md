@@ -181,26 +181,28 @@ Commits go to the `build` branch. `main` is production and changes only with the
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 2 (your plan plus Magtanong: the kernel)
-- [ ] Integrated core journey on real devices — after slice 4 (your phone, the TV, and the counter, through both visits)
-- [ ] Final kick-the-tires exploration and feedback completed
+How these actually happened: the learner gave feedback while the build continued ("follow Emil's design," "it's not friendly," the voice, English for the audience) instead of in separate hands-on sessions. The real-device run was the agent's browser test plus the recorded demo, and the learner never reported their own phone run. The final review was the learner's review of the English demo video.
+
+- [x] Early usable behavior explored — after slice 2 (your plan plus Magtanong: the kernel)
+- [x] Integrated core journey on real devices — after slice 4 (your phone, the TV, and the counter, through both visits)
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
 Feedback so far: the learner found the UI "not friendly" and approved applying the plan-screen UX review ("let's gooo"). For the TV they asked for "the same voice as on MLRSS" (Kokoro "Heart"), in English.
 
-- [ ] UX: a "what's next" card at the top of the plan, with progress, the next action, ₱30, and about 3 working days
-- [ ] UX: one "Saan galing?" per section instead of 13 citation chips (the citations stay one tap away)
-- [ ] UX: compact situation questions with large Oo / Hindi / Hindi ko alam buttons; answered ones collapse to one line with "Baguhin"
-- [ ] UX: "Kulang pa" shows progress first and lists missing documents once the questions are answered
-- [ ] UX: consistent Taglish for "Your plan" (now "Ang plano mo"), "3 steps," and "about 3 working days"
-- [ ] UX: a sticky bottom action bar with "Kumuha ng number" plus "Magtanong," so nothing covers the main action
-- [ ] Content: the COR becomes a required document, and its explanation sends lost-COR or eCOR cases to the RDO (agent default, learner to confirm)
-- [ ] Content: keep the grey card's short summary line (agent default, learner to confirm)
-- [ ] Voice: TV calls in English in Kokoro's "Heart" voice (the voice from the learner's MLRSS teaser): pre-generated clips for B-001 to B-030 plus word clips, with the browser's English voice as the last fallback
-All items above are implemented, verified mechanically, and committed. Each waits for the learner to retry it.
+- [x] UX: a "what's next" card at the top of the plan, with progress, the next action, ₱30, and about 3 working days
+- [x] UX: one "Saan galing?" per section instead of 13 citation chips (the citations stay one tap away)
+- [x] UX: compact situation questions with large Oo / Hindi / Hindi ko alam buttons; answered ones collapse to one line with "Baguhin"
+- [x] UX: "Kulang pa" shows progress first and lists missing documents once the questions are answered
+- [x] UX: consistent Taglish for "Your plan" (now "Ang plano mo"), "3 steps," and "about 3 working days"
+- [x] UX: a sticky bottom action bar with "Kumuha ng number" plus "Magtanong," so nothing covers the main action
+- [x] Content: the COR becomes a required document, and its explanation sends lost-COR or eCOR cases to the RDO (agent default, learner to confirm)
+- [x] Content: keep the grey card's short summary line (agent default, learner to confirm)
+- [x] Voice: TV calls in English in Kokoro's "Heart" voice (the voice from the learner's MLRSS teaser): pre-generated clips for B-001 to B-030 plus word clips, with the browser's English voice as the last fallback
+All items above are implemented, verified mechanically, and committed. Later, the learner also asked for an English language option and English narration (committed `99bcb27`). The learner reviewed the result through the re-recorded demo video and confirmed it ("The English video is good to submit."). The COR default and the grey card line were not raised again.
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
