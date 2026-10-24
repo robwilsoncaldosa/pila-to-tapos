@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pila to Tapos — app map</title>
+<style>
+:root{--bg:#FAF6EE;--fg:#14213D;--muted:#4a5568;--card:#fff;--line:#d9d2c3;--accent:#14213D;--accent-fg:#FAF6EE;--hl:#f1e6c8;--code:#efe8d8}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1729;--fg:#f3eee2;--muted:#b7bfce;--card:#18233d;--line:#33415f;--accent:#f3eee2;--accent-fg:#14213D;--hl:#2b3858;--code:#22304e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;line-height:1.2;margin:0 0 .5rem}
+h2{font-size:1.25rem;margin:2.2rem 0 .6rem;padding-top:.4rem;border-top:1px solid var(--line)}
+p,li{overflow-wrap:anywhere}
+code{background:var(--code);padding:.05em .35em;border-radius:4px;font:.88em ui-monospace,Menlo,Consolas,monospace;overflow-wrap:anywhere}
+.lead{font-size:1.05rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:.7rem 0}
+.card h3{margin:0 0 .3rem;font-size:1rem}
+.card p{margin:.2rem 0}
+.diagram{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
+.diagram svg{display:block;width:100%;min-width:560px;height:auto}
+.diagram:focus{outline:3px solid var(--fg);outline-offset:2px}
+svg .box{fill:var(--hl);stroke:var(--fg);stroke-width:1.2}
+svg .t{fill:var(--fg);font:13px system-ui,sans-serif}
+svg .s{fill:var(--muted);font:11px ui-monospace,Menlo,monospace}
+svg .arrow{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .head{fill:var(--fg)}
+table{border-collapse:collapse;width:100%}
+td{vertical-align:top;border-top:1px solid var(--line);padding:8px 6px}
+td:first-child{width:46%}
+details{margin:.5rem 0}
+summary{cursor:pointer;font-weight:600}
+summary:focus-visible,a:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.note{color:var(--muted);font-size:.92rem}
+@media (max-width:520px){td{display:block;width:100%!important;border-top:0;padding:2px 0}tr{display:block;border-top:1px solid var(--line);padding:8px 0}}
+</style>
+</head>
+<body>
+<main>
+<h1>Pila to Tapos — app map</h1>
+<p class="lead">Pila to Tapos helps a freelancer close a BIR (Philippine tax office) registration. It builds a plan from official sources, issues a queue number, tells her when she is called, lets her come back for the second visit, and marks the closure done: plan, number, called, come back, done.</p>
+<p>The app has a few main pieces:</p>
+<ul>
+<li>One Next.js app running on a laptop, with no deployment.</li>
+<li>A plan file with official excerpts, <code>content/plan/bir-closure.json</code>.</li>
+<li>An in-memory queue (nothing is saved to a database).</li>
+<li>Three screens: the phone (<code>/line</code>, <code>/plan</code>), the staff counter (<code>/counter</code>) and the TV (<code>/tv</code>). They check for changes every 2 seconds.</li>
+<li>The phone saves her progress in <code>localStorage</code> (<code>src/lib/phone-storage.ts</code>).</li>
+<li>An English / Filipino switch (<code>?lang=en</code> or <code>?lang=fil</code>).</li>
+</ul>
+
+<h2>One action, end to end: "Call next"</h2>
+<div class="diagram" tabindex="0" role="group" aria-label="Diagram, scrolls sideways on narrow screens">
+<svg viewBox="0 0 760 330" role="img" aria-labelledby="dt dd">
+<title id="dt">Call next, from the counter tap to the TV and phone</title>
+<desc id="dd">Staff tap Call next on the counter. The server action callNext calls the queue service callNext, which calls the in-memory queue repository. The TV and phone each poll every 2 seconds and see the change. The TV pulses and plays a voice clip. The phone shows a full-screen It's your turn overlay.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="head"/></marker></defs>
+<rect class="box" x="10" y="10" width="170" height="64" rx="8"/>
+<text class="t" x="20" y="32">1. Staff tap "Call next"</text>
+<text class="s" x="20" y="50">/counter</text>
+<text class="s" x="20" y="64">call-next-button.tsx</text>
+<rect class="box" x="205" y="10" width="170" height="64" rx="8"/>
+<text class="t" x="215" y="32">2. Server action</text>
+<text class="s" x="215" y="50">callNext</text>
+<text class="s" x="215" y="64">actions/queue.ts</text>
+<rect class="box" x="400" y="10" width="170" height="64" rx="8"/>
+<text class="t" x="410" y="32">3. Queue service</text>
+<text class="s" x="410" y="50">callNext</text>
+<text class="s" x="410" y="64">queue-service.ts</text>
+<rect class="box" x="585" y="10" width="165" height="64" rx="8"/>
+<text class="t" x="595" y="32">4. Memory queue</text>
+<text class="s" x="595" y="50">callNext</text>
+<text class="s" x="595" y="64">queue-repository.ts</text>
+<path class="arrow" d="M180 42H203" marker-end="url(#a)"/>
+<path class="arrow" d="M375 42H398" marker-end="url(#a)"/>
+<path class="arrow" d="M570 42H583" marker-end="url(#a)"/>
+<text class="t" x="10" y="125">Ticket is now "called". Nothing is pushed. Each screen asks again every 2 seconds:</text>
+<rect class="box" x="10" y="145" width="355" height="52" rx="8"/>
+<text class="t" x="20" y="167">5a. TV and phone poll</text>
+<text class="s" x="20" y="184">usePoll in src/lib/use-poll.ts (default 2000 ms)</text>
+<path class="arrow" d="M187 197V225" marker-end="url(#a)"/>
+<rect class="box" x="10" y="228" width="355" height="86" rx="8"/>
+<text class="t" x="20" y="250">6a. TV (/tv): the number pulses</text>
+<text class="t" x="20" y="270">and the Heart-voice clip plays</text>
+<text class="s" x="20" y="290">announcer.tsx calls speak()</text>
+<text class="s" x="20" y="304">src/lib/speech.ts (clipSequences)</text>
+<rect class="box" x="395" y="228" width="355" height="86" rx="8"/>
+<text class="t" x="405" y="250">6b. Phone (/line): full-screen</text>
+<text class="t" x="405" y="270">"It's your turn!" overlay</text>
+<text class="s" x="405" y="290">line-screen.tsx shows CalledOverlay</text>
+<text class="s" x="405" y="304">called-overlay.tsx</text>
+<path class="arrow" d="M300 197L560 225" marker-end="url(#a)"/>
+<rect class="box" x="395" y="145" width="355" height="52" rx="8"/>
+<text class="t" x="405" y="167">Status turns waiting to called</text>
+<text class="s" x="405" y="184">the next poll returns the new status</text>
+<path class="arrow" d="M395 171H367" marker-end="url(#a)"/>
+<path class="arrow" d="M667 74V143" marker-end="url(#a)"/>
+</svg>
+</div>
+<p class="note">If the diagram is wider than your screen, scroll it sideways inside its frame.</p>
+
+<h2>Reference route (not toured interactively)</h2>
+<p class="note">This is a reference route for the same action. It was read from the code, not walked through live with the learner. Search for the anchor name to jump to each spot.</p>
+<div class="card">
+<h3>Stop 1 — the tap: <code>src/app/counter/components/counter-screen.tsx</code></h3>
+<p>Anchor: <code>callNext(counter.id)</code> inside <code>CallNextButton</code>'s <code>onCall</code>. The button (<code>call-next-button.tsx</code>) is the big "Call next" the staff see; tapping it runs the server action, then the counter screen refreshes its own board.</p>
+</div>
+<div class="card">
+<h3>Stop 2 — the rule: <code>src/services/queue-service.ts</code></h3>
+<p>Anchor: <code>callNext</code>. The server action (<code>src/app/actions/queue.ts</code>) only passes the counter id to this service. The service decides what is allowed (for example it refuses while a number is still called, so staff must tap Done first) and asks the repository to mark the next waiting ticket as called, with a timestamp from an injected clock.</p>
+</div>
+<div class="card">
+<h3>Stop 3 — what the visitor sees: <code>src/lib/use-poll.ts</code>, then the two screens</h3>
+<p>Anchors: <code>usePoll</code>, <code>Announcer</code>, <code>CalledOverlay</code>. The in-memory repository (<code>src/adapters/memory/queue-repository.ts</code>, <code>callNext</code>) holds the new "called" status. Within about 2 seconds the TV's <code>usePoll</code> sees a new call, so <code>useNewCall</code> triggers <code>Announcer</code> and <code>speak</code> (pre-recorded clips from <code>public/audio/</code>). The phone's <code>usePoll</code> in <code>line-screen.tsx</code> sees the status change, plays a chime and shows <code>CalledOverlay</code>.</p>
+</div>
+
+<h2>To change this, start here</h2>
+<table>
+<tr><td>Requirements, steps, fees, questions and their citations</td><td><code>content/plan/bir-closure.json</code>, then run <code>npm run check:content</code></td></tr>
+<tr><td>Screen wording, either language</td><td><code>src/i18n/fil.ts</code> and <code>src/i18n/en.ts</code></td></tr>
+<tr><td>Colors, fonts, motion</td><td><code>src/app/globals.css</code> (easing tokens such as <code>--ease-out</code>) and the <code>cva</code> variants in <code>src/components/ui/</code> (for example <code>button.tsx</code>)</td></tr>
+<tr><td>The TV call voice</td><td>Clips in <code>public/audio/</code>, and how they are chosen in <code>src/lib/speech.ts</code> (<code>speak</code>, <code>clipSequences</code>)</td></tr>
+<tr><td>Queue rules (who is called, when it refuses)</td><td><code>src/services/queue-service.ts</code> and its tests, <code>src/services/queue-service.test.ts</code></td></tr>
+<tr><td>Team editing of the plan</td><td><code>/team</code> (code in <code>src/app/team/</code>); it needs <code>TEAM_PASSCODE</code> in <code>.env.local</code></td></tr>
+<tr><td>The plan screen's "what's next" card</td><td><code>src/app/plan/components/whats-next-card.tsx</code> (laid out in <code>plan-screen.tsx</code>)</td></tr>
+</table>
+
+<h2>A practice to reuse</h2>
+<p>Late in the build, the plan screen was called "not friendly". That is vague, so before changing anything it was turned into specific, checkable observations, then built and re-measured:</p>
+<ul>
+<li>Page height at phone size: about 5,800 px down to about 3,000 px.</li>
+<li>Citation chips: 13 down to 3 "Where is this from?" links (the citations stay one tap away).</li>
+<li>One clear "what's next" action at the top of the plan.</li>
+</ul>
+<p class="note">The measurements (5,833px to 3,003px tall, 13 to 3 citation buttons) are recorded in <code>devpost/checklist.md</code> (section "Final Review"); the plan screen's intent is in <code>devpost/prd.md</code> (section "Your Plan").</p>
+<p>The reusable habit: describe what you see, what you expected, and a measurable check, then let the agent build against that.</p>
+<p>A second example of the same idea turns a trust requirement into an automatic check. Every citation quote must appear word for word in its official source, and <code>npm run check:content</code> (<code>scripts/check-content.ts</code>, which calls <code>validateCitations</code> in <code>src/domain/citations.ts</code>) fails if one does not.</p>
+
+<h2>Run it again</h2>
+<ol>
+<li><code>npm install</code></li>
+<li><code>npm run dev</code> on the laptop, or <code>npm run dev:lan</code> to use a real phone on the same Wi-Fi.</li>
+<li>Open <code>/</code>, <code>/counter</code> and <code>/tv</code>. Add <code>?lang=en</code> for English (<code>?lang=fil</code> for Filipino).</li>
+</ol>
+<details>
+<summary>What to look for in the first run</summary>
+<p>Get a number on the phone view, tap "Call next" on <code>/counter</code>, and watch <code>/tv</code> and the phone react within about 2 seconds. The TV needs one tap first (the start overlay) before the browser lets it play sound.</p>
+</details>
+<p class="note">Snapshot of commit <code>6ac6f9f</code> — the code may drift after this.</p>
+</main>
+</body>
+</html>

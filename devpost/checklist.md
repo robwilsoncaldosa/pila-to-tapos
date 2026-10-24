@@ -200,21 +200,21 @@ Feedback so far: the learner found the UI "not friendly" and approved applying t
 - [x] Content: the COR becomes a required document, and its explanation sends lost-COR or eCOR cases to the RDO (agent default, learner to confirm)
 - [x] Content: keep the grey card's short summary line (agent default, learner to confirm)
 - [x] Voice: TV calls in English in Kokoro's "Heart" voice (the voice from the learner's MLRSS teaser): pre-generated clips for B-001 to B-030 plus word clips, with the browser's English voice as the last fallback
-All items above are implemented, verified mechanically, and committed. Later, the learner also asked for an English language option and English narration (committed `99bcb27`). The learner reviewed the result through the re-recorded demo video and confirmed it ("The English video is good to submit."). The COR default and the grey card line were not raised again.
+Measured at 375×812 in the browser: the plan page was 5,833px tall with 13 citation buttons before the UX pass, and 3,003px with 3 "Saan galing?" links after it. All items above are implemented, verified mechanically, and committed. Later, the learner also asked for an English language option and English narration (committed `99bcb27`). The learner reviewed the result through the re-recorded demo video and confirmed it ("The English video is good to submit."). The COR default and the grey card line were not raised again.
 
 - [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: not started
-Route and stops: not started
-Edit outcome: not started
-Reflection: not started
-Activity mode: not started
+Activity and evidence: prior practice connected (focused alternative for a plan-first learner). The learner's goal of turning a mental picture into buildable words was tied to real project moments: "the UI is not friendly" became measurable observations (5,833px to 3,003px tall, 13 to 3 citation buttons; see Final Review); filling the scope placeholders; and "the voice mispronounces Filipino, the audience is English," which became the English mode. Also shown: `check:content` (`validateCitations`) as a trust requirement turned into an automatic check.
+Route and stops: reference route only, not toured interactively. "Call next": `src/app/counter/components/call-next-button.tsx` → `callNext` in `src/app/actions/queue.ts` → `src/services/queue-service.ts` → `src/adapters/memory/queue-repository.ts` → `usePoll` (`src/lib/use-poll.ts`) → TV `Announcer`/`speak` and the phone's `CalledOverlay`.
+Edit outcome: not applicable (no live edit offered; the learner was moving to submission).
+Reflection: offered (optional), no answer recorded.
+Activity mode: prior practice connected, plus a brief recap, with the app map.
 
 ## Revisions
 
